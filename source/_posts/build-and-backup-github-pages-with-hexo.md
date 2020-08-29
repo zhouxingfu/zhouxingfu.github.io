@@ -57,17 +57,23 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
     package.json  
 ```
 
-拷贝到github.io所在的目录，然后git add --all, git commit git push origin hexo　　
+拷贝到github.io所在的目录，然后  
+
+    git add --all  
+    git commit 
+    git push --set--upstream origin hexo　
+    　
 然后把.git目录拷贝到blog folder
 
 ## 发布文章  
-经过上面的操作后，我们hexo g hexo d就是发布到github.io/master，　我们git add commit push就是发布到hexo  
+经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  
 
 ## 环境移植  
-如果我们要在另一台环境上写我们的blog，那么我们
-mkdir blog_folder
-cd blog_folder  
-npm install -g hexo-cli  
-hexo init  
-npm install  
-git clone -b hexo git@github.com/username/username.github.io 
+如果我们要在另一台环境上写我们的blog，那么我们  
+
+    mkdir blog_folder
+    cd blog_folder  
+    npm install -g hexo-cli  
+    hexo init  
+    npm install  
+    git clone -b hexo git@github.com/username/username.github.io 
