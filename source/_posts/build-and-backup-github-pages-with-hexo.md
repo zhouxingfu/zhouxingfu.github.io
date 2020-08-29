@@ -71,9 +71,15 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
 ## 环境移植  
 如果我们要在另一台环境上写我们的blog，那么我们  
 
-    mkdir blog_folder
-    cd blog_folder  
-    npm install -g hexo-cli  
-    hexo init  
-    npm install  
-    git clone -b hexo git@github.com/username/username.github.io 
+~~mkdir blog_folder~~  
+    ~~cd blog_folder~~  
+    ~~npm install -g hexo-cli~~    
+    ~~hexo init~~  
+    ~~npm install~~  
+    ~~git clone -b hexo git@github.com/username/username.github.io~~
+
+
+The instrutions above is not right, you should do as follows
+
+    git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
+    npm install
