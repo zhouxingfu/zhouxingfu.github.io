@@ -9,11 +9,11 @@ categories: STL
 尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。  
 为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  
 
-{% asset_img io_relationship.jpg STL IO HIERARCHY %}   
+{% asset_img iostream.gif STL IO HIERARCHY %}   
 
 
 
 
 __参考资料__  
-[C++标准I/O库：iostream, fstream, sstringstream](https://blog.csdn.net/anonymalias/article/details/27714359)  
+[Input/Output](http://www.cplusplus.com/reference/iolibrary/)  
 
