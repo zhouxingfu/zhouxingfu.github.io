@@ -2,6 +2,7 @@
 title: build and backup github pages with hexo
 date: 2020-08-29 16:46:06
 tags:
+categories: other
 ---
 
 之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  
