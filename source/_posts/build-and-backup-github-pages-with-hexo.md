@@ -7,7 +7,7 @@ categories: other
 
 之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  
 
-## 原理  
+## __<font color=0xFFFFFF>原理</font>__  
 hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。  
 我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。 
 注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  
@@ -20,7 +20,7 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
 
 下面我们梳理一下具体的流程。  
 
-## node及hexo环境  
+## __<font color=0xFFFFFF>node及hexo环境</font>__  
 
     mkdir blog
     npm i hexo-cli -g
@@ -28,11 +28,10 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
     hexo init  
     npm install  
 
-## github io  
+## __<font color=0xFFFFFF>github io</font>__  
 在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  
 
-
-## 发布到github.io  
+## __<font color=0xFFFFFF>发布到github.io</font>__  
     npm i hexo-deployer-git
 
 修改_config.yml文件
@@ -42,7 +41,7 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
     repository: git@github.com:username/username.github.io.git
     branch: master
   
-## hexo branch  
+## __<font color=0xFFFFFF>hexo branch</font>__  
 
 很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  
 
@@ -66,10 +65,10 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
     　
 然后把.git目录拷贝到blog folder
 
-## 发布文章  
+## __<font color=0xFFFFFF>发布文章</font>__  
 经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  
 
-## 环境移植  
+## __<font color=0xFFFFFF>环境移植</font>__  
 如果我们要在另一台环境上写我们的blog，那么我们  
 
 ~~mkdir blog_folder~~  
