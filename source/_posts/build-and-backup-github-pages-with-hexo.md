@@ -99,3 +99,12 @@ The instrutions above is not right, you should do as follows
 themes/next下_config.yml 设置excerpt_description: true  
 
 在文章中不显示的部分之前增加 \<!--more-->
+
+### __<font color=0xFF>git如何添加修改后的themes</font>__
+landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后
+git clone https://github.com/theme-next/hexo-theme-next themes/next。  
+但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。
+如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。
+
+还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  
+
