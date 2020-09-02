@@ -18,6 +18,8 @@ hexo依赖于node，环境是不需要备份的，那么我们要备份的是除
 
 我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。
 
+<!--more-->
+
 下面我们梳理一下具体的流程。  
 
 ## __<font color=0xFFFFFF>node及hexo环境</font>__  
@@ -83,3 +85,17 @@ The instrutions above is not right, you should do as follows
 
     git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
     npm install
+
+## __<font color=0xFFFFFF>小技巧</font>__  
+
+### __<font color=0xFF>添加本地搜索</font>__
+
+在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 
+
+    npm install hexo-generator-searchdb  
+
+### __<font color=0xFF>首页文章只显示部分摘要</font>__
+
+themes/next下_config.yml 设置excerpt_description: true  
+
+在文章中不显示的部分之前增加 \<!--more-->
