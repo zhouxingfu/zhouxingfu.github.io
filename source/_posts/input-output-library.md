@@ -1,5 +1,5 @@
 ---
-title: IO Operation in STL
+title: Input/Output library
 date: 2020-08-30 13:27:34
 tags:
 categories: STL
@@ -12,11 +12,13 @@ categories: STL
 尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。  
 为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  
 
-{% asset_img iostream.gif STL IO HIERARCHY %}   
+{% asset_img input_output_hierarchy.png STL IO HIERARCHY %}   
+
+
 
 
 
 
 ## __<font color=0xFFFFFF>参考资料</font>__  
-[Input/Output](http://www.cplusplus.com/reference/iolibrary/)  
+[Input/output library](https://en.cppreference.com/w/cpp/io)  
 
