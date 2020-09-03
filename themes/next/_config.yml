@@ -183,7 +183,7 @@ social:
   #Google: https://plus.google.com/yourname || fab fa-google
   #Twitter: https://twitter.com/yourname || fab fa-twitter
   #FB Page: https://www.facebook.com/yourname || fab fa-facebook
-  #StackOverflow: https://stackoverflow.com/yourname || fab fa-stack-overflow
+  StackOverflow: https://stackoverflow.com/users/9379501/zhou-xingfu || fab fa-stack-overflow
   #YouTube: https://youtube.com/yourname || fab fa-youtube
   #Instagram: https://instagram.com/yourname || fab fa-instagram
   #Skype: skype:yourname?call|chat || fab fa-skype
@@ -263,7 +263,7 @@ reward_settings:
   # If true, reward will be displayed in every article by default.
   enable: false
   animation: false
-  #comment: Donate comment here.
+  #comment: Donations will be forwarded to Oxfam.
 
 reward:
   #wechatpay: /images/wechatpay.png

@@ -146,6 +146,25 @@ w表示四字节，
 g表示八字节
 
 
+### __<font color=0xFF>查看正常函数名称</font>__   
+
+_ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这类名字，该怎么知道它之前正常的名字呢？  
+这涉及到name mangling技术。最开始没记起这个名词，连搜索都不好搜索。  
+
+[How to make gdb show the original non-mangling function name on disassembly model?](https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode)  
+
+c++file是一个经常用的技术，但好像不是所有情况下都可以。
+
+### __<font color=0xFF>objdump查看反汇编代码，如何从AT&T风格改为intel</font>__   
+
+gcc默认的汇编器是GAS，语法是AT&T
+
+objdump -d -mi386:x86-64:intel exe or lib file name
+
+
+### __<font color=0xFF>FS寄存器分析</font>__   
+
+
 ## __<font color=0xFFFFFF>参考资料</font>__  
 
 
@@ -157,3 +176,4 @@ g表示八字节
 
 [使用 gdb 恢复堆栈信息](https://www.jianshu.com/p/088fb171cd40)
 
+[How to make gdb show the original non-mangling function name on disassembly model?](https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode)
