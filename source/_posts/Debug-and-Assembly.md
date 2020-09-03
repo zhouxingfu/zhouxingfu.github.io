@@ -153,7 +153,11 @@ _ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这�
 
 [How to make gdb show the original non-mangling function name on disassembly model?](https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode)  
 
-c++file是一个经常用的技术，但好像不是所有情况下都可以。
+c++filt是一个经常用的技术，~~但好像不是所有情况下都可以~~。昨天c++file _ZNSaIcEC1Ev@plt，命令执行完还是这个字符串，当时认为是这个命令可能不适用于所有字符串，或者哪个环节出了问题。  
+
+c++filt _ZNSaIcEC1Ev  
+
+__后面那个@plt到底是干嘛的？__
 
 ### __<font color=0xFF>objdump查看反汇编代码，如何从AT&T风格改为intel</font>__   
 
