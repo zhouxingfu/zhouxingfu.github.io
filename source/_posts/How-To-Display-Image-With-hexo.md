@@ -1,5 +1,5 @@
 ---
-title: How To Display Image With hexo
+title: 在hexo中显示图片
 date: 2020-08-30 17:55:46
 tags:
 categories: other

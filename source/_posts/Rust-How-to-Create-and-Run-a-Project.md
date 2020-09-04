@@ -1,5 +1,5 @@
 ---
-title: Rust - How to Create and Run a Project
+title: Rust学习（一）如何创建、运行一个新工程
 date: 2020-09-02 15:09:59
 tags:
 categories: Rust

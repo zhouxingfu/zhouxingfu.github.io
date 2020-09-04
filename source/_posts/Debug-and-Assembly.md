@@ -1,5 +1,5 @@
 ---
-title: Debug and Assembly
+title: 调试与汇编
 date: 2020-08-31 11:36:09
 tags:
 categories: assembly

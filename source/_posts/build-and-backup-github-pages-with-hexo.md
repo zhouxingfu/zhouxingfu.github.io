@@ -1,5 +1,5 @@
 ---
-title: build and backup github pages with hexo
+title: 用hexo搭建github blog
 date: 2020-08-29 16:46:06
 tags:
 categories: other
@@ -98,7 +98,18 @@ The instrutions above is not right, you should do as follows
 
 themes/next下_config.yml 设置excerpt_description: true  
 
-在文章中不显示的部分之前增加 \<!--more-->
+在文章中不显示的部分之前增加 \<!--more--> 
+
+### __<font color=0xFF>文章按照更新时间排序</font>__
+
+在blog下_config.yml中 
+
+```
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -updated #从-date改成-updated
+```
 
 ### __<font color=0xFF>git如何添加修改后的themes</font>__
 landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后

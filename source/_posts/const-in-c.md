@@ -54,7 +54,7 @@ func_6() = {2, 2.0f, 'b'}; //error: passing ‘const haha’ as ‘this’ argum
 
 现在我们单独说一说 __<font color=red>const修饰函数返回值</font>__ 的情况。  
 
-如果返回值为某个对象的const或者某个对象的引用const，则返回值具有const属性，则返回实例只能访问A中的public protect数据成员和const成员函数，并且 __<font color=red>不允许对其进行赋值操作</font>__。  
+如果返回值为某个对象的const或者某个对象的引用const，则返回值具有const属性，则返回实例只能访问A中的public protect数据成员和const成员函数，并且 __<font color=red>不允许对其进行赋值操作</font>__ 。  
 
 上面的例子中，返回值为int的都是右值，看汇编中是直接把结果放到%rax中，而寄存器我们都知道是没有地址的。
 

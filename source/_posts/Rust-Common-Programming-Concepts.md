@@ -12,3 +12,10 @@ _"This chapter covers concepts that appear in almost every programming language 
 
 ### __<font color=0xFFFFFF>immutable constant 区别</font>__  
 
+|const | variable|
+|:----|:----|
+|在整个生命周期内value不可更改|var可随时重新定义，比如let x= 10; let mut x = 20;默认为immutable，可随时更改为mutable|
+|必须注明类型|不必注明类型|
+|可以在任何范围内定义，比如全局|貌似不可以？|
+|const赋值时必须是常亮表达式，或者至少能找到初始值，而不能是一个function call或者运行时才能获取的值|可以？|
+
