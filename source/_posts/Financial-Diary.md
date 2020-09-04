@@ -14,6 +14,7 @@ categories: other
 
 在这里记录下自己的分析，纯粹为了留念吧。  
 
+## __<font color=0xFFFFFF>2020.9.4</font>__
 从月线和周线上看，万科A和一大票传媒股，MACD指标显示短周期MACD线正准备或正在上穿长周期MACD线。  
 同样，RSI指标正在上扬。  
 
