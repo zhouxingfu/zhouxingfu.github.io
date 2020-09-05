@@ -10,7 +10,7 @@ _"This chapter covers concepts that appear in almost every programming language 
 
 好了，C++的话题到此为止，我们看Rust。  
 
-### __<font color=0xFFFFFF>immutable constant 区别</font>__  
+## __<font color=0xFFFFFF>immutable constant 区别</font>__  
 
 |const | variable|
 |:----|:----|
@@ -19,7 +19,7 @@ _"This chapter covers concepts that appear in almost every programming language 
 |可以在任何范围内定义，比如全局|貌似不可以？|
 |const赋值时必须是常亮表达式，或者至少能找到初始值，而不能是一个function call或者运行时才能获取的值|可以？|
 
-### __<font color=0xFFFFFF>shadowing和mut 区别</font>__  
+## __<font color=0xFFFFFF>shadowing和mut 区别</font>__  
 
 ```
 let mut x = 10;
@@ -35,7 +35,7 @@ let x= x + 100;
 |通过let，我们会改变暂时改变x的状态为mutable，等操作结束，x重新变为immutable|mut表示variable的value是可以被修改的|
 |shadowing只是重用了variable的name，第二次或者后面let的时候可以更改它的类型|mut不可以，没有let的情况下，前面是什么类型，后面赋值的时候也必须是相同类型|
 
-### __<font color=0xFFFFFF>数据类型</font>__ 
+## __<font color=0xFFFFFF>数据类型</font>__ 
 
 
 |length |signed|unsigned|
@@ -111,3 +111,10 @@ array声明方式
 |可以解构|没有这个必要|
 
 
+## __<font color=0xFFFFFF>与C++的Function比较</font>__  
+
+|Rust Function | C++ Function|
+|:----|:----|
+|没有此要求，只要在scope内被看到|调用的Function必须在Caller之前被声明或者定义 |
+|let不返回，所以 _let x = (let y = 6); //error  但是 let y = 100; let x = (y = 0) //成功|int x = (int y=0)是不可以的，但可以写成int x = (y = 0)|
+|返回值是不带;的表达式|返回值必须是return语句|
