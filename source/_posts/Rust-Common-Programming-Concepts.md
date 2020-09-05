@@ -37,7 +37,6 @@ let x= x + 100;
 
 ### __<font color=0xFFFFFF>数据类型</font>__ 
 
-#### __<font color=0x0FFFA>整数类型</font>__  
 
 |length |signed|unsigned|
 |:----|:----|:----|
@@ -60,6 +59,55 @@ let x= x + 100;
 <!--more-->
 从上面看跟C++一模一样，或者说跟其它很多语言的定义是一样的，语言总是相同的，印证了最开始的那句话，语言是特性的集合。  
 
-_<font color=blue>这里注意到一个自己之前你忽略的问题，那就是float的表示范围。之前的错觉是float跟int32，double跟int64的表示范围一样，只不过中间多了很多小数表示。现在想来，大错特错，如果表示范围一致，那多出来的小数是哪些bit表示的呢。  
+_<font color=gray>这里注意到一个自己之前你忽略的问题，那就是float的表示范围。之前的错觉是float跟int32，double跟int64的表示范围一样，只不过中间多了很多小数表示。现在想来，大错特错，如果表示范围一致，那多出来的小数是哪些bit表示的呢。  
 float：1bit（符号位）+8bits（指数位+23bits（尾数位）
 double：1bit（符号位）+ 11bits（指数位）+ 52bits（尾数位）</font>_
+
+Rust的字符类型都是Unicode编码，怎么在不同的编码之间切换呢？  
+
+
+Rust有复合类型，tuple和array。  
+
+    __趣味：python数据类型__
+
+    这里突然想到一个问题，就是在Python中，也有tuple，而且tuple是immutable的，那么在Python中为什么有些类型是mutable，有些是immutable，这么设计的原因是什么？  
+
+    不可变数据类型：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址也会发生改变，就称不可变数据类型，包括：int（整型）、string（字符串）、tuple（元组）。  
+
+    可变数据类型的定义为：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址不发生改变，就称可变数据类型。包括：set（集合）、list（列表）、dict（字典）
+
+    [Mutable vs Immutable Objects in Python](https://medium.com/@meghamohan/mutable-and-immutable-side-of-python-c2145cf72747#:~:text=Simple%20put%2C%20a%20mutable%20object,Custom%20classes%20are%20generally%20mutable.)  
+
+
+Rust中的tuple也可以包含各种数据类型，比如
+
+    let tp = (10, 10.0, 'a', "hello");  
+
+__destructuring解构__   
+
+    let tup: (i32, f64, u8) = (500, 6.4, 1);  
+    let (x, y, z) = tup;  
+
+还可以根据下标索引来访问tuple中的元素  
+
+    let x: (i32, f64, u8) = (500, 6.4, 1);
+    let five_hundred = x.0;
+    let six_point_four = x.1;
+    let one = x.2;  
+
+array声明方式 
+
+    let a:[i32;5] = [1,2,3,4,5];  
+    let a = [3;5];  //same with let a = [3, 3, 3, 3, 3];  
+
+使用方式也是通过下标索引。  
+
+现在总结一下tuple和array
+
+|tuple|array|
+|:----|:----|
+|immutable， 即使let mut，也仅仅只是可以修改变量的value，但不能修改变量的类型，比如tuple是（i32, float, character, string)类型，即使我们是按照let mut声明的，那么我们可以修改它的value，比如原先是(5, 5.0, 'a', "hello")，现在可以赋值为(6, 6.0, 'b', "world")，但每个element的类型是确定的，不可以被修改，不能用其它类型的值来赋值|immutable，因为array是同一类型的，所以没有这个问题，唯一的问题是array的size不可更改，即使let mut，也不可以修改array的size|
+|可以下标访问|可以下标访问|
+|可以解构|没有这个必要|
+
+
