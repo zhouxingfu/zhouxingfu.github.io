@@ -10,9 +10,10 @@ categories: Rust
 Rust选择了第三条路：ownership。  
 
 Rust文档上说  
-```
-All data stored on the stack must have a known, fixed size. Data with an unknown size at compile time or a size that might change must be stored on the heap instead.
-```
+
+    All data stored on the stack must have a known, fixed size. 
+    Data with an unknown size at compile time or a size that might change must be stored on the heap instead.
+
 也就是一个数据，如果要存储在栈上，那么在编译的时候就必须确定大小，并且大小不能更改？  
 这句话和我之前的认知是矛盾的
 ```
@@ -142,3 +143,8 @@ fn no_dangle() -> String {
 ## __<font color=greeb>切片类型slice type</font>__  
 
 slice type是另一个没有ownership的数据类型。
+
+slice跟Python 的slice一样，也是一个对原始数据的reference，但string slice的index只面对UTF8 string，如果是多字节string，在compile的时候会报错。  
+
+slice适用于String integers这类，使用上没什么区别，但一定要遵守ownership的准则。
+
