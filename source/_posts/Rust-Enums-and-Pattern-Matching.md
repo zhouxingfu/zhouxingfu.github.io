@@ -4,6 +4,8 @@ date: 2020-09-08 22:02:24
 tags:
 categories: Rust
 ---
+
+## __<font color=0xFFFFFF>介绍</font>__
 正常情况下，我们声明enum的格式如下
 ```
 fn main() 
@@ -43,6 +45,23 @@ fn main() {
 }
 ```
 在上面，我们可以直接把enum绑定到一个类型上，也就是enum中的element对应的必须是某个类型的value。  
+
+```
+enum Message 
+{
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+fn main() {}
+
+```
+* Quit has no data associated with it at all.
+* Move includes an anonymous struct inside it.
+* Write includes a single String.
+* ChangeColor includes three i32 values.
+
 
 但是上面的code中，home和loopback是什么类型，我们该怎么访问或者使用它呢？  
 
