@@ -42,7 +42,7 @@ fn main() {
 }
 
 ```
-
+<!--more-->
 ## __<font color=0xFFFFFF>使用示例</font>__  
 
 ### __<font color=blue>非结构体用法</font>__  

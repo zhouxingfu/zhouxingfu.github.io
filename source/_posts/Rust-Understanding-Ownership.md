@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
 ```
 在编译时，我们并不知道x所占空间大小。  
 
+<!--more-->
 Rust ownership的设计思想是，我所有的variable name都绑定到stack上的一个空间，但这个空间里面不存储data，只存储pointer，指向heap。  
 
 ownership规则  
