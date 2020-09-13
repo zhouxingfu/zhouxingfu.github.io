@@ -35,6 +35,7 @@ pub fn hehe() {
 }
 ```
 
+<!--more-->
 我们先看看上面两段代码，代码1编译报错
 ```
 error[E0433]: failed to resolve: maybe a missing crate `hh`?
