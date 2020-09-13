@@ -1,5 +1,5 @@
 ---
-title: Rust Enums and Pattern Matching
+title: Rust(6) Enums and Pattern Matching
 date: 2020-09-08 22:02:24
 tags:
 categories: Rust

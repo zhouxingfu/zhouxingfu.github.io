@@ -1,5 +1,5 @@
 ---
-title: Rust Common Programming Concepts
+title: Rust(3) Common Programming Concepts
 date: 2020-09-02 21:45:45
 tags:
 categories: Rust

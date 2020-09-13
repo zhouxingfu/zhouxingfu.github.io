@@ -1,5 +1,5 @@
 ---
-title: Rust Understanding Ownership
+title: Rust(4) Understanding Ownership
 date: 2020-09-05 17:25:09
 tags:
 categories: Rust
