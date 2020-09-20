@@ -14,3 +14,6 @@ categories: [leetcode]
 
 说实话，也该double了。  
 
+__update 2020.9.20__ 
+
+打算用rust和c++ python同时刷leetcode，算是一个非常间距的任务了。加油吧。
