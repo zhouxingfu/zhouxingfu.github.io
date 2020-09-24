@@ -46,7 +46,6 @@ class Solution {
 public:
     bool repeatedSubstringPattern(string s) {
         int len = 1, start=0, cmp_times=0;
-        bool bDuplicated = false;
         for(int len = 1; len <= (floor)(s.length() / 2); ++len)
         {
             if(s.length() % len != 0)
