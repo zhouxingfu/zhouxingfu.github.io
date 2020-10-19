@@ -447,6 +447,21 @@ use-a： 方法参数
 
 继承很好理解，就是重写overwrite，如果想明确基类为抽象类的话，可以通过ABCMeta和abstractclass来实现。
 
+### __2.5.4 奇怪的lambda表达式__  
+
+在C++中我们写lambda [=](int x, int y)  int { return x + y;}
+
+在python中竟然有这样的定义，看着也不是很正常啊，这里的return type是一个lambda。在C++中我们是不可以这么写的。  
+
+```
+def make_incrementor(n):
+    return lambda x: x + n
+
+f = make_incrementor(42)
+print(f(0))  
+print(f(1))
+```
+
 # __3 界面开发__  
 
 有tkinter pygame，对我来说，最起码目前无意义，没有做界面开发的需求。  
