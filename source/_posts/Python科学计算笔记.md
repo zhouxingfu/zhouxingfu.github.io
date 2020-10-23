@@ -33,6 +33,8 @@ categories: Python
 
 ### __1.3 存取元素__  
 
+<!--more-->
+
 有了创造，就要有访问，那么该怎么访问元素呢？  
 
 * 切片  
@@ -103,4 +105,32 @@ __<font color=green size=5>总结</font>__
 说实话，这块理解还是挺难的，而且实际使用中有些内容已经有差别了，比如被废弃的方法，还是要时常温故，多加体会。  
 
 
+__关于存取元素时是否与原数据共用__  
+
+中心思想，是抓住问题的核心，如果我们可以仅仅通过修改stride shape就能得到一份新数据，这时候肯定是不用拷贝最合算，如果没办法通过修改stride shape得到数据，那么就只能拷贝了。  两个简单的例子， a[::2, :]是无需拷贝的，只需要把元素的stride*2就可以“得到”我们想要的数据；a[[1,4,7,9]]是需要拷贝的，此时我们不能通过简单修改stride就得到我们想要的数据。  
+
+
+### __1.4 frompyfunc__  
+
+感觉类似于函数指针typedef，不过问题是看上去它只有一个可以遍历的arg.  
+
+    def calc_test(a, b, c, d):
+        print(a + c + b + d)
+
+
+    def create():
+        a = np.arange(1, 10, 1) # 正确
+        a = 10 # 正确
+        b = np.arange(10, 100, 10)
+        c = np.arange(100, 1000, 100)
+        d = np.arange(1000, 10000, 1000)
+        calc_test_func = np.frompyfunc(calc_test, 4, 1)
+        print(calc_test_func(a, b, c, d))
+
+上面这段代码，经过几次测试，得出的规律是，frompyfunc的几个特点
+
+    m = np.arange(1, 10, 5) + np.arange(10, 100, 10) # 错误 ValueError: operands could not be broadcast together with shapes (2,) (9,) 
+
+
+如果两个或者多个数组size不一致，那么这时候就出发挥 广播机制  
 
