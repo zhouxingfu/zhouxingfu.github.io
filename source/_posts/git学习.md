@@ -23,3 +23,20 @@ Let's go!
 
 ### __git rebase: 变基的原理是什么__  
 
+### __git reset: reset之后某些丢掉的commit能被找回来吗__  
+[How can I recover a lost commit in Git?](https://stackoverflow.com/questions/10099258/how-can-i-recover-a-lost-commit-in-git)  
+
+### __git reset: reset如何调整commit的顺序？__  
+rebase调整commit的原理是什么？
+### __git cherry-pick__  
+
+1. cherry-pick 多个不同branch的commit，可以直接像下面这么写吗 git cherry-pick commit1 commit4 commit9（这三个commit分属不同的branch）  
+2. cherry-pick的commit是由merge而来的，此时会出现什么问题？遇到这种情况，该怎么处理？  
+
+
+### __如何定位哪个commit开始引入了某个bug__  
+
+
+### __之前的某个commit存在bug，该如何修复__ 
+* 直接新加一个修复bug的commit，简单直接  
+* 

@@ -16,4 +16,4 @@ categories: Linux
     pkg-config --cflags "jpeg >= 1.0.0" # for version check  
     pkg-config  --modversion jpeg | awk -F. '{ printf "0x%02X%02X%02X\n",$1,$2,$3 }' #version check  
 * dpkg -s packagename (deb-based distribution)
-* 
+
