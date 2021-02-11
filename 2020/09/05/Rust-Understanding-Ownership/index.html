@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="所有程序在运行的时候必须管理内存。有一些语言有垃圾回收机制，比如Java Python，另外一些语言必须自己管理内存，比如C++。   Rust选择了第三条路：ownership。   Rust文档上说   All data stored on the stack must have a known, fixed size.  Data with an unknown size at compil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust(4) Understanding Ownership">
+<meta property="og:url" content="zhouxingfu.github.io/2020/09/05/Rust-Understanding-Ownership/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="所有程序在运行的时候必须管理内存。有一些语言有垃圾回收机制，比如Java Python，另外一些语言必须自己管理内存，比如C++。   Rust选择了第三条路：ownership。   Rust文档上说   All data stored on the stack must have a known, fixed size.  Data with an unknown size at compil">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-06T00:25:09.000Z">
+<meta property="article:modified_time" content="2021-02-11T08:01:08.975Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/09/05/Rust-Understanding-Ownership/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Rust(4) Understanding Ownership | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/05/Rust-Understanding-Ownership/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust(4) Understanding Ownership
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-05 17:25:09" itemprop="dateCreated datePublished" datetime="2020-09-05T17:25:09-07:00">2020-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>所有程序在运行的时候必须管理内存。有一些语言有垃圾回收机制，比如Java Python，另外一些语言必须自己管理内存，比如C++。  </p>
+<p>Rust选择了第三条路：ownership。  </p>
+<p>Rust文档上说  </p>
+<pre><code>All data stored on the stack must have a known, fixed size. 
+Data with an unknown size at compile time or a size that might change must be stored on the heap instead.</code></pre>
+<p>也就是一个数据，如果要存储在栈上，那么在编译的时候就必须确定大小，并且大小不能更改？<br>这句话和我之前的认知是矛盾的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    int a;</span><br><span class="line">    cin &gt;&gt; a;</span><br><span class="line">    int x[a];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在编译时，我们并不知道x所占空间大小。  </p>
+<a id="more"></a>
+<p>Rust ownership的设计思想是，我所有的variable name都绑定到stack上的一个空间，但这个空间里面不存储data，只存储pointer，指向heap。  </p>
+<p>ownership规则  </p>
+<ul>
+<li>每一个value都有一个叫做owner的variable。</li>
+<li>同一个时刻只能有一个owner。</li>
+<li>当owner离开了作用于，data将会被dropped释放。  </li>
+</ul>
+<p>上面说stack里面只存储指针，不存储数据，其实是不准确的，因为有些叫Stack-Only Data，比如integers。</p>
+<p>如果一个类型实现了Copy接口，那么就不会存在Drop接口；反之亦然。  </p>
+<p>像是integers这种类型在编译的时候能够知道需要空间大小，所以实际的value非常快；同时，对这些类型来说，深拷贝和浅拷贝没有任何区别。</p>
+<table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">ownership转移</th>
+<th align="left">解决思路/效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">作为函数形参传递</td>
+<td align="left">此时，ownership就已经转移到调用的子函数了，子函数执行完毕，变量就被drop了，此时，变量不可用。</td>
+<td align="left">将形参返回，此时ownership会重新被转移回来</td>
+</tr>
+<tr>
+<td align="left">返回形参不是一个好方式，如果有很多形参，这导致整个函数的臃肿。如果用&amp;的方式传递</td>
+<td align="left">子函数内不再拥有形参的ownership</td>
+<td align="left">可以放心地在子函数内使用形参，不用再返回形参</td>
+</tr>
+<tr>
+<td align="left">&amp;不占用ownership，那么可以有多个&amp;吗？如果声明为&amp;mut，是不是就可以修改形参了？</td>
+<td align="left">rust在设计上避免data race，要避免data race，所以可以同时读，读和写的作用域不能重叠，我们在C++中可以加锁控制，但在rust里就是本质上排除掉这种行为。</td>
+<td align="left">请参见 <strong>如何避免data race</strong></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h2 id="如何避免data-race"><a href="#如何避免data-race" class="headerlink" title="如何避免data race"></a><strong><font color=greeb>如何避免data race</font></strong></h2><p>首先，要明确出发data race的三个必要条件</p>
+<ol>
+<li>同时有两个或以上的pointer可以访问同一个数据</li>
+<li>至少有一个pointer正在写数据</li>
+<li>没有一个机制来同步访问数据  </li>
+</ol>
+<p>Rust为了解决这个问题，直接在编译阶段就报错。  </p>
+<p>有以下几种情况  </p>
+<ol>
+<li><font color=red>同一个作用域内</font>只要有一个&amp;mut  </li>
+</ol>
+<p>在这里，首先要理解同一个作用域的概念。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let mut x &#x3D; String::from(&quot;hello&quot;)</span><br><span class="line">&#123;</span><br><span class="line">    let y &#x3D; &amp;mut x;</span><br><span class="line">&#125;</span><br><span class="line">let mut&amp; z &#x3D; x;</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，跟C/C++的作用域的概念类似，离开了代码块，我们就可以重新borrow了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let mut s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    let r1 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r2 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r3 &#x3D; &amp;mut s; &#x2F;&#x2F; BIG PROBLEM</span><br><span class="line"></span><br><span class="line">    println!(&quot;&#123;&#125;, &#123;&#125;, and &#123;&#125;&quot;, r1, r2, r3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子中，r3和r1 r2的作用域重叠，如果我们这些改写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let mut s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    let r1 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r2 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    println!(&quot;&#123;&#125; and &#123;&#125;&quot;, r1, r2);</span><br><span class="line">    &#x2F;&#x2F; r1 and r2 are no longer used after this point</span><br><span class="line"></span><br><span class="line">    let r3 &#x3D; &amp;mut s; &#x2F;&#x2F; no problem</span><br><span class="line">    println!(&quot;&#123;&#125;&quot;, r3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是没有问题的。Rust程序是怎么判断作用域的呢？在compile的时候，rust程序会看到，在let r3 = &amp;mut s;之后已经没有再使用r1 r2了，这时候Rust就认为r1 r2的作用域在r3之前已经结束了。  </p>
+<h2 id="如何避免dangling-pointer悬停指针（野指针）"><a href="#如何避免dangling-pointer悬停指针（野指针）" class="headerlink" title="如何避免dangling pointer悬停指针（野指针）"></a><strong><font color=greeb>如何避免dangling pointer悬停指针（野指针）</font></strong></h2><p>我们知道如果两个指针指向同一个memory，如果我们free一次，那么此时另外一个指针就是成为野指针。  </p>
+<p>Rust为了解决这个问题，在编译的时候就会给予提示。  </p>
+<p>不光是上面说的情况，只要是指针指向的memory已经被drop掉了，那么指针就会编程野指针，下面的代码，在C++ compile的时候不会报错，但运行的时候会crash，Rust是在compile的时候做了强检查。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let reference_to_nothing &#x3D; dangle();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn dangle() -&gt; &amp;String &#123;</span><br><span class="line">    let s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    &amp;s &#x2F;&#x2F; Here, s goes out of scope, and is dropped. Its memory goes away.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该怎么解决这个问题呢？可以照着下面改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let string &#x3D; no_dangle();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn no_dangle() -&gt; String &#123;</span><br><span class="line">    let s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    s &#x2F;&#x2F;Ownership is moved out, and nothing is deallocated.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在总结下reference的两个使用规则  </p>
+<ol>
+<li>在任何时候，可以有一个mut reference和若干个immutable reference。 </li>
+<li>reference必须一直有效。  </li>
+</ol>
+<h2 id="切片类型slice-type"><a href="#切片类型slice-type" class="headerlink" title="切片类型slice type"></a><strong><font color=greeb>切片类型slice type</font></strong></h2><p>slice type是另一个没有ownership的数据类型。</p>
+<p>slice跟Python 的slice一样，也是一个对原始数据的reference，但string slice的index只面对UTF8 string，如果是多字节string，在compile的时候会报错。  </p>
+<p>slice适用于String integers这类，使用上没什么区别，但一定要遵守ownership的准则。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/03/Introduction-to-Algorithm-Chapter-35-Approximation-Algorithms/" rel="prev" title="Introduction to Algorithm Chapter 35 Approximation Algorithms">
+      <i class="fa fa-chevron-left"></i> Introduction to Algorithm Chapter 35 Approximation Algorithms
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/08/Rust-Using-Structs-to-Structure-Related-Data/" rel="next" title="Rust(5) Using Structs to Structure Related Data">
+      Rust(5) Using Structs to Structure Related Data <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8Ddata-race"><span class="nav-number">1.</span> <span class="nav-text">如何避免data race</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8Ddangling-pointer%E6%82%AC%E5%81%9C%E6%8C%87%E9%92%88%EF%BC%88%E9%87%8E%E6%8C%87%E9%92%88%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">如何避免dangling pointer悬停指针（野指针）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%87%E7%89%87%E7%B1%BB%E5%9E%8Bslice-type"><span class="nav-number">3.</span> <span class="nav-text">切片类型slice type</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

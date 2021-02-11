@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="“This chapter covers concepts that appear in almost every programming language and how they work in Rust. Many programming languages have much in common at their core. None of the concepts presented i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust(3) Common Programming Concepts">
+<meta property="og:url" content="zhouxingfu.github.io/2020/09/02/Rust-Common-Programming-Concepts/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="“This chapter covers concepts that appear in almost every programming language and how they work in Rust. Many programming languages have much in common at their core. None of the concepts presented i">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-03T04:45:45.000Z">
+<meta property="article:modified_time" content="2021-02-11T08:01:08.975Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/09/02/Rust-Common-Programming-Concepts/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Rust(3) Common Programming Concepts | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Rust-Common-Programming-Concepts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust(3) Common Programming Concepts
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 21:45:45" itemprop="dateCreated datePublished" datetime="2020-09-02T21:45:45-07:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><em>“This chapter covers concepts that appear in almost every programming language and how they work in Rust. <strong><font color =red>Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Rust</font></strong>, but we’ll discuss them in the context of Rust and explain the conventions around using these concepts.”</em> </p>
+<p>跟王垠之前在某篇blog里谈到的一样，有一个特性的集合，每个语言是里面的一个子集，C++也是如此。至于为什么C++的学习曲线这么抖，我想大概是因为它要的东西太多，什么都能做，但有的语言比它更专业，虽然功能比它少。也就是说C++是一门不够专注的语言。  </p>
+<p>好了，C++的话题到此为止，我们看Rust。  </p>
+<h2 id="immutable-constant-区别"><a href="#immutable-constant-区别" class="headerlink" title="immutable constant 区别"></a><strong><font color=0xFFFFFF>immutable constant 区别</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">const</th>
+<th align="left">variable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">在整个生命周期内value不可更改</td>
+<td align="left">var可随时重新定义，比如let x= 10; let mut x = 20;默认为immutable，可随时更改为mutable</td>
+</tr>
+<tr>
+<td align="left">必须注明类型</td>
+<td align="left">不必注明类型</td>
+</tr>
+<tr>
+<td align="left">可以在任何范围内定义，比如全局</td>
+<td align="left">貌似不可以？</td>
+</tr>
+<tr>
+<td align="left">const赋值时必须是常亮表达式，或者至少能找到初始值，而不能是一个function call或者运行时才能获取的值</td>
+<td align="left">可以？</td>
+</tr>
+</tbody></table>
+<h2 id="shadowing和mut-区别"><a href="#shadowing和mut-区别" class="headerlink" title="shadowing和mut 区别"></a><strong><font color=0xFFFFFF>shadowing和mut 区别</font></strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let mut x &#x3D; 10;</span><br><span class="line">x &#x3D; 100;</span><br><span class="line">和</span><br><span class="line">let x &#x3D; 10;</span><br><span class="line">let x&#x3D; x + 100;</span><br><span class="line">的区别</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">shadowing</th>
+<th align="left">mut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">通过let，我们会改变暂时改变x的状态为mutable，等操作结束，x重新变为immutable</td>
+<td align="left">mut表示variable的value是可以被修改的</td>
+</tr>
+<tr>
+<td align="left">shadowing只是重用了variable的name，第二次或者后面let的时候可以更改它的类型</td>
+<td align="left">mut不可以，没有let的情况下，前面是什么类型，后面赋值的时候也必须是相同类型</td>
+</tr>
+</tbody></table>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a><strong><font color=0xFFFFFF>数据类型</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">length</th>
+<th align="left">signed</th>
+<th align="left">unsigned</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">8-bit</td>
+<td align="left">i8</td>
+<td align="left">u8</td>
+</tr>
+<tr>
+<td align="left">16-bit</td>
+<td align="left">i16</td>
+<td align="left">u16</td>
+</tr>
+<tr>
+<td align="left">32-bit</td>
+<td align="left">i32</td>
+<td align="left">u32</td>
+</tr>
+<tr>
+<td align="left">64-bit</td>
+<td align="left">i64</td>
+<td align="left">u64</td>
+</tr>
+<tr>
+<td align="left">128-bit</td>
+<td align="left">i128</td>
+<td align="left">u128</td>
+</tr>
+<tr>
+<td align="left">arch 类似于c++ size_t，取决于当前程序是64bit or 32bit</td>
+<td align="left">isize</td>
+<td align="left">usize</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">Number literals</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Decimal</td>
+<td align="left">98_222</td>
+</tr>
+<tr>
+<td align="left">Hex</td>
+<td align="left">0xff</td>
+</tr>
+<tr>
+<td align="left">Octal</td>
+<td align="left">0o77</td>
+</tr>
+<tr>
+<td align="left">Binary</td>
+<td align="left">0b1111_0000</td>
+</tr>
+<tr>
+<td align="left">Byte (u8 only)</td>
+<td align="left">b’A’</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+<p>从上面看跟C++一模一样，或者说跟其它很多语言的定义是一样的，语言总是相同的，印证了最开始的那句话，语言是特性的集合。  </p>
+<p><em><font color=gray>这里注意到一个自己之前你忽略的问题，那就是float的表示范围。之前的错觉是float跟int32，double跟int64的表示范围一样，只不过中间多了很多小数表示。现在想来，大错特错，如果表示范围一致，那多出来的小数是哪些bit表示的呢。<br>float：1bit（符号位）+8bits（指数位+23bits（尾数位）<br>double：1bit（符号位）+ 11bits（指数位）+ 52bits（尾数位）</font></em></p>
+<p>Rust的字符类型都是Unicode编码，怎么在不同的编码之间切换呢？  </p>
+<p>Rust有复合类型，tuple和array。  </p>
+<pre><code>__趣味：python数据类型__
+
+这里突然想到一个问题，就是在Python中，也有tuple，而且tuple是immutable的，那么在Python中为什么有些类型是mutable，有些是immutable，这么设计的原因是什么？  
+
+不可变数据类型：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址也会发生改变，就称不可变数据类型，包括：int（整型）、string（字符串）、tuple（元组）。  
+
+可变数据类型的定义为：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址不发生改变，就称可变数据类型。包括：set（集合）、list（列表）、dict（字典）
+
+[Mutable vs Immutable Objects in Python](https://medium.com/@meghamohan/mutable-and-immutable-side-of-python-c2145cf72747#:~:text=Simple%20put%2C%20a%20mutable%20object,Custom%20classes%20are%20generally%20mutable.)  </code></pre>
+<p>Rust中的tuple也可以包含各种数据类型，比如</p>
+<pre><code>let tp = (10, 10.0, &#39;a&#39;, &quot;hello&quot;);  </code></pre>
+<p><strong>destructuring解构</strong>   </p>
+<pre><code>let tup: (i32, f64, u8) = (500, 6.4, 1);  
+let (x, y, z) = tup;  </code></pre>
+<p>还可以根据下标索引来访问tuple中的元素  </p>
+<pre><code>let x: (i32, f64, u8) = (500, 6.4, 1);
+let five_hundred = x.0;
+let six_point_four = x.1;
+let one = x.2;  </code></pre>
+<p>array声明方式 </p>
+<pre><code>let a:[i32;5] = [1,2,3,4,5];  
+let a = [3;5];  //same with let a = [3, 3, 3, 3, 3];  </code></pre>
+<p>使用方式也是通过下标索引。  </p>
+<p>现在总结一下tuple和array</p>
+<table>
+<thead>
+<tr>
+<th align="left">tuple</th>
+<th align="left">array</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">immutable， 即使let mut，也仅仅只是可以修改变量的value，但不能修改变量的类型，比如tuple是（i32, float, character, string)类型，即使我们是按照let mut声明的，那么我们可以修改它的value，比如原先是(5, 5.0, ‘a’, “hello”)，现在可以赋值为(6, 6.0, ‘b’, “world”)，但每个element的类型是确定的，不可以被修改，不能用其它类型的值来赋值</td>
+<td align="left">immutable，因为array是同一类型的，所以没有这个问题，唯一的问题是array的size不可更改，即使let mut，也不可以修改array的size</td>
+</tr>
+<tr>
+<td align="left">可以下标访问</td>
+<td align="left">可以下标访问</td>
+</tr>
+<tr>
+<td align="left">可以解构</td>
+<td align="left">没有这个必要</td>
+</tr>
+</tbody></table>
+<h2 id="与C-的Function比较"><a href="#与C-的Function比较" class="headerlink" title="与C++的Function比较"></a><strong><font color=0xFFFFFF>与C++的Function比较</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">Rust Function</th>
+<th align="left">C++ Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">没有此要求，只要在scope内被看到</td>
+<td align="left">调用的Function必须在Caller之前被声明或者定义</td>
+</tr>
+<tr>
+<td align="left">let不返回，所以 _let x = (let y = 6); //error  但是 let y = 100; let x = (y = 0) //成功</td>
+<td align="left">int x = (int y=0)是不可以的，但可以写成int x = (y = 0)</td>
+</tr>
+<tr>
+<td align="left">返回值是不带;的表达式</td>
+<td align="left">返回值必须是return语句</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/02/Rust-How-to-Create-and-Run-a-Project/" rel="prev" title="Rust学习（一）如何创建、运行一个新工程">
+      <i class="fa fa-chevron-left"></i> Rust学习（一）如何创建、运行一个新工程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/02/const-in-c/" rel="next" title="const in c++">
+      const in c++ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#immutable-constant-%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">immutable constant 区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shadowing%E5%92%8Cmut-%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">shadowing和mut 区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8EC-%E7%9A%84Function%E6%AF%94%E8%BE%83"><span class="nav-number">4.</span> <span class="nav-text">与C++的Function比较</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

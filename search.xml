@@ -1,0 +1,2417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>100个困扰我的问题(一)反码与补码</title>
+    <url>/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/</url>
+    <content><![CDATA[<p>参考资料 <a href="https://www.jianshu.com/p/a1b385b24189">我们为什么需要反码和补码？</a>  </p>
+<p>大学在C语言课上，第一次接触原码、反码、补码，觉得很奇怪，我们用二进制表示，然后直接加减乘除就好了。要搞明白这些码，要从二进制开始。  </p>
+<p>人类钟意于十进制的历史，有人说是因为10个手指头（也可能是10个脚趾头，手动狗头），阿拉伯人改进了印度的十进制，后来传到了欧洲，后面变成世界标准。  </p>
+<p>人类习惯了十进制，但电子设备有自己的角度，就像那些动物如果没有10根手指，大概率也不会产生10进制，而是会产生比如20进制，12进制。  </p>
+<p>二极管是人类最开始发明的比较简单的电子元器件，这里面只有开 关两种状态，这也是我们采用二进制的原因，当然现在电子元器件可以有三种状态，但标准已经制定完了，再换成三进制的代价太大了。  </p>
+<p>二进制也可以进行加减运算啊，为什么要设计这么多码，这一切都是因为我们CPU中只有加法器。加法器可以实现加减乘除的运算，同时用电路实现减法器 乘法器 除法器都非常复杂，既然可以用加法来实现所有的加减乘除操作，那么从成本考虑只保留了加法器。  </p>
+<p>既然我们选择了省钱，那么就要做好在另一个方面复杂度提高的心理准备，“好快省”是不可能同时存在的，我们要尊重科学规律、自然规律。  </p>
+<a id="more"></a>
+
+<p>就一般的整数计算来说，包括正数和负数。对加法来说，包括以下几个可能的情况  </p>
+<ul>
+<li>正数 + 正数</li>
+<li>正数 + 负数</li>
+<li>负数 + 负数</li>
+</ul>
+<p>首先，我们该怎么表示负数呢？</p>
+<p>为了表示负数，我们要牺牲一个存储位，用它来表示符号，1个8 bit的数据，最高位为符号位，其中1代表负数，0代表正数，表示范围为[-128, 127]。   </p>
+<p>其中<br>0000 0000 = 0<br>1000 0000 = -128  </p>
+<p>这里我有一个疑问，为什么表示范围不是[-127, 127]，1000 0000不应该也是 0 吗，1000 0000 1000 0000 也可以用来-128啊，干嘛要弄的这么复杂。  </p>
+<p>首先8 bit的空间，在电路上来说肯定是2^8 = 256种状态，那我们没有必要用两种电路状态表示同一个数字。另外，用16位来表示-128也浪费空间了。最后，第1位毕竟是1，用来表示-128更好，而不是表示128。  </p>
+<p>回到加法。</p>
+<p>正数 + 正数 没什么需要讨论，主要是讨论 后面两种情况。  </p>
+<p>正数 +  负数 </p>
+<p>1 - 2 = 1 + (-2) = 0000 0001 + 1000 0010 = 1000 0011 = -3<br>结果与预期不符合。</p>
+<p>二进制计算溢出有一个特点，就是它类似于模运算。<br>127 + 1 = 1111 1111 + 0000 0001 = 1000 0000 = -128</p>
+<img src="/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg" class="">
+
+
+<p>如上述所示，就是看作去模数/余数 的操作，也就是一个数，无论正负，加上模，得到的仍然是它自身。  </p>
+<p>也就是说 i - j = i + (-j) = i + (-j) + 2^n -1 + 1 = i + (2^n - j - 1) + 1</p>
+<p>这里我们在计算2^n - 1和 j 的时候，没有符号位</p>
+<p>所以 2^n - 1 - j = 1111 1111 - 0000 0010 = 1111 1101<br>看起来就是-j = 1000 0010保持符号位不变，其它位置取反，这里我们称 1111 1101 为-2的反码，那么 反码 +1 就是我们想要的结果了，最终得到1111 1111，这是反码的计算结果，最终我们要把反码转变成原码，那就是先减去1，然后保持符号位不变，其它位取反，最终得到 1000 0001。与预期结果相符合。</p>
+<h4 id="CSAPP-Chapter2-信息的表示和处理"><a href="#CSAPP-Chapter2-信息的表示和处理" class="headerlink" title="CSAPP Chapter2 信息的表示和处理"></a><strong>CSAPP Chapter2 信息的表示和处理</strong></h4><p><strong>练习题 2.13</strong><br><em>用bis bic实现bool_or bool_xor</em>  </p>
+<pre><code>int bis(int x, int m);
+int bic(int x, int m);
+int bool_or(int x, int y)  
+&#123;
+    int result = bis(x, y);
+    return result;
+&#125;
+int bool_xor(int x, int y)  
+&#123;
+    int result = bic(bis(x, y), bis(bic(0xFF, x), bic(0xFF, y)));
+    return result;
+&#125;
+关于bool_xor = (x | y) &amp; (~x | ~y)，这个跟模拟电路的与非门概念很接近，很多的功能都是通过简单的与非门实现的。  
+我们知道1 xor 1 = 0 xor 0 = 0, 1 ^ 0 = 0 ^ 1 = 1  
+输入是x y, 输出是1个z，这时候中间肯定还有一层（类似于神经网络），只是这一层的我们不知道有几个系数，最后输出z的公式是什么。有可能是非常简单的&amp;，|，也有可能是非常复杂的一个公式，比如用到了好几个与非，打个比方，中间这一层有N个系数，然后通过一个非常复杂的与非门设计。  
+
+幸好，异或门没有那么复杂。 我们先做一个假设，中间一层也是两个输入，最后通过 &amp; 操作输出。好吧，我写不出来我的思考过程，或者说很难用简练的语言说出来。  
+
+回到bool_xor，我们要首先实现bit_not 和 bit_and
+
+int bit_not(int x)
+&#123;
+    return bic(0xFF, x);
+&#125;
+
+int bit_add(int x, int y)
+&#123;
+    return bic(x, bit_not(y));
+&#125;</code></pre>
+<p><strong>练习题 2.15</strong><br>只使用位级和逻辑运算，编写一个C表达式，它等价于 x==y。换句话说，当x和y相等时它将返回1，否则就返回0。  </p>
+<pre><code>! (x ^ y)</code></pre>
+<h4 id="CSAPP-Data-Lab"><a href="#CSAPP-Data-Lab" class="headerlink" title="CSAPP Data Lab"></a><strong>CSAPP Data Lab</strong></h4><p><a href="http://csapp.cs.cmu.edu/3e/labs.html">CSAPP Labs</a>  </p>
+]]></content>
+      <categories>
+        <category>cs</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Add Digits</title>
+    <url>/2020/12/01/Add-Digits/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>All Elements in Two Binary Search Trees</title>
+    <url>/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong>  </p>
+<p><strong>Given two binary search trees root1 and root2.</strong></p>
+<p><strong>Return a list containing all the integers from both trees sorted in ascending order.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e1.png" class="">  
+
+<pre><code>Input: root1 = [2,1,4], root2 = [1,0,3]
+Output: [0,1,1,2,3,4]</code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: root1 = [0,-10,10], root2 = [5,1,7,0,2]
+Output: [-10,0,0,1,2,5,7,10]  </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: root1 = [], root2 = [5,1,7,0,2]
+Output: [0,1,2,5,7]  </code></pre>
+<p><strong>Example 4:</strong>  </p>
+<pre><code>Input: root1 = [0,-10,10], root2 = []
+Output: [-10,0,10]  </code></pre>
+<p><strong>Example 5:</strong>  </p>
+<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e5.png" class="">  
+
+<pre><code>Input: root1 = [1,null,8], root2 = [8,1]
+Output: [1,1,8,8]  </code></pre>
+<a id="more"></a>  
+
+<p>最直观的想法是先做遍历，然后得到两个有序的array，然后进行插入排序。  </p>
+<p>这样的话整体的复杂度就是O(M+N)，比如要做两次，有办法优化吗？</p>
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Atomic operations library</title>
+    <url>/2020/09/02/Atomic-operations-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Basic Calculator</title>
+    <url>/2020/12/01/Basic-Calculator/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Containers library</title>
+    <url>/2020/09/02/Containers-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Count Primes</title>
+    <url>/2020/12/01/Count-Primes/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Diagnostics_Library(Error-Handling)</title>
+    <url>/2020/09/02/Diagnostics-Library-Error-Handling/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2>]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Fraction to Recurring Decimal</title>
+    <url>/2020/12/01/Fraction-to-Recurring-Decimal/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>调试与汇编</title>
+    <url>/2020/08/31/Debug-and-Assembly/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。  </p>
+<p>对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从这个角度看，C++语言的代码耦合度太高了。至少以下几个方面并不适合C++  </p>
+<pre><code>1. 界面开发: 很多大厂的PC端用的是directUI架构，要想写好需要对C++熟练，而且要自己做各种精细控制。  
+2. 小工具开发：胶水语言不香吗？  
+3. 科学试验性质项目：比如机器学习模型训练  </code></pre>
+<p>其他：比如一般的程序开发，除非其它语言没有对应的库，否则都应该选用JAVA/C#/PYTHON这类语言开发，或者golang/rust。总之，C++的学习曲线太陡峭，但跟rust相比，历史包袱又很重。<br>既然这样，为什么我们还要学习C++呢？就是因为目前来说没有特别好能替代的，或许再过两年，rust和go成长起来之后，C++的市场份额会进一步萎缩，慢慢地被淘汰掉吧，淘汰也不是仅仅靠喊就行的，新语言还是得加油努力喔。  </p>
+<p>在Linux下我们用gdb进行代码调试和crash分析。在Windows平台我们有很多工具，一般是用IDA进行静态反汇编，用OD或者WinDbg进行动态分析，WinDbg也可以反汇编。<br>现在写blog的平台是Linux，所以先写linux的。我们的重点放在分析crashdump上。  </p>
+<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color=0xFFFFFF>gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
+<p>一般发布版本，要从几个方面考虑</p>
+<ol>
+<li>可追溯</li>
+<li>自动化  </li>
+<li>防破解  </li>
+</ol>
+<p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
+<h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3><a id="more"></a>
+
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-call.png" class="" title="stack frame call">
+
+
+<p>从上面我们可知<br>入栈时具体操作是</p>
+<pre><code>1)调用参数从右往左压栈  
+2)返回地址入栈  
+3)跳转到子函数起始地址 EIP 
+4)子函数将父函数栈帧起始地址%rbp入栈  
+5)将%rbp的值设置为当前%rsp的值，开辟栈帧空间  </code></pre>
+<p>出栈的时候，我们要清理堆栈  </p>
+<pre><code>1)movq %rbp, %rsp ; 使 %rsp 和 %rbp 指向同一位置，即子栈帧的起始处, 收回子栈帧空间
+2)popq %rbp ; 将栈中保存的父栈帧的 %rbp 的值赋值给 %rbp，并且 %rsp 上移一个位置指向父栈帧的结尾处</code></pre>
+<p>为了便于栈帧恢复，x86_64 架构中提供了 leave 指令来实现上述两条命令的功能。执行 leave 后，前面图中函数调用的栈帧结构如下　　</p>
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png" class="" title="stack frame leave">
+
+<p>调用 leave 后，%rsp 指向返回地址；ret 指令，从栈顶弹出数据，并跳转到此数据指向的地址处。在leave 执行后，%rsp 指向返回地址，因而 ret 的作用就是把 %rsp 上移一个位置，并跳转到返回地址执行。</p>
+<p>所以，leave 指令用于恢复父函数的栈帧，ret 用于跳转到返回地址处，leave 和ret 配合共同完成了子函数的返回。当执行完成 ret 后，%rsp 指向的是父栈帧的结尾处，父栈帧尾部存储的调用参数由编译器自动释放。</p>
+<h2 id="恢复被破坏的堆栈"><a href="#恢复被破坏的堆栈" class="headerlink" title="恢复被破坏的堆栈"></a><strong><font color=0xFFFFFF>恢复被破坏的堆栈</font></strong></h2><p>看知乎上回答问题的人，经常会开头来一句“先问有没有，再问是不是，再问为什么”。  </p>
+<p>怎么判断一个堆栈被破坏了？<br>很明显的，EIP EBP RETADDR这些都不是正常的内存值，比如?????或者0x00000000这类的。  </p>
+<p>至于该怎么恢复堆栈，我觉得总体上建立在一个基础上，也就是<a href="https://devblogs.microsoft.com/oldnewthing/20110309-00/?p=11263">How to rescue a broken stack trace: Recovering the EBP</a>  这里面所说的，堆栈其实就是EBP组成的linked-list，虽然因为各种原因（比如数组越界等）会破坏堆栈，但终归不会把所有层的堆栈给破坏了。  </p>
+<p>比如在上面的例子中，ESP看上去还算正常，那么我们就看一下ESP周围数据，根据linked-list的特性，如果有一个EBP，那么EBP本身是一个地址，同时，在它的底层函数，EBP也会是一个value（call 子函数的时候，会先push EBP）。</p>
+<p>在这里，我们回顾一下EBP附近的堆栈结构  </p>
+<p>The structure of each stack frame is therefore  </p>
+<table>
+<thead>
+<tr>
+<th>addr</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[ebp+n]</td>
+<td>Offsets greater than 4 access parameters</td>
+</tr>
+<tr>
+<td>[ebp+4]</td>
+<td>Offset 4 is the return address</td>
+</tr>
+<tr>
+<td>[ebp+0]</td>
+<td>Zero offset accesses caller’s EBP</td>
+</tr>
+<tr>
+<td>[ebp-n]</td>
+<td>Negative offsets access locals</td>
+</tr>
+</tbody></table>
+<p>在这里，如果我们找到EBP，那么附近的就是RetAddr，在gdb下用info symbol 内存地址 可以看到具体的函数。  </p>
+<p><a href="https://bbs.pediy.com/thread-254771.htm">[翻译]手把手教你修复被破坏的堆栈</a><br>上述链接对应的资源在 <a href="/2020/08/31/Debug-and-Assembly/corrupted-stack-example-resource.zip" title="这里下载">这里下载</a></p>
+<h2 id="FPO产生的影响"><a href="#FPO产生的影响" class="headerlink" title="FPO产生的影响"></a><strong><font color=0xFFFFFF>FPO产生的影响</font></strong></h2><p>FPO = Frame Pointer Omission<br>FPO优化是intel处理器单独必备的，它的主要原理是不再为调用的子函数进行push EBP , mov ebp esp的操作。  </p>
+<p><a href="http://www.nynaeve.net/?p=91">Frame pointer omission (FPO) optimization and consequences when debugging, part 1</a><br><a href="http://www.nynaeve.net/?p=97">Frame pointer omission (FPO) optimization and consequences when debugging, part 2</a></p>
+<p><a href="https://docs.microsoft.com/en-us/archive/blogs/larryosterman/fpo">FPO</a>  </p>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a><strong><font color=0xFFFFFF>通用命令</font></strong></h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bt</td>
+<td>查看堆栈</td>
+</tr>
+<tr>
+<td>frame n</td>
+<td>查看堆栈中第n帧信息</td>
+</tr>
+<tr>
+<td>list</td>
+<td>查看function周围的代码</td>
+</tr>
+<tr>
+<td>info locals</td>
+<td>查看本地变量</td>
+</tr>
+<tr>
+<td>print variable_name</td>
+<td>查看具体变量value</td>
+</tr>
+</tbody></table>
+<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color=0xFFFFFF> 寄存器建议使用规则</font></strong></h2><img src="/2020/08/31/Debug-and-Assembly/registers.jpg" class="">
+
+
+
+
+<h3 id="GDB查看指定内存地址处的内容"><a href="#GDB查看指定内存地址处的内容" class="headerlink" title="GDB查看指定内存地址处的内容"></a><strong><font color=0xFF>GDB查看指定内存地址处的内容</font></strong></h3><p>命令格式：x/nfu <addr></p>
+<p>如：</p>
+<p>（gdb）x/1xb 0x7fffffffd708</p>
+<p>x : examine 的缩写</p>
+<p>n : 表示要显示的内存单元个数</p>
+<p>f : 表示显示方式, 可取如下值<br>x 按十六进制格式显示变量。<br>d 按十进制格式显示变量。<br>u 按十进制格式显示无符号整型。<br>o 按八进制格式显示变量。<br>t 按二进制格式显示变量。<br>a 按十六进制格式显示变量。<br>i 指令地址格式<br>c 按字符格式显示变量。<br>f 按浮点数格式显示变量。</p>
+<p>u表示一个地址单元的长度，与n一起表示显示的地址长度<br>b表示单字节，<br>h表示双字节，<br>w表示四字节，<br>g表示八字节</p>
+<h3 id="查看正常函数名称"><a href="#查看正常函数名称" class="headerlink" title="查看正常函数名称"></a><strong><font color=0xFF>查看正常函数名称</font></strong></h3><p>_ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这类名字，该怎么知道它之前正常的名字呢？<br>这涉及到name mangling技术。最开始没记起这个名词，连搜索都不好搜索。  </p>
+<p><a href="https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode">How to make gdb show the original non-mangling function name on disassembly model?</a>  </p>
+<p>c++filt是一个经常用的技术，<del>但好像不是所有情况下都可以</del>。昨天c++file _ZNSaIcEC1Ev@plt，命令执行完还是这个字符串，当时认为是这个命令可能不适用于所有字符串，或者哪个环节出了问题。  </p>
+<p>c++filt _ZNSaIcEC1Ev  </p>
+<p><strong>后面那个@plt到底是干嘛的？</strong></p>
+<h3 id="objdump查看反汇编代码，如何从AT-amp-T风格改为intel"><a href="#objdump查看反汇编代码，如何从AT-amp-T风格改为intel" class="headerlink" title="objdump查看反汇编代码，如何从AT&amp;T风格改为intel"></a><strong><font color=0xFF>objdump查看反汇编代码，如何从AT&amp;T风格改为intel</font></strong></h3><p>gcc默认的汇编器是GAS，语法是AT&amp;T</p>
+<p>objdump -d -mi386:x86-64:intel exe or lib file name</p>
+<h3 id="FS寄存器分析"><a href="#FS寄存器分析" class="headerlink" title="FS寄存器分析"></a><strong><font color=0xFF>FS寄存器分析</font></strong></h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://zhuanlan.zhihu.com/p/27339191">x86-64 下函数调用及栈帧原理 - 冷风寒雨宿天涯的文章 - 知乎</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/107455887">x86_64架构下的函数调用及栈帧原理 - 看雪学院的文章 - 知乎</a>  </p>
+<p><a href="https://blog.csdn.net/zrf2112/article/details/95661316">函数调用过程&amp;栈帧&amp;调用约定</a>  </p>
+<p><a href="https://www.jianshu.com/p/088fb171cd40">使用 gdb 恢复堆栈信息</a></p>
+<p><a href="https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode">How to make gdb show the original non-mangling function name on disassembly model?</a></p>
+]]></content>
+      <categories>
+        <category>assembly</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>General utilities library</title>
+    <url>/2020/09/02/General-utilities-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Happy Number</title>
+    <url>/2020/12/01/Happy-Number/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>在hexo中显示图片</title>
+    <url>/2020/08/30/How-To-Display-Image-With-hexo/</url>
+    <content><![CDATA[<p><font color=0xFFFFFF>本文所有方式均通过亲自验证</font></p>
+<p>刻舟求剑是什么意思，今天算是认识到了。<br>为什么信息越来越多，我们却越来越累了呢，是因为有其他的东西吸引了我们本来的注意力吗？有这种原因，但还有更重要的是，有效信息太少。<br>今天我在网上找hexo显示本地图片的方式，尝试了很多都有问题，搜索出来的结果绝大部分都是无效信息。<br>下面我们说一说这些无效信息。  </p>
+<p><strong>npm install hexo-asset-image</strong><br>安装这个插件之后，显示图片不对。通过查看public目录下生成的index，发现是生成的图片link不对。<br>我们用上面这个命令安装的是hexo-asset-image 1.0.0版本，这个版本跟hexo3兼容上有问题，无法正确生成图片link。  </p>
+<p><strong>npm install <a href="https://github.com/CodeFalling/hexo-asset-image">https://github.com/CodeFalling/hexo-asset-image</a> –save</strong><br>有的blog发现了这个问题，提示要用这个版本的插件0.0.5。<br>但这个插件也有问题，我们需要修改hexo-asset-image的index.js文件，可以参考<a href="https://segmentfault.com/q/1010000020310187/a-1020000020311907">hexo 图片路径错误/.com//</a><br>也就是说，用很老的版本是可以的，但同样的，这个老版本的插件跟hexo3及以上版本也存在兼容问题。  </p>
+<p>上面是网络搜索的两个主要结果，其实主要结果是第1个，第2个我也是在segmentfault上找到的。  </p>
+<p>还好，搜索引擎给了我一个更好的答案。  </p>
+<p><strong>hexo原生支持image</strong>  </p>
+<p><a href="https://www.jianshu.com/p/7f06d10f2e3e">关于hexo博客图片插件问题</a>  </p>
+<p><a href="https://hexo.io/zh-cn/docs/asset-folders">hexo文档：资源文件夹</a>  </p>
+<p>根据官方文档的说明，目前版本的hexo可以直接显示图片，主要有两种方式</p>
+<ol>
+<li>source/images文件夹下面放置图片，通过![](/images/sample.jpg)直接显示</li>
+<li>通过文章资源文件夹   <ol>
+<li>_config.yml中　post_asset_folder : true</li>
+<li>hexo n title “name” 会生成同名的md和文件夹  </li>
+<li>把图片资源放置到对应的文件夹，这时候有两种方式来显示图片<br>markdown方式： ![](1.png) 这种方式会导致的结果是，在首页中看不到图片，但如果点开具体文章，图片是可以正常显示的。<br>正确方式：hexo3支持的标签用法   </li>
+</ol>
+</li>
+</ol>
+<p>所以，原来的很多具体的处理措施，现在并不可用了，但方法该是我们掌握的，比如这里遇到无法显示的问题，首先要排查生成的html里image link是否正确，然后最好的方式是寻找官方文档的支持，说实话，现在搜索引擎的权重设计的并不好，很多已经无法用的方案，还在置顶，不知道因为作者是做了SEO优化，还是说搜索引擎本身并不智能到判断这些信息已经是不合适的了。  </p>
+<p>缘木求鱼，刻舟求剑。从古至今，大的道理还是那么多，关键是如何变成自己的模型。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何从IEEE Xplore免费下载</title>
+    <url>/2020/08/29/How-to-download-IEEE-Xplore/</url>
+    <content><![CDATA[<p>最近在学习memory order，越学习越深，网上有介绍一本资料《A Primer on Memory Consistency and Cache Coherence》，本来想直接下载，发现csdn就是恶心，明明是盗版，结果还要自己花钱下载。结果，发现这书2020年2月出了第二版，找到了出版社的网站，但是下载不了。柳岸花明，在IEEE Xplore里找到了，但没办法下载，需要学校帐号。<br>在网上又找到了一个下载IEEE Xplore的方法，保存一下  </p>
+<ol>
+<li><p>找到某篇文章:<br><a href="https://ieeexplore.ieee.org/document/7965747">https://ieeexplore.ieee.org/document/7965747</a></p>
+</li>
+<li><p>查询到DOI是:</p>
+</li>
+<li><p>1109/SERA.2017.7965747  </p>
+</li>
+<li><p><a href="http://sci-hub.tw/">http://sci-hub.tw</a><br>输入10.1109/SERA.2017.7965747即可下载pdf</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Integer to English Words</title>
+    <url>/2020/12/01/Integer-to-English-Words/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 10 Elementary Data Structures</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-10-Elementary-Data-Structures/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 11 Hash Tables</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-11-Hash-Tables/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 12 Binary Search Trees</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-12-Binary-Search-Trees/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 13 Red Black Trees</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-13-Red-Black-Trees/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 14 Augmenting Data Structures</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-14-Augmenting-Data-Structures/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 15 Dynamic Programming</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-15-Dynamic-Programming/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 16 Greedy Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-16-Greedy-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 17 Amortized Analysis</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-17-Amortized-Analysis/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 18 B-Trees</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-18-B-Trees/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 19 Fibonacci Heaps</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-19-Fibonacci-Heaps/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 2 Getting Started</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-2-Getting-Started/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 20 van Emde Boas Trees</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-20-van-Emde-Boas-Trees/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 21 Data Structures for Disjoint Sets</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-21-Data-Structures-for-Disjoint-Sets/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 22 Elementary Graph Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-22-Elementary-Graph-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 23 Minimum Spanning Trees</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-23-Minimum-Spanning-Trees/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 24 Single-Source Shortest Paths</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-24-Single-Source-Shortest-Paths/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 25 All-Pairs Shortest Paths</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-25-All-Pairs-Shortest-Paths/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 26 Maximum Flow</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-26-Maximum-Flow/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 27 Multithreaded Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-27-Multithreaded-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 28 Matrix Operations</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-28-Matrix-Operations/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 29 Linear Programming</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-29-Linear-Programming/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 3 Growth of Functions</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-3-Growth-of-Functions/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 30 Polynomials and the FFT</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-30-Polynomials-and-the-FFT/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 31 Number-Theoretic Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-31-Number-Theoretic-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 32 String Matching</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-32-String-Matching/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 33 Computational Geometry</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-33-Computational-Geometry/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 34 NP-Completeness</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-34-NP-Completeness/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 35 Approximation Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-35-Approximation-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 4 Divide and Conquer</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-4-Divide-and-Conquer/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 5 Probabilistic Analysis and Randomized Algorithms</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-5-Probabilistic-Analysis-and-Randomized-Algorithms/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 6 Heapsort</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-6-Heapsort/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 7 Quicksort</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-7-Quicksort/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 8 Sorting in Linear Time</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-8-Sorting-in-Linear-Time/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Introduction to Algorithm Chapter 9 Medians and Order Statistics</title>
+    <url>/2020/09/03/Introduction-to-Algorithm-Chapter-9-Medians-and-Order-Statistics/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Iterators library</title>
+    <url>/2020/09/02/Iterators-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Language support library</title>
+    <url>/2020/09/02/Language-support-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Largest Time for Given Digits</title>
+    <url>/2020/09/22/Largest-Time-for-Given-Digits/</url>
+    <content><![CDATA[<p><strong><font color=green>题目描述</font></strong></p>
+<p>Given an array arr of 4 digits, find the latest 24-hour time that can be made using each digit exactly once.</p>
+<p>24-hour times are formatted as “HH:MM”, where HH is between 00 and 23, and MM is between 00 and 59. The earliest 24-hour time is 00:00, and the latest is 23:59.</p>
+<p>Return the latest 24-hour time in “HH:MM” format.  If no valid time can be made, return an empty string.</p>
+<p>Example 1:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A &#x3D; [1,2,3,4]</span><br><span class="line">Output: &quot;23:41&quot;</span><br><span class="line">Explanation: The valid 24-hour times are &quot;12:34&quot;, &quot;12:43&quot;, &quot;13:24&quot;, &quot;13:42&quot;, &quot;14:23&quot;, &quot;14:32&quot;, &quot;21:34&quot;, &quot;21:43&quot;, &quot;23:14&quot;, and &quot;23:41&quot;. Of these times, &quot;23:41&quot; is the latest.</span><br></pre></td></tr></table></figure>
+<p>Example 2:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A &#x3D; [5,5,5,5]</span><br><span class="line">Output: &quot;&quot;</span><br><span class="line">Explanation: There are no valid 24-hour times as &quot;55:55&quot; is not valid.</span><br></pre></td></tr></table></figure>
+<p>Example 3:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A &#x3D; [0,0,0,0]</span><br><span class="line">Output: &quot;00:00&quot;</span><br></pre></td></tr></table></figure>
+<p>Example 4:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Input: A &#x3D; [0,0,1,0]</span><br><span class="line">Output: &quot;10:00&quot;</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a> 
+
+<p>最开始我的想法是要arr[0]&lt;=2 arr[1]&lt;=3 arr[2]&lt;=5，由此写了下面的实现</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    string largestTimeFromDigits(vector&lt;int&gt;&amp; arr) &#123;</span><br><span class="line">        string result &#x3D; &quot;&quot;;</span><br><span class="line">        vector&lt;int&gt; temp &#x3D; arr;</span><br><span class="line">        std::sort(temp.begin(), temp.end());</span><br><span class="line">        unsigned int hour_high &#x3D; -1, hour_low &#x3D; -1, minute_high &#x3D; -1, minute_low &#x3D; -1;</span><br><span class="line">        vector&lt;int&gt;::iterator it;</span><br><span class="line">        if( (temp[0]&lt;3) and (temp[1]&lt;4) and (temp[2]&lt;6))</span><br><span class="line">        &#123;</span><br><span class="line">            &#x2F;&#x2F;find the last indexA &lt; 3 and last indexB &lt; 4</span><br><span class="line">            </span><br><span class="line">            pair&lt;bool, int&gt; indexA(false,-1), indexB(false, -1);</span><br><span class="line">            for(int i&#x3D;temp.size()-1; i&gt;&#x3D;0; --i)</span><br><span class="line">            &#123;</span><br><span class="line">                if(temp[i] &lt; 3 &amp;&amp; indexA.first &#x3D;&#x3D; false)</span><br><span class="line">                &#123;</span><br><span class="line">                    indexA.second &#x3D; i;</span><br><span class="line">                    indexA.first &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">                if(temp[i] &lt; 4 &amp;&amp; indexB.first &#x3D;&#x3D; false)</span><br><span class="line">                &#123;</span><br><span class="line">                    indexB.second &#x3D; i;</span><br><span class="line">                    indexB.first &#x3D; true;</span><br><span class="line">                &#125;                </span><br><span class="line">            &#125;</span><br><span class="line">            &#x2F;&#x2F;</span><br><span class="line">            if(indexA.second &#x3D;&#x3D; -1 || indexB.second &#x3D;&#x3D; -1)</span><br><span class="line">                return &quot;&quot;;</span><br><span class="line">                </span><br><span class="line">            &#x2F;&#x2F;hour_high should be certain, then</span><br><span class="line">            hour_high &#x3D; temp[indexA.second];</span><br><span class="line">            &#x2F;&#x2F;then loop back from indexB.second, choose hour_low</span><br><span class="line">            for(int j&#x3D;indexB.second; j&gt;&#x3D;0; --j)</span><br><span class="line">            &#123;</span><br><span class="line">                if(j!&#x3D;indexA.second)</span><br><span class="line">                &#123;</span><br><span class="line">                    hour_low &#x3D; temp[j];</span><br><span class="line">                    indexB.second &#x3D; j;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            bool bMinuteHighUsed &#x3D; false, bMinuteLowUsed &#x3D; false;</span><br><span class="line">            for(int k &#x3D; temp.size()-1; k&gt;&#x3D;0; --k)</span><br><span class="line">            &#123;</span><br><span class="line">                if(k&#x3D;&#x3D;indexA.second or k&#x3D;&#x3D; indexB.second)</span><br><span class="line">                    continue;</span><br><span class="line">                if(temp[k]&gt;&#x3D;6)</span><br><span class="line">                &#123;</span><br><span class="line">                    minute_low &#x3D; temp[k];</span><br><span class="line">                    bMinuteLowUsed &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    if(bMinuteHighUsed &#x3D;&#x3D; false)</span><br><span class="line">                    &#123;</span><br><span class="line">                        minute_high &#x3D; temp[k];</span><br><span class="line">                        bMinuteHighUsed &#x3D; true;</span><br><span class="line">                    &#125;</span><br><span class="line">                    else</span><br><span class="line">                    &#123;</span><br><span class="line">                        if(bMinuteLowUsed &#x3D;&#x3D; false)</span><br><span class="line">                        &#123;</span><br><span class="line">                            minute_low &#x3D; temp[k];</span><br><span class="line">                            bMinuteLowUsed &#x3D; true;                       </span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            &#x2F;&#x2F;compose result string</span><br><span class="line">            result &#x3D; std::to_string(hour_high) + std::to_string(hour_low) + &quot;:&quot; + std::to_string(minute_high) + std::to_string(minute_low);</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            return &quot;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>后面commit之后，发现case没过，是因为明显忘记了还有19:28这样的结果啊，所以arr[1]是无法被限定死的。  </p>
+<p>现在的思路是任意选择两个，组成hour，有两种顺序，即使满足hour 属于 [0,23]区间，也不证明要一定保留，还必须满足minute属于[0,59]，因此需要列举出所有的case。  </p>
+<p>下面是我的实现，但从算法实现上看很繁琐，一点也不简洁。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    string largestTimeFromDigits(vector&lt;int&gt;&amp; arr) &#123;</span><br><span class="line">        string result &#x3D; &quot;&quot;;</span><br><span class="line">        vector&lt;int&gt; temp &#x3D; arr;</span><br><span class="line">        std::sort(temp.begin(), temp.end());</span><br><span class="line">        if(temp[0] &gt;2 or temp[0]&lt;0 or temp[1]&lt;0 or temp[2] &lt; 0 or temp[3] &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            return &quot;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F;use pair to store</span><br><span class="line">        pair&lt;int, int&gt; hour_index(-1, -1), hour(-1, -1), minute_index(-1, -1), minute(-1, -1);</span><br><span class="line">        int hour_max &#x3D; -1, minute_max &#x3D; -1;</span><br><span class="line">        for(int i&#x3D;0; i&lt;temp.size(); ++i)</span><br><span class="line">            for(int j&#x3D;0; j&lt;temp.size(); ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                if(i &#x3D;&#x3D; j)</span><br><span class="line">                &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    int tmp_hour &#x3D; temp[i]*10 + temp[j];</span><br><span class="line">                    if(tmp_hour &gt; hour_max and tmp_hour &lt;&#x3D; 23)</span><br><span class="line">                    &#123;                    </span><br><span class="line">                        int tmp_minute_max &#x3D; -1;</span><br><span class="line">                        pair&lt;int, int&gt; tmp_minute_index(-1, -1), tmp_minute(-1, -1);</span><br><span class="line">                        for(int m&#x3D;0; m&lt;temp.size(); ++m)</span><br><span class="line">                        &#123;</span><br><span class="line">                            if(m &#x3D;&#x3D; j or m &#x3D;&#x3D; i)</span><br><span class="line">                                continue;</span><br><span class="line">                            if(tmp_minute_index.first &#x3D;&#x3D; -1)</span><br><span class="line">                            &#123;</span><br><span class="line">                                tmp_minute_index.first &#x3D; m;</span><br><span class="line">                                tmp_minute.first &#x3D; temp[m];</span><br><span class="line">                            &#125;</span><br><span class="line">                            else</span><br><span class="line">                            &#123;</span><br><span class="line">                                tmp_minute_index.second &#x3D; m;</span><br><span class="line">                                tmp_minute.second &#x3D; temp[m];</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        int tmp1 &#x3D; tmp_minute.first * 10 + tmp_minute.second;</span><br><span class="line">                        int tmp2 &#x3D; tmp_minute.first + tmp_minute.second *10;</span><br><span class="line">                        if(tmp1 &gt; 59 and tmp2 &gt; 59)</span><br><span class="line">                        &#123;</span><br><span class="line">                            tmp_minute &#x3D; std::make_pair&lt;int,int&gt;(-1, -1);</span><br><span class="line">                            tmp_minute_index &#x3D; std::make_pair&lt;int,int&gt;(-1, -1);</span><br><span class="line">                        &#125;</span><br><span class="line">                        else if(tmp1 &lt;&#x3D; 59 and tmp2 &gt; 59)</span><br><span class="line">                        &#123;                         </span><br><span class="line">                            tmp_minute_max &#x3D; tmp1;</span><br><span class="line">                        &#125;</span><br><span class="line">                        else if(tmp1 &gt;59 and tmp2 &lt;&#x3D; 59)</span><br><span class="line">                        &#123;</span><br><span class="line">                            tmp_minute_max &#x3D; tmp2;</span><br><span class="line">                            swap(tmp_minute.first, tmp_minute.second);</span><br><span class="line">                            swap(tmp_minute_index.first, tmp_minute_index.second);</span><br><span class="line">                        &#125;</span><br><span class="line">                        else</span><br><span class="line">                        &#123;</span><br><span class="line">                            if(tmp1 &lt; tmp2)</span><br><span class="line">                            &#123;</span><br><span class="line">                                tmp_minute_max &#x3D; tmp2;</span><br><span class="line">                                swap(tmp_minute.first, tmp_minute.second);</span><br><span class="line">                                swap(tmp_minute_index.first, tmp_minute_index.second);</span><br><span class="line">                            &#125;</span><br><span class="line">                            else</span><br><span class="line">                            &#123;</span><br><span class="line">                                tmp_minute_max &#x3D; tmp1;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        if(tmp_minute.first &#x3D;&#x3D; -1 or tmp_minute.second &#x3D;&#x3D; -1)</span><br><span class="line">                            continue;</span><br><span class="line">                        </span><br><span class="line">                        &#x2F;&#x2F;</span><br><span class="line">                        if(tmp_hour &gt; hour_max)</span><br><span class="line">                        &#123;</span><br><span class="line">                            hour.first &#x3D; temp[i];</span><br><span class="line">                            hour.second &#x3D; temp[j];</span><br><span class="line">                            minute.first &#x3D; tmp_minute.first;</span><br><span class="line">                            minute.second &#x3D; tmp_minute.second;</span><br><span class="line">                            hour_max &#x3D; hour.first*10 + hour.second;</span><br><span class="line">                        &#125;</span><br><span class="line">                        else if(tmp_hour &#x3D;&#x3D; hour_max  and minute_max &lt; tmp_minute_max)</span><br><span class="line">                        &#123;</span><br><span class="line">                            hour.first &#x3D; temp[i];</span><br><span class="line">                            hour.second &#x3D; temp[j];</span><br><span class="line">                            minute.first &#x3D; tmp_minute.first;</span><br><span class="line">                            minute.second &#x3D; tmp_minute.second;</span><br><span class="line">                            hour_max &#x3D; hour.first*10 + hour.second;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                    &#125;</span><br><span class="line">                    else</span><br><span class="line">                    &#123;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        </span><br><span class="line">        if(hour.first &#x3D;&#x3D; -1 or hour.second &#x3D;&#x3D; -1 or minute.first &#x3D;&#x3D; -1 or minute.second &#x3D;&#x3D; -1)</span><br><span class="line">            return &quot;&quot;;</span><br><span class="line">        </span><br><span class="line">        result &#x3D; to_string(hour.first) + to_string(hour.second) +  &quot;:&quot; + to_string(minute.first) + to_string(minute.second);</span><br><span class="line">        </span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Linux构建程序时如何判断库能否被找到</title>
+    <url>/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/</url>
+    <content><![CDATA[<p>在用CMake构建程序的时候，经常要用到find_package来查找库，那么什么样的库可以被find_package找到呢？  </p>
+<ul>
+<li><p>ldconfig -p | grep libjpeg  </p>
+</li>
+<li><p>locate libGL.so</p>
+</li>
+<li><p>pkg-config </p>
+<p>  pkg-config –cflags jpeg<br>  pkg-config –libs jpeg<br>  pkg-config –cflags “jpeg &gt;= 1.0.0” # for version check<br>  pkg-config  –modversion jpeg | awk -F. ‘{ printf “0x%02X%02X%02X\n”,$1,$2,$3 }’ #version check  </p>
+</li>
+<li><p>dpkg -s packagename (deb-based distribution)</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Max Points on a Line</title>
+    <url>/2020/12/01/Max-Points-on-a-Line/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Missing Number</title>
+    <url>/2020/12/01/Missing-Number/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Number of Digit One</title>
+    <url>/2020/12/01/Number-of-Digit-One/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>PE ELF文件格式浅析</title>
+    <url>/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86/arm等）。  </p>
+<p>那种格式可以被OS识别甚至加载、启动都与OS息息相关。  </p>
+<p>我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32/64上？<br>这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么导致这些结果的原因是什么呢？</p>
+<p>首先说Apple，使用的是一种叫做Fat Binary的技术，也就是我在编译程序的时候里面其实有包含了两套代码，同时支持x86/64，苹果现在宣布今后将把macos从x86迁移到arm平台，那么是要还是用Fat Binary技术吗？Fat Binary的优点和缺点都显而易见，那么还有其它方式吗？  </p>
+<p>我们知道，Windows系统，32位应用可以在64位系统上运行，64位程序不能在32位系统上运行，这是为什么？  </p>
+<p><strong><font color=0xFF>ToDoList</font></strong>  </p>
+<a id="more"></a>
+
+<ol>
+<li><p>Windows下 32位应用在64位系统上运行的原理，编译好的x86应用可以在Windows arm平台运行吗？是需要在编译的时候指定平台呢，还是可以直接通过OS内部的翻译器解决这个问题？x86_64 应用能运行在arm64平台上吗，实现的原理又是什么呢？ x86应用在64位系统上只能运行在user mode，所以驱动或者依赖于驱动的x86应用是没办法运行在64位系统上的，还有就是32位应用无法调用64位DLL，反之亦然，这是为什么呢？</p>
+</li>
+<li><p>Windows arm是如何实现的？现在指定了CPU和GPU，也就是说如果要换其他家arm芯片，就要重新适配是么？类似于苹果Mac arm也只能用自己的arm芯片？为什么x86 32位程序可以跑在Windows arm上？微软说这10.1之后就可以推送新的surface proc x II(arm平台)，支持64位x86应用跑在上面了，这又是怎么实现的呢？</p>
+</li>
+<li><p>Windows arm系统如何实现驱动开发？打个比方，比如杀毒软件该如何适配呢？是需要重新写一遍驱动呢，还是可以直接在上面跑，跟x86 x64应用的待遇一样？ </p>
+</li>
+<li><p>我们知道在Windows x86/x64平台，需要的驱动不同，也就是32位系统需要32位driver，64位系统需要64位driver，当然，我们也知道，32位软件可以在64位系统上跑（通过WOW机制），但驱动不可以，但我们看安全卫士 这类软件只有一个版本，没有根据操作系统选择，那么应该是32位程序，那就是说32位程序可以与64位driver sys通信，但32位程序无法调用64位DLL，这样的理解对吗？ </p>
+</li>
+<li><p>64位程序不能调用32位DLL，32位driver sys，但可以调用32位COM（通过进程间COM的方式）</p>
+</li>
+<li><p>从2011年微软发布支持arm平台的Windows RT开始，已经接近十年了，Apple也将在11月发布第一款Mac arm。“第一次发生在上世纪九十年代中叶，Macintosh从Motorola的68k指令集迁移到了IBM的PowerPC指令集上，那段时间乔布斯并不在苹果。用乔布斯在WWDC 2005上面的话来说，这次切换为苹果奠定了未来十年的基础（指90年代中叶到2005年左右）。第二次是软件层面上的大换血，从Mac OS 9迁移到了具有BSD血统的Mac OS X上，这也是乔布斯一手主导的一次切换，让Mac的操作系统变得现代化，并打好了在未来二十年内发展的基础。第三次则是我们所熟知的从PowerPC架构的处理器迁移到Intel处理器上面，乔布斯在2005年的WWDC大会上面宣告了这次迁移。到今天为止，所有的Mac都已经换上了Intel的CPU，在系统层面上，macOS也早已完全抛弃掉了对PowerPC指令集、甚至于32位x86指令集（IA-32）的支持，在macOS 11之前，它只支持使用x86-64指令集的处理器。”那么桌面PC的未来甚至服务器的未来就是arm了吗？  arm server实现了云端同架构，但有没有这么一个问题，就是同样的应用在这个arm芯片上可以，在另外一个arm芯片上不可以？如果是android这样系统的话，应该没问题，因为大家的app在上面开发都是可以用的，就算底层的程序，应该问题也不大。至于为什么微软和Apple迁移那么难，是因为OS跟指令集绑定的太深了，而Linux因为开源的问题，所以很早就有人着手解决这个问题了。  </p>
+</li>
+</ol>
+<p>上面有6个问题，是我昨天想起来记下的，其实里面的问题里已经有了一些答案，现在结合我知道的，先讲一些实现原理，最后回答上面的问题。  </p>
+<h1 id="2-操作系统与指令集配合以及一些实例"><a href="#2-操作系统与指令集配合以及一些实例" class="headerlink" title="2 操作系统与指令集配合以及一些实例"></a><strong>2 操作系统与指令集配合以及一些实例</strong></h1><p>指令集和程序通过操作系统交流，一般情况下，编译好的可执行程序里面是固定的指令集，比如我们在VS中指定了平台(x86/x64)，那么就会生成32/64位程序，虽然目前AMD的x64和x86是兼容的，但最开始Intel IA64和x86并不兼容，选择了某个平台，我们也就选择了将程序中的代码编译成某个指令集。操作系统根据自己定义好的格式，解析可执行文件，把指令发送给CPU执行。<br><a href="https://blog.csdn.net/zhongjin616/article/details/18765301">单片机 指令集 和 操作系统的关系</a>  </p>
+<p>操作系统可以支持多个指令集平台吗？我觉得从技术上是可以实现的。    </p>
+<ol>
+<li>比如从引导程序开始就做成Fat Binary这种形式，先判断当前是什么CPU架构，然后我的OS安装盘里就选择哪种平台版本的安装程序，但最终安装的操作系统里，是包含多个CPU平台支持的</li>
+<li>在运行可执行程序的时候，如果可执行程序本身是Fat Binary，那么就选择支持的指令集直接运行；如果不是，那么通过操作系统自带的翻译器翻译指令。  </li>
+</ol>
+<p>但是这样有一个问题啊，就是操作系统和可执行程序都会非常臃肿。<br>所以，上面提到的操作系统做成Fat Binary是不现实的，不同的架构，同一个系统安装文件，这得包含多少冗余啊。至于第二点，Apple的实现方式是Fat Binary，但Mac OS本身也没有Fat Binary。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NeXT的Mach内核所支持的Mach-O二进制文件格式引入了一种叫fat binary的特性，说白了就是在一个平台架构上分别交叉编译所有平台的二进制格式文件，然后把每个文件都打包成一个文件。Universal Binary就是指同时打包Intel平台和PowerPC平台的二进制文件。Mac OS X 10.4最终支持四个平台的BSD系统调用——32位Power PC、64位PowerPC、32位 x86和64位x86_64。作为最终用户，无须搞清这些区别，因为使用Universal Binary技术，买回来的软件直接会解出相应平台程序的二进制文件并执行。这是苹果很成功的一步——不像Windows系统中要用不同的路径（\Windows\System、\Windows\System32、\Windows\System64）分别存放不同架构的二进制库，并且用户还需在32位版和64位版之间犹豫不决。</span><br></pre></td></tr></table></figure>
+
+<p>苹果这么做的好处是，操作系统内部不需要实现类似于Windows emulator的机制，但坏处是应用体积会变得大，毕竟里面包含了很多平台的二进制程序。  </p>
+<h2 id="2-1-微软的实现思路"><a href="#2-1-微软的实现思路" class="headerlink" title="2.1 微软的实现思路"></a><strong>2.1 微软的实现思路</strong></h2><h3 id="2-1-1-如何实现64位系统上加载32位程序"><a href="#2-1-1-如何实现64位系统上加载32位程序" class="headerlink" title="2.1.1 如何实现64位系统上加载32位程序"></a><strong>2.1.1 如何实现64位系统上加载32位程序</strong></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">intel X86架构CPU可能实现了多个指令集x86，x86-64，MMX，SSE，SSE2，SSE3，SSSE3 ，而这些指令集中的指令让cpu完成的动作都比较复杂，所以也称为CISC</span><br><span class="line"></span><br><span class="line">AMD amd64架构的cpu 兼容了x86指令集还拓增了3D-Now!指令集，用于加强对3D显示的支持。</span><br><span class="line"></span><br><span class="line">ARM ARMv1~ARMv7架构的cpu实现了Thumb指令集和ARM指令集。这些指令集中的一条指令让cpu完成的动作都比较简单，所以也称为RISC指令集</span><br></pre></td></tr></table></figure>
+<p>但32/64指令长度也不一样啊，一个是32位，一个是64位，这些该怎么办？  </p>
+<p><a href="https://www.techsupportalert.com/content/how-windows7-vista64-support-32bit-applications.htm">How Windows 64-bit Supports 32-bit Applications</a><br><a href="http://baijiahao.baidu.com/s?id=1567917475253638&wfr=spider&for=pc">Win10 ARM版如何运行x86程序？IT之家带你一文读懂</a><br><a href="https://www.zhihu.com/question/334122973">为什么同一个exe文件能在不同指令集CPU上运行？</a><br><a href="https://www.zhihu.com/question/52873651">如何看待微软的CHPE（arm运行x86）？</a><br><a href="https://docs.microsoft.com/en-us/windows/win32/winprog64/running-32-bit-applications">Running 32-bit Applications</a>   </p>
+<p>上面的链接详细介绍了  </p>
+<ol>
+<li>Windows 64位系统如何跑32位应用？ 通过一个中间层 32位指令 &lt;–&gt; 转换器 &lt;–&gt; 64位指令。</li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg" class="">
+
+
+<ol start="2">
+<li>Windows arm如何支持运行x86应用。通过emulator，比如  </li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg" class="">
+
+<p>下面这些就是Windows提供的包含emulator的库</p>
+<ul>
+<li>Wow64.dll provides the core emulation infrastructure and the thunks for the Ntoskrnl.exe entry-point functions.</li>
+<li>Wow64Win.dll provides thunks for the Win32k.sys entry-point functions.</li>
+<li>(x64 only) Wow64Cpu.dll provides support for running x86 programs on x64.</li>
+<li>(Intel Itanium only) IA32Exec.bin contains the x86 software emulator.</li>
+<li>(Intel Itanium only) Wowia32x.dll provides the interface between IA32Exec.bin and WOW64.</li>
+<li>(ARM64 only) xtajit.dll contains the x86 software emulator.</li>
+<li>(ARM64 only) wowarmw.dll provides support for running ARM32 programs on ARM64.</li>
+</ul>
+<p>10月底微软是释放出支持x64应用的Windows ARM系统。  </p>
+<p>现在的制约因素是效率不行，因为要通过中间转码的方式，但为什么Mac ARM 就能这么厉害呢？ 有一个想法是Windows的前向兼容太多，导致系统做的比较臃肿，而Mac OS历来就是喜新厌旧，隔个几年就不支持之前的设备或者某些接口是常规操作。  </p>
+<p>现在回答上面的问题  </p>
+<ol>
+<li><p>32位无法调用64位DLL，但可以使用64位driver sys。<br>通过上面的原理，我们知道64位系统跑32位程序是通过指令集32/64转换实现的，32位调用64位DLL该怎么办，难道我们要标记一下哪些需要进行指令集转换，哪些不需要吗？可是在实际使用过程中，exe调用DLL导出的function，本身就是一套流水线下来的，我们没办法在执行指令的过程中区分哪些指令要转64，哪些不用转64。<br>至于driver sys，可以理解为进程间通信，相当于一个32位进程，一个64位进程，通过某些手段进行通信，这样也能解释64位程序如何调用32位DLL，那就是通过进程间COM，既然是不同的进程，那么要不要进行指令转，就是进程相关的了，相互独立的进程间不影响。</p>
+</li>
+<li><p>emulator是运行在用户态的，即user mode。</p>
+</li>
+<li><p>驱动程序如果想适配Windows ARM，需要指定平台，重新编译，不能通过emulator。也就是说x86驱动不能直接在Windows ARM上跑，需要重新编译。这里有一个问题，就是x86驱动也只能编译为arm32 driver，arm32 driver可以在arm64平台上跑吗？当然不可以了，参见Windows 64系统不支持32位驱动。<a href="https://docs.microsoft.com/zh-cn/windows-hardware/drivers/develop/building-arm64-drivers">使用 WDK 生成 ARM64 驱动程序</a>   </p>
+</li>
+</ol>
+<p>好，上面的6个问题基本上回答完了。在这里，有一个共识，就是arm平台将继续发扬光大，继续无往不利，而WinTel组合也将慢慢成为历史。以后芯片的种类、平台、定制化都将越来越丰富。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Partition Labels</title>
+    <url>/2020/09/23/Partition-Labels/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong>  </p>
+<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>S will have length in range [1, 500].</li>
+<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
+</ul>
+<a id="more"></a>
+
+<p><strong>思路</strong>  </p>
+<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
+<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
+<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color=blue>__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
+<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    vector&lt;int&gt; partitionLabels(string S) &#123;</span><br><span class="line">        map&lt;char, pair&lt;int, int&gt;&gt; map_assemble;</span><br><span class="line">        vector&lt;pair&lt;int, int&gt;&gt; vec_result;</span><br><span class="line">        int length &#x3D; S.length();</span><br><span class="line">        for(int i&#x3D;0; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            if(map_assemble.find(S[i]) !&#x3D; map_assemble.end())</span><br><span class="line">            &#123;</span><br><span class="line">                &#x2F;&#x2F;update</span><br><span class="line">                map_assemble[S[i]].second &#x3D; i;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                &#x2F;&#x2F;add</span><br><span class="line">                map_assemble[S[i]] &#x3D; make_pair(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        map&lt;pair&lt;int, int&gt;, char&gt; map_assemble_reverse;</span><br><span class="line">        for(auto it&#x3D; map_assemble.begin(); it!&#x3D;map_assemble.end(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(make_pair(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;求相交集合的并集</span><br><span class="line">         map&lt;pair&lt;int, int&gt;, char&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        for(it &#x3D; map_assemble_reverse.begin(); it!&#x3D;map_assemble_reverse.end(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            bool bProcessed &#x3D; false;</span><br><span class="line">            for(auto it1&#x3D;vec_result.begin(); it1!&#x3D;vec_result.end(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                int a1 &#x3D; it-&gt;first.first, b1 &#x3D; it-&gt;first.second;</span><br><span class="line">                int a2 &#x3D; it1-&gt;first, b2 &#x3D; it1-&gt;second;</span><br><span class="line">                if((a1 &gt; b2) or (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    it1 &#x3D; vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(make_pair(min(a1, a2), max(b1, b2)));</span><br><span class="line">                    bProcessed &#x3D; true;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if(bProcessed)</span><br><span class="line">                continue;</span><br><span class="line">            else</span><br><span class="line">                vec_result.push_back(make_pair(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F;convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span><br><span class="line">        vector&lt;int&gt; final_result;</span><br><span class="line">        for(auto it&#x3D; vec_result.begin(); it!&#x3D;vec_result.end(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + 1);</span><br><span class="line">        &#125;</span><br><span class="line">        return final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Permutation Sequence</title>
+    <url>/2020/12/01/Permutation-Sequence/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Pow of Two</title>
+    <url>/2020/12/01/Pow-of-Two/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Python中mutable与immutable</title>
+    <url>/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/</url>
+    <content><![CDATA[<p>在Python的数据类型中，根据是否可改变，分为mutable与immutable。   </p>
+<p>那么跟C/C++相比，所谓的不可修改是什么意思？  </p>
+<ul>
+<li>不能进行单个元素的赋值操作</li>
+<li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
+</ul>
+<p>下面我们针对tuple来写几个例子。  </p>
+<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
+<pre><code>a = (1, 2)  
+a[0] = 2 #error</code></pre>
+<p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
+<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
+<pre><code>a = (1, 2)  
+id(a) #140036094436208
+a = -2, -1 # right (-2, -1)
+id(a) #140036072923616
+a += (-1, 4) # right (-2, -1, -1, 4)
+id(a) # 140036094653072</code></pre>
+<p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
+<p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
+<p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
+<p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
+<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
+<p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
+<p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python科学计算笔记</title>
+    <url>/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="1-numpy"><a href="#1-numpy" class="headerlink" title="1 numpy"></a><strong>1 numpy</strong></h2><h3 id="1-1-如何创建array"><a href="#1-1-如何创建array" class="headerlink" title="1.1 如何创建array"></a><strong>1.1 如何创建array</strong></h3><p>创建array的几种方式</p>
+<ul>
+<li><p>numpy.array() </p>
+<p>  An array, any object exposing the array interface, an object whose</p>
+<pre><code>      __array__ method returns an array, or any (nested) sequence</code></pre>
+</li>
+<li><p>numpy.asarray()  </p>
+<p>  array_like</p>
+<pre><code>      Input data, in any form that can be converted to an array.  This
+      includes lists, lists of tuples, tuples, tuples of tuples, tuples
+      of lists and ndarrays.</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>自动生成数组 numpy.arange  numpy.logspace numpy.linspace 用于创建等差 等比 array（arange和linspace创建等差array的方式有区别）  </p>
+</li>
+<li><p>numpy.full numpy.zeros numpy.ones</p>
+</li>
+<li><p>numpy.fromstring numpy.frombuffer numpy.from function </p>
+</li>
+</ul>
+<h3 id="1-3-存取元素"><a href="#1-3-存取元素" class="headerlink" title="1.3 存取元素"></a><strong>1.3 存取元素</strong></h3><a id="more"></a>
+
+<p>有了创造，就要有访问，那么该怎么访问元素呢？  </p>
+<ul>
+<li>切片<br>  正常的切片方式，比如连续切片 a[3:5] 非连续切片a[[1,3,5]]</li>
+</ul>
+<p><strong><font color=red>一维数组和多维数组的存取</font></strong><br>我们可以用数组作为索引，来构造新数组  </p>
+<p>这里有一个公式 output = method(input)  </p>
+<p>首先我们要明确input和output是什么，然后才能找到适合的公式来套用。  </p>
+<p>下面是一个简单的总结，其中多维我们先用二维来替代。  </p>
+<table>
+<thead>
+<tr>
+<th align="left">input</th>
+<th align="left">output</th>
+<th align="left">note</th>
+<th align="left">sample</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">一维</td>
+<td align="left">一维</td>
+<td align="left">从一维中取数，组成一维array</td>
+<td align="left"><del>a[np.array([x1, x2, x3, x4])]</del></td>
+</tr>
+<tr>
+<td align="left">一维</td>
+<td align="left">多维</td>
+<td align="left">从一维中取数，组成N维array</td>
+<td align="left"><del>错误的方式 a[[[x1,x2,x3,x4],[x5,x6,x7,x8]]]</del> <br><del>正确的方式 a[np.array([[1, 2, 3], [4, 5, 6]])]</del></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">一维</td>
+<td align="left">从N维中取数，组成一维array</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">多维</td>
+<td align="left">从N维中取数，组成N维array</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>本来想着列个表就能简单的说清楚，但现在看，还是有些复杂的，下面就展开来说吧。  </p>
+<p>下面有几种写法，让我们看一看 </p>
+<p><font color=red>input : 一维数组    output : 一维数组和二维数组</font></p>
+<pre><code>a = np.array(1, 10, 1)
+print(a[1, 3, 5]) # 错误，因为a是一维数组，但提供了3维索引
+print(a[[1, 3, 5], [2, 4, 6]]) # 错误，跟上面一样，提供了两个index
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x]) # 错误，IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
+# 上述语句还有warning  FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+y = np.array([[1, 3, 5], [2, 4, 6]])
+print(numpy.array(y)) # 正确</code></pre>
+<p>从上面的例子中，我们可以得到以下几个简单的结论 </p>
+<ul>
+<li>input为一维数组，索引必须也是一维的，不管输出是怎么样，要确保能访问到input中的元素，下标必须为一维，所以a[[1, 3, 5]]是正确的，a[1, 3, 5]是错误的</li>
+</ul>
+<p>但这里有一个问题，就是a[x]和a[np.array(x)]有什么区别？<br>通过help(x)可以得知一个是numpy.ndarray，一个是list。个人猜测，list是不确定大小的，也就是我们拿到一个list，里面的元素大小也不一定相同，所以需要转成ndarray，明确是一个正常的数组。否则，就会报上面的IndexError和Warning。  </p>
+<p><font color=red>input : 二维数组    output : 一维数组和二维数组</font> </p>
+<pre><code>a = np.arange(1, 10, 1).reshape(-1,1) + np.arange(10, 60, 5)
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x])  # 正确，但会报warning，输出一个1*3的数组array
+m = ([1,2,3], [4,5,6])
+print(a[m])  # 正确，无warning，下标是有两个元素的元组，输出结果是1*3的数组array
+print(a(np.array(x))) # 正确，但输出是一个三维数组
+y = [[1,2], [3,4]]
+z = [[5,6], [7,8]]
+print(a[y,z]) #正确</code></pre>
+<p>上面我们看到，print(a[x])会报warning， _<font color=red>FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use <code>arr[tuple(seq)]</code> instead of <code>arr[seq]</code>. In the future this will be interpreted as an array index, <code>arr[np.array(seq)]</code>, which will result either in an error or a different result.</font>_。<br>也就是说，对于多维数组的index操作，我们需要传入一个tuple sequence，传入non-tuple sequence的方法已经被废弃了。  </p>
+<p>至于print(a(np.array(x)))输出一个三维数组，可以这样理解，首先np.array(x)得到的是一个array，但只有一个元素，在书中有这么一句话 <em><font color=red>当所有轴都用形状仙童的整数数组作为下标时，得到的数组和下标数组的形状相同。</font></em> 但当我们传入的是只有一个元素的tuple的时候（不管这个元素内部是多么复杂）， 当我们没有指定第一轴的下标的时候，我们用:来代替。此时，我们要重新明确一下a[m,n]中代表的涵义，m是0轴坐标，n是1轴坐标，既然n为:，那么所有的列数据都被占用。  </p>
+<p><strong><font color=green size=5>总结</font></strong><br>说实话，这块理解还是挺难的，而且实际使用中有些内容已经有差别了，比如被废弃的方法，还是要时常温故，多加体会。  </p>
+<p><strong>关于存取元素时是否与原数据共用</strong>  </p>
+<p>中心思想，是抓住问题的核心，如果我们可以仅仅通过修改stride shape就能得到一份新数据，这时候肯定是不用拷贝最合算，如果没办法通过修改stride shape得到数据，那么就只能拷贝了。  两个简单的例子， a[::2, :]是无需拷贝的，只需要把元素的stride*2就可以“得到”我们想要的数据；a[[1,4,7,9]]是需要拷贝的，此时我们不能通过简单修改stride就得到我们想要的数据。  </p>
+<h3 id="1-4-frompyfunc"><a href="#1-4-frompyfunc" class="headerlink" title="1.4 frompyfunc"></a><strong>1.4 frompyfunc</strong></h3><p>感觉类似于函数指针typedef，不过问题是看上去它只有一个可以遍历的arg.  </p>
+<pre><code>def calc_test(a, b, c, d):
+    print(a + c + b + d)
+
+
+def create():
+    a = np.arange(1, 10, 1) # 正确
+    a = 10 # 正确
+    b = np.arange(10, 100, 10)
+    c = np.arange(100, 1000, 100)
+    d = np.arange(1000, 10000, 1000)
+    calc_test_func = np.frompyfunc(calc_test, 4, 1)
+    print(calc_test_func(a, b, c, d))</code></pre>
+<p>上面这段代码，经过几次测试，得出的规律是，frompyfunc的几个特点</p>
+<pre><code>m = np.arange(1, 10, 5) + np.arange(10, 100, 10) # 错误 ValueError: operands could not be broadcast together with shapes (2,) (9,) </code></pre>
+<p>如果两个或者多个数组size不一致，那么这时候就出发挥 广播机制  </p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python线程操作</title>
+    <url>/2020/11/20/Python%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="1-多线程操作的基本原理"><a href="#1-多线程操作的基本原理" class="headerlink" title="1 多线程操作的基本原理"></a><strong>1 多线程操作的基本原理</strong></h1><p>开发语言与系统架构无关，在学习使用C++的时候我们就接触过多线程编程，后面随着处理器多核的出现，有了并行编程，这两个还存在着很大的区别。  </p>
+<p>说一下我所理解的多线程编程  </p>
+<ol>
+<li>存在可以独立执行的Task</li>
+<li>Task之间的依赖关系是流式的（或者可以转变为流式）  </li>
+</ol>
+<p>举个人脸检测的例子</p>
+<pre class="mermaid">graph LR;
+　　视频流-->| 检测 |人脸信息;
+　　人脸信息-->| 后处理 |处理过的人脸信息;
+　　处理过的人脸信息-->| 显示 |上层回调;</pre>
+
+<p>在实际的操作中，我们可以把所有需要处理的视频流保存下来，然后传递给算法引擎，然后得到所有的人脸信息，然后对每一帧的人脸信息进行统一处理，然后再一帧帧返回结果。但这样做效率很低。<br>我们可以试着这么做，开一个线程A，用于获取视频帧；再开一个线程B，用于算法检测；再开一个线程C，用于回调显示。<br>这样做的好处是，我拿到一帧视频，放到buffer里（这里甚至可以设定双buffer）。 </p>
+<p><a href="https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics">Multiple buffering</a>  </p>
+<p>vsync</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rectangle Area</title>
+    <url>/2020/12/01/Rectangle-Area/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Regular expressions library</title>
+    <url>/2020/09/02/Regular-expressions-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Repeated Substring Pattern</title>
+    <url>/2020/09/23/Repeated-Substring-Pattern/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong></p>
+<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: &quot;abab&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: &quot;aba&quot;
+Output: False </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: &quot;abcabcabcabc&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
+<p><strong>思路</strong>  </p>
+<p>start : 代表要比较的子串的开始索引  </p>
+<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
+<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
+<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
+<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    bool repeatedSubstringPattern(string s) &#123;</span><br><span class="line">        int len &#x3D; 1, start&#x3D;0, cmp_times&#x3D;0;</span><br><span class="line">        for(int len &#x3D; 1; len &lt;&#x3D; (floor)(s.length() &#x2F; 2); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            if(s.length() % len !&#x3D; 0)</span><br><span class="line">                continue;</span><br><span class="line">            cmp_times &#x3D; s.length() &#x2F; len;</span><br><span class="line">            bool bCurDup &#x3D; true;</span><br><span class="line">            for(int i&#x3D;1; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                if(bCurDup &#x3D;&#x3D; true)</span><br><span class="line">                    for(int j&#x3D;0; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        if(s[j] !&#x3D; s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup &#x3D; false;</span><br><span class="line">                            break;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if(bCurDup &#x3D;&#x3D; true)</span><br><span class="line">            &#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(19) Advanced Features</title>
+    <url>/2020/09/13/Rust-Advanced-Features/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(12) An I/O Project - Building a Command Line Program</title>
+    <url>/2020/09/13/Rust-An-IO-Project-Building-a-Command-Line-Program/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(8) Common Collections</title>
+    <url>/2020/09/13/Rust-Common-Collections/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(3) Common Programming Concepts</title>
+    <url>/2020/09/02/Rust-Common-Programming-Concepts/</url>
+    <content><![CDATA[<p><em>“This chapter covers concepts that appear in almost every programming language and how they work in Rust. <strong><font color =red>Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Rust</font></strong>, but we’ll discuss them in the context of Rust and explain the conventions around using these concepts.”</em> </p>
+<p>跟王垠之前在某篇blog里谈到的一样，有一个特性的集合，每个语言是里面的一个子集，C++也是如此。至于为什么C++的学习曲线这么抖，我想大概是因为它要的东西太多，什么都能做，但有的语言比它更专业，虽然功能比它少。也就是说C++是一门不够专注的语言。  </p>
+<p>好了，C++的话题到此为止，我们看Rust。  </p>
+<h2 id="immutable-constant-区别"><a href="#immutable-constant-区别" class="headerlink" title="immutable constant 区别"></a><strong><font color=0xFFFFFF>immutable constant 区别</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">const</th>
+<th align="left">variable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">在整个生命周期内value不可更改</td>
+<td align="left">var可随时重新定义，比如let x= 10; let mut x = 20;默认为immutable，可随时更改为mutable</td>
+</tr>
+<tr>
+<td align="left">必须注明类型</td>
+<td align="left">不必注明类型</td>
+</tr>
+<tr>
+<td align="left">可以在任何范围内定义，比如全局</td>
+<td align="left">貌似不可以？</td>
+</tr>
+<tr>
+<td align="left">const赋值时必须是常亮表达式，或者至少能找到初始值，而不能是一个function call或者运行时才能获取的值</td>
+<td align="left">可以？</td>
+</tr>
+</tbody></table>
+<h2 id="shadowing和mut-区别"><a href="#shadowing和mut-区别" class="headerlink" title="shadowing和mut 区别"></a><strong><font color=0xFFFFFF>shadowing和mut 区别</font></strong></h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let mut x &#x3D; 10;</span><br><span class="line">x &#x3D; 100;</span><br><span class="line">和</span><br><span class="line">let x &#x3D; 10;</span><br><span class="line">let x&#x3D; x + 100;</span><br><span class="line">的区别</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">shadowing</th>
+<th align="left">mut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">通过let，我们会改变暂时改变x的状态为mutable，等操作结束，x重新变为immutable</td>
+<td align="left">mut表示variable的value是可以被修改的</td>
+</tr>
+<tr>
+<td align="left">shadowing只是重用了variable的name，第二次或者后面let的时候可以更改它的类型</td>
+<td align="left">mut不可以，没有let的情况下，前面是什么类型，后面赋值的时候也必须是相同类型</td>
+</tr>
+</tbody></table>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a><strong><font color=0xFFFFFF>数据类型</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">length</th>
+<th align="left">signed</th>
+<th align="left">unsigned</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">8-bit</td>
+<td align="left">i8</td>
+<td align="left">u8</td>
+</tr>
+<tr>
+<td align="left">16-bit</td>
+<td align="left">i16</td>
+<td align="left">u16</td>
+</tr>
+<tr>
+<td align="left">32-bit</td>
+<td align="left">i32</td>
+<td align="left">u32</td>
+</tr>
+<tr>
+<td align="left">64-bit</td>
+<td align="left">i64</td>
+<td align="left">u64</td>
+</tr>
+<tr>
+<td align="left">128-bit</td>
+<td align="left">i128</td>
+<td align="left">u128</td>
+</tr>
+<tr>
+<td align="left">arch 类似于c++ size_t，取决于当前程序是64bit or 32bit</td>
+<td align="left">isize</td>
+<td align="left">usize</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">Number literals</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Decimal</td>
+<td align="left">98_222</td>
+</tr>
+<tr>
+<td align="left">Hex</td>
+<td align="left">0xff</td>
+</tr>
+<tr>
+<td align="left">Octal</td>
+<td align="left">0o77</td>
+</tr>
+<tr>
+<td align="left">Binary</td>
+<td align="left">0b1111_0000</td>
+</tr>
+<tr>
+<td align="left">Byte (u8 only)</td>
+<td align="left">b’A’</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+<p>从上面看跟C++一模一样，或者说跟其它很多语言的定义是一样的，语言总是相同的，印证了最开始的那句话，语言是特性的集合。  </p>
+<p><em><font color=gray>这里注意到一个自己之前你忽略的问题，那就是float的表示范围。之前的错觉是float跟int32，double跟int64的表示范围一样，只不过中间多了很多小数表示。现在想来，大错特错，如果表示范围一致，那多出来的小数是哪些bit表示的呢。<br>float：1bit（符号位）+8bits（指数位+23bits（尾数位）<br>double：1bit（符号位）+ 11bits（指数位）+ 52bits（尾数位）</font></em></p>
+<p>Rust的字符类型都是Unicode编码，怎么在不同的编码之间切换呢？  </p>
+<p>Rust有复合类型，tuple和array。  </p>
+<pre><code>__趣味：python数据类型__
+
+这里突然想到一个问题，就是在Python中，也有tuple，而且tuple是immutable的，那么在Python中为什么有些类型是mutable，有些是immutable，这么设计的原因是什么？  
+
+不可变数据类型：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址也会发生改变，就称不可变数据类型，包括：int（整型）、string（字符串）、tuple（元组）。  
+
+可变数据类型的定义为：当该数据类型的对应变量的值发生了改变，那么它对应的内存地址不发生改变，就称可变数据类型。包括：set（集合）、list（列表）、dict（字典）
+
+[Mutable vs Immutable Objects in Python](https://medium.com/@meghamohan/mutable-and-immutable-side-of-python-c2145cf72747#:~:text=Simple%20put%2C%20a%20mutable%20object,Custom%20classes%20are%20generally%20mutable.)  </code></pre>
+<p>Rust中的tuple也可以包含各种数据类型，比如</p>
+<pre><code>let tp = (10, 10.0, &#39;a&#39;, &quot;hello&quot;);  </code></pre>
+<p><strong>destructuring解构</strong>   </p>
+<pre><code>let tup: (i32, f64, u8) = (500, 6.4, 1);  
+let (x, y, z) = tup;  </code></pre>
+<p>还可以根据下标索引来访问tuple中的元素  </p>
+<pre><code>let x: (i32, f64, u8) = (500, 6.4, 1);
+let five_hundred = x.0;
+let six_point_four = x.1;
+let one = x.2;  </code></pre>
+<p>array声明方式 </p>
+<pre><code>let a:[i32;5] = [1,2,3,4,5];  
+let a = [3;5];  //same with let a = [3, 3, 3, 3, 3];  </code></pre>
+<p>使用方式也是通过下标索引。  </p>
+<p>现在总结一下tuple和array</p>
+<table>
+<thead>
+<tr>
+<th align="left">tuple</th>
+<th align="left">array</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">immutable， 即使let mut，也仅仅只是可以修改变量的value，但不能修改变量的类型，比如tuple是（i32, float, character, string)类型，即使我们是按照let mut声明的，那么我们可以修改它的value，比如原先是(5, 5.0, ‘a’, “hello”)，现在可以赋值为(6, 6.0, ‘b’, “world”)，但每个element的类型是确定的，不可以被修改，不能用其它类型的值来赋值</td>
+<td align="left">immutable，因为array是同一类型的，所以没有这个问题，唯一的问题是array的size不可更改，即使let mut，也不可以修改array的size</td>
+</tr>
+<tr>
+<td align="left">可以下标访问</td>
+<td align="left">可以下标访问</td>
+</tr>
+<tr>
+<td align="left">可以解构</td>
+<td align="left">没有这个必要</td>
+</tr>
+</tbody></table>
+<h2 id="与C-的Function比较"><a href="#与C-的Function比较" class="headerlink" title="与C++的Function比较"></a><strong><font color=0xFFFFFF>与C++的Function比较</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">Rust Function</th>
+<th align="left">C++ Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">没有此要求，只要在scope内被看到</td>
+<td align="left">调用的Function必须在Caller之前被声明或者定义</td>
+</tr>
+<tr>
+<td align="left">let不返回，所以 _let x = (let y = 6); //error  但是 let y = 100; let x = (y = 0) //成功</td>
+<td align="left">int x = (int y=0)是不可以的，但可以写成int x = (y = 0)</td>
+</tr>
+<tr>
+<td align="left">返回值是不带;的表达式</td>
+<td align="left">返回值必须是return语句</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(6) Enums and Pattern Matching</title>
+    <url>/2020/09/08/Rust-Enums-and-Pattern-Matching/</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a><strong><font color=0xFFFFFF>介绍</font></strong></h2><p>正常情况下，我们声明enum的格式如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() </span><br><span class="line">&#123;</span><br><span class="line">    enum IpAddrKind &#123;</span><br><span class="line">        V4,</span><br><span class="line">        V6,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct IpAddr &#123;</span><br><span class="line">        kind: IpAddrKind,</span><br><span class="line">        address: String,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let home &#x3D; IpAddr &#123;</span><br><span class="line">        kind: IpAddrKind::V4,</span><br><span class="line">        address: String::from(&quot;127.0.0.1&quot;),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    let loopback &#x3D; IpAddr &#123;</span><br><span class="line">        kind: IpAddrKind::V6,</span><br><span class="line">        address: String::from(&quot;::1&quot;),</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>这种写法本质上跟C的语法一样，但在Rust中还有一种更加简洁的写法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    enum IpAddr &#123;</span><br><span class="line">        V4(String),</span><br><span class="line">        V6(String),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let home &#x3D; IpAddr::V4(String::from(&quot;127.0.0.1&quot;));</span><br><span class="line"></span><br><span class="line">    let loopback &#x3D; IpAddr::V6(String::from(&quot;::1&quot;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面，我们可以直接把enum绑定到一个类型上，也就是enum中的element对应的必须是某个类型的value。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">enum Message </span><br><span class="line">&#123;</span><br><span class="line">    Quit,</span><br><span class="line">    Move &#123; x: i32, y: i32 &#125;,</span><br><span class="line">    Write(String),</span><br><span class="line">    ChangeColor(i32, i32, i32),</span><br><span class="line">&#125;</span><br><span class="line">fn main() &#123;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Quit has no data associated with it at all.</li>
+<li>Move includes an anonymous struct inside it.</li>
+<li>Write includes a single String.</li>
+<li>ChangeColor includes three i32 values.</li>
+</ul>
+<p>但是上面的code中，home和loopback是什么类型，我们该怎么访问或者使用它呢？  </p>
+<p>在<a href="https://stackoverflow.com/questions/9109872/how-do-you-access-enum-values-in-rust">How do you access enum values in Rust?</a>通过match，可以得到内部的数据。</p>
+<p>let (x, y) = Shape::Circle(Point { x: 0.0, y: 0.0 }, 10.0);</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">struct Point &#123;</span><br><span class="line">    x: f64,</span><br><span class="line">    y: f64,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">enum Shape &#123;</span><br><span class="line">    Circle(Point, f64),</span><br><span class="line">    Rectangle(Point, Point),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let my_shape &#x3D; Shape::Circle(Point &#123; x: 0.0, y: 0.0 &#125;, 10.0);</span><br><span class="line"></span><br><span class="line">    match my_shape &#123;</span><br><span class="line">        Shape::Circle(_, value) &#x3D;&gt; println!(&quot;value: &#123;&#125;&quot;, value),</span><br><span class="line">        _ &#x3D;&gt; println!(&quot;Something else&quot;),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们会想到在开始介绍Rust的时候，有一个特性<font color=red>destructuring解构</font>，那么我们可以通过destructuring来解析数据吗？比如，像下面这么写</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let my_shape &#x3D; Shape::Circle(Point &#123; x: 0.0, y: 0.0 &#125;, 10.0);</span><br><span class="line">let (x, y) &#x3D; my_shape; &#x2F;&#x2F;error, cause my_shape is enum, but is not a tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="Option-lt-T-gt-和null-reference"><a href="#Option-lt-T-gt-和null-reference" class="headerlink" title="Option&lt;T&gt;和null reference"></a><strong><font color=0xFFFFFF>Option&lt;T&gt;和null reference</font></strong></h2><p><em><font color=green><br>我称之为我的十亿美元错误……当时，我正在设计第一个全面的类型系统，用于面向对象语言中的引用功能。我的目标是确保所有对引用的使用都是绝对安全的，由编译器自动执行检查。但是我无法拒绝定义一个 Null 引用的诱惑，因为它实在太容易实现了。这导致了无数错误、漏洞和系统崩溃。在过去的四十年里，这些问题可能已经造成了十亿美元的损失。 ——托尼·霍尔，ALGOL W 的发明者。</font></em></p>
+<p>我所理解的NULL，比如在C++创建一个对象指针，或者Java中创建一个对象引用，都会用到null。C++中的指针，Java中的引用，在我看来都是一回事，都是指向某块内存，这块内存是某个对象类型的。  </p>
+<p>当我们在操作对象的时候，指针或者引用有可能无效，不论是主动的还是被动的，这都会导致问题，使用null可以快速地让我们标记一个不可用的对象或者对象引用。但很显然，并没有编译器自动检查这回事，我们要在自己的代码中强行检查，否则我们无法判断当前使用的指针或者引用是否有效<br>C++   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if(nullptr &#x3D;&#x3D; p)&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>JAVA</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if(str&#x3D;&#x3D;null || str.equals(&quot;&quot;))&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>C#</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if(string.IsNullOrEmpty(str))&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>为了安全性，我们要对代码中所有用到的地方加上对象是否为null的判断，null可以表示任何类型的空对象，但我们又不能确保依赖的第三方是否能做到这样，所以在C++和java中，我们能看到很多错误都是null引起的。  </p>
+<p>这里有两篇关于null的介绍，可以仔细看一看。<br><a href="https://www.cnblogs.com/math/p/null.html">NULL-计算机科学上最糟糕的失误</a><br><a href="https://blog.csdn.net/IT_ORACLE/article/details/54691671">Java中有关Null的9件事</a><br><a href="https://zhuanlan.zhihu.com/p/157621373">Null：一个价值 10 亿美元的错误，真的很后悔设计了它</a>  </p>
+<p><strong><font color=gray>Rust的解决方法</font></strong></p>
+<p>可不用null，该怎么表示空引用呢？  </p>
+<p>Rust采用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">enum Option&lt;T&gt;&#123;</span><br><span class="line">    Some(T),</span><br><span class="line">    None,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们用了泛型，也就是每一个类型，我们都有一个对应的null，比如</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let some_number &#x3D; Some(5);</span><br><span class="line">    let some_string &#x3D; Some(&quot;a string&quot;);</span><br><span class="line"></span><br><span class="line">    let absent_number: Option&lt;i32&gt; &#x3D; None;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>注意：None和Some可以直接调用，而不用通过Option::，这是什么原因呢？</em></p>
+<p>这么做的好处是，Option<T>和T不是同一种类型，所以不能进行各种操作，必须得把Option<T>转成T才可以。但这样的意义是什么呢？我们的引用在编译阶段就能检查。  </p>
+<h2 id="match"><a href="#match" class="headerlink" title="match"></a><strong><font color=0xFFFFFF>match</font></strong></h2><p>match类似于switch case  </p>
+<pre><code>#[derive(Debug)]
+enum UsState &#123;
+    Alabama,
+    Alaska,
+    // --snip--
+&#125;
+
+enum Coin &#123;
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+&#125;
+
+fn value_in_cents(coin: Coin) -&gt; u8 &#123;
+    match coin &#123;
+        Coin::Penny =&gt; 1,
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter(state) =&gt; &#123;
+            println!(&quot;State quarter from &#123;:?&#125;!&quot;, state);
+            25
+        &#125;
+    &#125;
+&#125;
+
+fn main() &#123;
+    value_in_cents(Coin::Quarter(UsState::Alaska));
+&#125;</code></pre>
+<p><strong><font color=red>if let 语法</font></strong>  </p>
+<p>if let 与 if的区别在哪里呢？</p>
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(9) Error Handling</title>
+    <url>/2020/09/13/Rust-Error-Handling/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(16) Fearless Concurrency</title>
+    <url>/2020/09/13/Rust-Fearless-Concurrency/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(20) Final Project - Building a Multithreaded Web Server</title>
+    <url>/2020/09/13/Rust-Final-Project-Building-a-Multithreaded-Web-Server/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(13) Functional Languages Features - Iterators and Closures</title>
+    <url>/2020/09/13/Rust-Functional-Languages-Features-Iterators-and-Closures/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(10) Generic Types Traits and Lifetimes</title>
+    <url>/2020/09/13/Rust-Generic-Types-Traits-and-Lifetimes/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust学习（一）如何创建、运行一个新工程</title>
+    <url>/2020/09/02/Rust-How-to-Create-and-Run-a-Project/</url>
+    <content><![CDATA[<p>听说Rust是一门立志于取代C++的语言，特意来学习，目前我并不知道它的优势是什么，但对toml lock文件格式我并不陌生。  </p>
+<p>现在开始吧。  </p>
+<h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a><strong><font color=0xFFFFFF>新建工程</font></strong></h2><ol>
+<li>自动化方法 <table>
+<thead>
+<tr>
+<th align="left">command</th>
+<th align="left">usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><font color=blue>cargo new</font></strong></td>
+<td align="left">create a new project with init files, .toml, etc</td>
+</tr>
+<tr>
+<td align="left"><strong><font color=blue>cargo build –release (default debug)</font></strong></td>
+<td align="left">compile program, generate binary file</td>
+</tr>
+<tr>
+<td align="left"><strong><font color=blue>cargo run</font></strong></td>
+<td align="left">compile, generate and run binary file</td>
+</tr>
+<tr>
+<td align="left"><strong><font color=blue>cargo check</font></strong></td>
+<td align="left">compile files</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<ol start="2">
+<li>手工方法<br>创建cargo new生成的目录结构及配置文件。  </li>
+</ol>
+<a id="more"></a>  
+
+<h2 id="Cargo包管理机制"><a href="#Cargo包管理机制" class="headerlink" title="Cargo包管理机制"></a><strong><font color=0xFFFFFF>Cargo包管理机制</font></strong></h2><p>.toml文件格式  </p>
+<pre><code>[dependencies]  
+rand = &quot;0.5.5&quot;</code></pre>
+<p>由toml文件可以生成lock文件，可以看做toml文件的结果缓存。  </p>
+<p>如果运行cargo build，那么会下载依赖库。cargo update会更新依赖库，但只会更新一个minor newer version，不是big newer version update。 要想big version update，就要修改toml文件。 </p>
+<p>这里有几个问题（留待后续看cargo再解决）  </p>
+<ol>
+<li>下载的依赖库是源码还是binary？如果是binary的话，如果binary不能支持开发平台，该怎么办？cargo支持自己搭建类似于crato.io的server吗？或者兼容crato.io和自己的远程编译server?</li>
+<li>如何指定编译平台？cargo 自动识别吗？如果是编译库的话，我们要指定一些特殊选项，该怎么配置？  </li>
+<li>cargo update更新的规则是什么？为什么这么设计？</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(7) Managing Growing Projects with Packages Crates and Modules</title>
+    <url>/2020/09/11/Rust-Managing-Growing-Projects-with-Packages-Crates-and-Modules/</url>
+    <content><![CDATA[<h2 id="Package-Crate-Module"><a href="#Package-Crate-Module" class="headerlink" title="Package Crate Module"></a><strong><font color=0xFFFFFF>Package Crate Module</font></strong></h2><p>Rust中也有包的概念，其实跟我接触的Python差不多，有人说跟go挺像的也。</p>
+<p>Package里可以有0或者1个lib crate，可以有若干个binary crate。  </p>
+<p><em><font color=red> 代码1</font></em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#[cfg(test)]</span><br><span class="line">mod hh &#123;</span><br><span class="line">    #[test]</span><br><span class="line">    pub fn  it_works() &#123;</span><br><span class="line">        assert_eq!(2 + 2, 4);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">pub fn hehe() &#123;</span><br><span class="line">    crate::hh::it_works();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em><font color=red> 代码2</font></em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mod hh &#123;</span><br><span class="line">    pub fn  it_works() &#123;</span><br><span class="line">        assert_eq!(2 + 2, 4);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">pub fn hehe() &#123;</span><br><span class="line">    crate::hh::it_works();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+<p>我们先看看上面两段代码，代码1编译报错</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">error[E0433]: failed to resolve: maybe a missing crate &#96;hh&#96;?</span><br><span class="line">  --&gt; src&#x2F;lib.rs:11:12</span><br><span class="line">   |</span><br><span class="line">11 |     crate::hh::it_works();</span><br><span class="line">   |            ^^ maybe a missing crate &#96;hh&#96;?</span><br><span class="line"></span><br><span class="line">error: aborting due to previous error</span><br><span class="line"></span><br><span class="line">For more information about this error, try &#96;rustc --explain E0433&#96;.</span><br><span class="line">error: could not compile &#96;my_lib&#96;.</span><br></pre></td></tr></table></figure>
+<p>代码2编译就是正常的。  </p>
+<p>唯一的区别是缺少 #[cfg(test)]，这个代表什么意思呢？表明这是一个测试mod，里面的函数是测试函数，在cargo build的时候会被忽略，只有cargo test才会被编译，所以代码1在编译的时候会提示找不到hh。  </p>
+<table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">Rust</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">rs文件有能否有多个mod</td>
+<td align="left">可以</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">mod或者fn如何被外界访问</td>
+<td align="left">rs文件中最高层的mod是默认public，除此之外所有的mod和其他结构都是private</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">在外部如何使用</td>
+<td align="left">用use，类似于Python import</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h3 id="拆分模块到不同的文件"><a href="#拆分模块到不同的文件" class="headerlink" title="拆分模块到不同的文件"></a><strong><font color=0xFFFFFF>拆分模块到不同的文件</font></strong></h3><p>这一点类似于Java，com.sensetime.stmobile.humanaction这种形式的，每一层都是文件夹。  </p>
+<pre><code>src   
+    -- lib.rs ()
+    -- front_of_house  (文件夹)
+        -- hosting.rs</code></pre>
+<p>下面我们列举出所有代码  </p>
+<p><em><font color=red>src/lib.rs</font></em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mod front_of_house;</span><br><span class="line">pub use crate::front_of_house::hosting;</span><br><span class="line">pub fn eat_at_restaurant()&#123;</span><br><span class="line">    hosting::add_waitlist();</span><br><span class="line">    hosting::add_waitlist();</span><br><span class="line">    hosting::add_waitlist();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><font color=red>src/front_of_house/hosting.rs</font></em> </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pub fn add_to_waitlist()&#123;&#125;</span><br><span class="line">&#96;&#96;&#96;  </span><br><span class="line">可编译的时候还是报错，为什么呢？就是在src目录下还需要一个front_of_house.rs  </span><br></pre></td></tr></table></figure>
+<p>pub mod hosting;</p>
+<pre><code>这是跟Java不一样的地方，也就是除了目录之外，我必须还要声明一个文件夹对应的文件，里面列举了我实现的mod。  
+
+</code></pre>
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(14) More about Cargo and Crates.io</title>
+    <url>/2020/09/13/Rust-More-about-Cargo-and-Crates-io/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(17) Object Oriented Programming Features of Rust</title>
+    <url>/2020/09/13/Rust-Object-Oriented-Programming-Features-of-Rust/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(18) Patterns and Matching</title>
+    <url>/2020/09/13/Rust-Patterns-and-Matching/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(15) Smart Pointers</title>
+    <url>/2020/09/13/Rust-Smart-Pointers/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(4) Understanding Ownership</title>
+    <url>/2020/09/05/Rust-Understanding-Ownership/</url>
+    <content><![CDATA[<p>所有程序在运行的时候必须管理内存。有一些语言有垃圾回收机制，比如Java Python，另外一些语言必须自己管理内存，比如C++。  </p>
+<p>Rust选择了第三条路：ownership。  </p>
+<p>Rust文档上说  </p>
+<pre><code>All data stored on the stack must have a known, fixed size. 
+Data with an unknown size at compile time or a size that might change must be stored on the heap instead.</code></pre>
+<p>也就是一个数据，如果要存储在栈上，那么在编译的时候就必须确定大小，并且大小不能更改？<br>这句话和我之前的认知是矛盾的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    int a;</span><br><span class="line">    cin &gt;&gt; a;</span><br><span class="line">    int x[a];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在编译时，我们并不知道x所占空间大小。  </p>
+<a id="more"></a>
+<p>Rust ownership的设计思想是，我所有的variable name都绑定到stack上的一个空间，但这个空间里面不存储data，只存储pointer，指向heap。  </p>
+<p>ownership规则  </p>
+<ul>
+<li>每一个value都有一个叫做owner的variable。</li>
+<li>同一个时刻只能有一个owner。</li>
+<li>当owner离开了作用于，data将会被dropped释放。  </li>
+</ul>
+<p>上面说stack里面只存储指针，不存储数据，其实是不准确的，因为有些叫Stack-Only Data，比如integers。</p>
+<p>如果一个类型实现了Copy接口，那么就不会存在Drop接口；反之亦然。  </p>
+<p>像是integers这种类型在编译的时候能够知道需要空间大小，所以实际的value非常快；同时，对这些类型来说，深拷贝和浅拷贝没有任何区别。</p>
+<table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">ownership转移</th>
+<th align="left">解决思路/效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">作为函数形参传递</td>
+<td align="left">此时，ownership就已经转移到调用的子函数了，子函数执行完毕，变量就被drop了，此时，变量不可用。</td>
+<td align="left">将形参返回，此时ownership会重新被转移回来</td>
+</tr>
+<tr>
+<td align="left">返回形参不是一个好方式，如果有很多形参，这导致整个函数的臃肿。如果用&amp;的方式传递</td>
+<td align="left">子函数内不再拥有形参的ownership</td>
+<td align="left">可以放心地在子函数内使用形参，不用再返回形参</td>
+</tr>
+<tr>
+<td align="left">&amp;不占用ownership，那么可以有多个&amp;吗？如果声明为&amp;mut，是不是就可以修改形参了？</td>
+<td align="left">rust在设计上避免data race，要避免data race，所以可以同时读，读和写的作用域不能重叠，我们在C++中可以加锁控制，但在rust里就是本质上排除掉这种行为。</td>
+<td align="left">请参见 <strong>如何避免data race</strong></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h2 id="如何避免data-race"><a href="#如何避免data-race" class="headerlink" title="如何避免data race"></a><strong><font color=greeb>如何避免data race</font></strong></h2><p>首先，要明确出发data race的三个必要条件</p>
+<ol>
+<li>同时有两个或以上的pointer可以访问同一个数据</li>
+<li>至少有一个pointer正在写数据</li>
+<li>没有一个机制来同步访问数据  </li>
+</ol>
+<p>Rust为了解决这个问题，直接在编译阶段就报错。  </p>
+<p>有以下几种情况  </p>
+<ol>
+<li><font color=red>同一个作用域内</font>只要有一个&amp;mut  </li>
+</ol>
+<p>在这里，首先要理解同一个作用域的概念。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">let mut x &#x3D; String::from(&quot;hello&quot;)</span><br><span class="line">&#123;</span><br><span class="line">    let y &#x3D; &amp;mut x;</span><br><span class="line">&#125;</span><br><span class="line">let mut&amp; z &#x3D; x;</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，跟C/C++的作用域的概念类似，离开了代码块，我们就可以重新borrow了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let mut s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    let r1 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r2 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r3 &#x3D; &amp;mut s; &#x2F;&#x2F; BIG PROBLEM</span><br><span class="line"></span><br><span class="line">    println!(&quot;&#123;&#125;, &#123;&#125;, and &#123;&#125;&quot;, r1, r2, r3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子中，r3和r1 r2的作用域重叠，如果我们这些改写</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let mut s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    let r1 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    let r2 &#x3D; &amp;s; &#x2F;&#x2F; no problem</span><br><span class="line">    println!(&quot;&#123;&#125; and &#123;&#125;&quot;, r1, r2);</span><br><span class="line">    &#x2F;&#x2F; r1 and r2 are no longer used after this point</span><br><span class="line"></span><br><span class="line">    let r3 &#x3D; &amp;mut s; &#x2F;&#x2F; no problem</span><br><span class="line">    println!(&quot;&#123;&#125;&quot;, r3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是没有问题的。Rust程序是怎么判断作用域的呢？在compile的时候，rust程序会看到，在let r3 = &amp;mut s;之后已经没有再使用r1 r2了，这时候Rust就认为r1 r2的作用域在r3之前已经结束了。  </p>
+<h2 id="如何避免dangling-pointer悬停指针（野指针）"><a href="#如何避免dangling-pointer悬停指针（野指针）" class="headerlink" title="如何避免dangling pointer悬停指针（野指针）"></a><strong><font color=greeb>如何避免dangling pointer悬停指针（野指针）</font></strong></h2><p>我们知道如果两个指针指向同一个memory，如果我们free一次，那么此时另外一个指针就是成为野指针。  </p>
+<p>Rust为了解决这个问题，在编译的时候就会给予提示。  </p>
+<p>不光是上面说的情况，只要是指针指向的memory已经被drop掉了，那么指针就会编程野指针，下面的代码，在C++ compile的时候不会报错，但运行的时候会crash，Rust是在compile的时候做了强检查。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let reference_to_nothing &#x3D; dangle();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn dangle() -&gt; &amp;String &#123;</span><br><span class="line">    let s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    &amp;s &#x2F;&#x2F; Here, s goes out of scope, and is dropped. Its memory goes away.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该怎么解决这个问题呢？可以照着下面改</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let string &#x3D; no_dangle();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn no_dangle() -&gt; String &#123;</span><br><span class="line">    let s &#x3D; String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    s &#x2F;&#x2F;Ownership is moved out, and nothing is deallocated.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在总结下reference的两个使用规则  </p>
+<ol>
+<li>在任何时候，可以有一个mut reference和若干个immutable reference。 </li>
+<li>reference必须一直有效。  </li>
+</ol>
+<h2 id="切片类型slice-type"><a href="#切片类型slice-type" class="headerlink" title="切片类型slice type"></a><strong><font color=greeb>切片类型slice type</font></strong></h2><p>slice type是另一个没有ownership的数据类型。</p>
+<p>slice跟Python 的slice一样，也是一个对原始数据的reference，但string slice的index只面对UTF8 string，如果是多字节string，在compile的时候会报错。  </p>
+<p>slice适用于String integers这类，使用上没什么区别，但一定要遵守ownership的准则。</p>
+]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust Unrecoverable Errors with panic</title>
+    <url>/2020/09/13/Rust-Unrecoverable-Errors-with-panic/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(5) Using Structs to Structure Related Data</title>
+    <url>/2020/09/08/Rust-Using-Structs-to-Structure-Related-Data/</url>
+    <content><![CDATA[<p>Rust没有class的概念，有struct对应于其他类型的class，以及C/C++中的struct概念。</p>
+<table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">Rust struct</th>
+<th align="left">C++ Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">声明形式</td>
+<td align="left">与C语言struct类似，struct Rectangle{width:u32, height:u32,}</td>
+<td align="left">class {} 或者struct {} Test;</td>
+</tr>
+<tr>
+<td align="left">method</td>
+<td align="left">类似于非静态函数，声明形式跟Python中class接近，会有一个self参数，不过这个self参数可以是self或者&amp;self，取决于想要borrow一个mutable或者immutable</td>
+<td align="left">self与C++中隐藏的this指针类似</td>
+</tr>
+<tr>
+<td align="left">Associated Function</td>
+<td align="left">没有self参数，一般用作构造函数，比如String::from()就属于这种性质</td>
+<td align="left">不知道除了构造函数之外，还可以用作static成员函数吗？</td>
+</tr>
+</tbody></table>
+<p><strong><font color=green>String和&amp;str的区别</font></strong>  </p>
+<p>&amp;str是字符串的引用，String是基于堆创建的，可增长的。比如let s = “hello world”，s的类型就是&amp;str，右边称为字符串字面量literal，程序编译成二进制文件后，这个字符串会被保存在文件内部，所以s是特定位置字符串的引用，这就是为什么s是&amp;str类型。  </p>
+<p>&amp;str由于保存在二进制文件内，所以&amp;str类型不存在生命周期的概念，它是整个程序生命周期static内都能访问的。</p>
+<p>String是我们最常使用的字符串类型，本质上是vector，具备跟vetor类似的方法。</p>
+<p>也就是说，&amp;str类型变量没有lifetime，所以下面的代码会报错  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">struct User </span><br><span class="line">&#123;</span><br><span class="line">    username: &amp;str,</span><br><span class="line">    email: &amp;str,</span><br><span class="line">    sign_in_count: u64,</span><br><span class="line">    active: bool,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let user1 &#x3D; User &#123;</span><br><span class="line">        email: &quot;someone@example.com&quot;,</span><br><span class="line">        username: &quot;someusername123&quot;,</span><br><span class="line">        active: true,</span><br><span class="line">        sign_in_count: 1,</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a><strong><font color=0xFFFFFF>使用示例</font></strong></h2><h3 id="非结构体用法"><a href="#非结构体用法" class="headerlink" title="非结构体用法"></a><strong><font color=blue>非结构体用法</font></strong></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let width1 &#x3D; 30;</span><br><span class="line">    let height1 &#x3D; 50;</span><br><span class="line"></span><br><span class="line">    println!(</span><br><span class="line">        &quot;The area of the rectangle is &#123;&#125; square pixels.&quot;,</span><br><span class="line">        area(width1, height1)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn area(width: u32, height: u32) -&gt; u32 &#123;</span><br><span class="line">    width * height</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="简化用法"><a href="#简化用法" class="headerlink" title="简化用法"></a><strong><font color=blue>简化用法</font></strong></h3><p>可以在传入参数时临时构造结构体，但这样有一个问题，就是不知道结构体中成员的意义。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let rect1 &#x3D; (30, 50);</span><br><span class="line"></span><br><span class="line">    println!(</span><br><span class="line">        &quot;The area of the rectangle is &#123;&#125; square pixels.&quot;,</span><br><span class="line">        area(rect1)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn area(dimensions: (u32, u32)) -&gt; u32 &#123;</span><br><span class="line">    dimensions.0 * dimensions.1</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="常规用法"><a href="#常规用法" class="headerlink" title="常规用法"></a><strong><font color=blue>常规用法</font></strong></h3><p>定义新的结构体，在传参时把结构体作为参数，不管是mut还是immutable。这种使用方式跟C++非常类似。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">struct Rectangle &#123;</span><br><span class="line">    width: u32,</span><br><span class="line">    height: u32,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let rect1 &#x3D; Rectangle &#123;</span><br><span class="line">        width: 30,</span><br><span class="line">        height: 50,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    println!(</span><br><span class="line">        &quot;The area of the rectangle is &#123;&#125; square pixels.&quot;,</span><br><span class="line">        area(&amp;rect1)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn area(rectangle: &amp;Rectangle) -&gt; u32 &#123;</span><br><span class="line">    rectangle.width * rectangle.height</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用Derived-Traits打印struct内容"><a href="#用Derived-Traits打印struct内容" class="headerlink" title="用Derived Traits打印struct内容"></a><strong><font color=blue>用Derived Traits打印struct内容</font></strong></h3><p><strong><font color=red>错误写法</font></strong>  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">struct Rectangle &#123;</span><br><span class="line">    width: u32,</span><br><span class="line">    height: u32,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let rect1 &#x3D; Rectangle &#123;</span><br><span class="line">        width: 30,</span><br><span class="line">        height: 50,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    println!(&quot;rect1 is &#123;&#125;&quot;, rect1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><font color=red>正确写法</font></strong>  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#[derive(Debug)]</span><br><span class="line">struct Rectangle &#123;</span><br><span class="line">    width: u32,</span><br><span class="line">    height: u32,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let rect1 &#x3D; Rectangle &#123;</span><br><span class="line">        width: 30,</span><br><span class="line">        height: 50,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    println!(&quot;rect1 is &#123;:?&#125;&quot;, rect1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Rust(11) Writing Automated Tests</title>
+    <url>/2020/09/13/Rust-Writing-Automated-Tests/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Rust</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Sqrt(x)</title>
+    <url>/2020/12/01/Sqrt-x/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Strings library</title>
+    <url>/2020/09/02/Strings-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Strobogrammatic Number II</title>
+    <url>/2020/12/01/Strobogrammatic-Number-II/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Strobogrammatic Number III</title>
+    <url>/2020/12/01/Strobogrammatic-Number-III/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Strobogrammatic Number</title>
+    <url>/2020/12/01/Strobogrammatic-Number/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Thread support library</title>
+    <url>/2020/09/02/Thread-support-library/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>UNIX环境高级编程笔记（一）</title>
+    <url>/2020/11/12/UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Ugly Number II</title>
+    <url>/2020/12/01/Ugly-Number-II/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Ugly Number</title>
+    <url>/2020/12/01/Ugly-Number/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Valid Number</title>
+    <url>/2020/12/01/Valid-Number/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>用hexo搭建github blog</title>
+    <url>/2020/08/29/build-and-backup-github-pages-with-hexo/</url>
+    <content><![CDATA[<p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<p>我们的操作步骤是</p>
+<ol>
+<li>在github.io　hexo分支备份源文件</li>
+<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
+</ol>
+<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
+<a id="more"></a>
+
+<p>下面我们梳理一下具体的流程。  </p>
+<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color=0xFFFFFF>node及hexo环境</font></strong></h2><pre><code>mkdir blog
+npm i hexo-cli -g
+hexo -v 
+hexo init  
+npm install  </code></pre>
+<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color=0xFFFFFF>github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
+<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color=0xFFFFFF>发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
+<p>修改_config.yml文件</p>
+<pre><code>deploy:
+type: &#39;git&#39;
+repository: git@github.com:username/username.github.io.git
+branch: master</code></pre>
+<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color=0xFFFFFF>hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
+<p>所以，我们有两种处理方法</p>
+<ol>
+<li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
+<li>把github.io　切换到hexo branch，把blog folder中需要的文件<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">scaffolds&#x2F;  </span><br><span class="line">source&#x2F;  </span><br><span class="line">themes&#x2F;  </span><br><span class="line">.gitignore  </span><br><span class="line">_config.yml  </span><br><span class="line">package.json  </span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>拷贝到github.io所在的目录，然后  </p>
+<pre><code>git add --all  
+git commit 
+git push --set--upstream origin hexo　
+　</code></pre>
+<p>然后把.git目录拷贝到blog folder</p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color=0xFFFFFF>发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
+<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color=0xFFFFFF>环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#x6d;">&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#x6d;</a>/username/username.github.io</del></p>
+<p>The instrutions above is not right, you should do as follows</p>
+<pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
+npm install</code></pre>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color=0xFFFFFF>小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color=0xFF>添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
+<pre><code>npm install hexo-generator-searchdb  </code></pre>
+<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color=0xFF>首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
+<p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
+<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color=0xFF>文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">index_generator:</span><br><span class="line">  path: &#39;&#39;</span><br><span class="line">  per_page: 10</span><br><span class="line">  order_by: -updated #从-date改成-updated</span><br></pre></td></tr></table></figure>
+
+<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color=0xFF>git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
+<p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>const in c++</title>
+    <url>/2020/09/02/const-in-c/</url>
+    <content><![CDATA[<p>在C++中，const用来表示常量、不变的涵义。  </p>
+<p>我们先看下面的例子。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int func_1() &#123;return 6;&#125;</span><br><span class="line">int func_2(int x)&#123;</span><br><span class="line">    int temp &#x3D; x;</span><br><span class="line">    return temp;</span><br><span class="line">&#125;</span><br><span class="line">string func_3()&#123;</span><br><span class="line">    return &quot;hello&quot;;</span><br><span class="line">&#125;</span><br><span class="line">string func_4()&#123;</span><br><span class="line">    string temp &#x3D; &quot;hello&quot;;</span><br><span class="line">    return temp;</span><br><span class="line">&#125;</span><br><span class="line">typedef struct HaHa&#123;</span><br><span class="line">    int a;</span><br><span class="line">    float b;</span><br><span class="line">    char c;</span><br><span class="line">&#125;*pHaHa;</span><br><span class="line">HaHa func_5()</span><br><span class="line">&#123;</span><br><span class="line">    return &#123;1, 1.0f, &#39;a&#39;&#125;;</span><br><span class="line">&#125;</span><br><span class="line">const HaHa func_6()&#123;</span><br><span class="line">    return &#123;1, 1.0f, &#39;a&#39;&#125;;</span><br><span class="line">&#125;</span><br><span class="line">func_1() &#x3D; 1;              &#x2F;&#x2F;error   </span><br><span class="line">func_2() &#x3D; 2;              &#x2F;&#x2F;error</span><br><span class="line">func_3() &#x3D; &quot;3&quot;;            &#x2F;&#x2F;error</span><br><span class="line">func_4() &#x3D; &quot;4&quot;;            &#x2F;&#x2F;right</span><br><span class="line">func_5() &#x3D; &#123;2, 2.0f, &#39;b&#39;&#125;; &#x2F;&#x2F;right</span><br><span class="line">func_6() &#x3D; &#123;2, 2.0f, &#39;b&#39;&#125;; &#x2F;&#x2F;error: passing ‘const haha’ as ‘this’ argument of ‘haha&amp; haha::operator&#x3D;(haha&amp;&amp;)’ discards qualifiers [-fpermissive]</span><br></pre></td></tr></table></figure>
+
+<p>目前已知的规则，有如下几个</p>
+<table>
+<thead>
+<tr>
+<th align="left">规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">const修饰变量，value不可修改</td>
+</tr>
+<tr>
+<td align="left">指针使用const，指针自身不可修改 int * const p 修饰的是指针； const int <em>p 修饰的是变量； const int</em> const p; 二者皆被修改</td>
+</tr>
+<tr>
+<td align="left">const 修饰函数参数，参数在函数内不可修改</td>
+</tr>
+<tr>
+<td align="left">const指针所指向的内容不可修改 void func(const char* var)</td>
+</tr>
+<tr>
+<td align="left">参数为引用，为了增加效率同时防止修改 void func(const Type&amp; var)</td>
+</tr>
+</tbody></table>
+<p>现在我们单独说一说 <strong><font color=red>const修饰函数返回值</font></strong> 的情况。  </p>
+<p>如果返回值为某个对象的const或者某个对象的引用const，则返回值具有const属性，则返回实例只能访问A中的public protect数据成员和const成员函数，并且 <strong><font color=red>不允许对其进行赋值操作</font></strong> 。  </p>
+<p>上面的例子中，返回值为int的都是右值，看汇编中是直接把结果放到%rax中，而寄存器我们都知道是没有地址的。</p>
+<p>区分左值和右值的一种简单方法是看能否对该值取地址&amp;。  </p>
+<p>但为什么返回值是string的时候就可以了呢？</p>
+<p>在<a href="https://blog.csdn.net/qq_22660775/article/details/89854545">C++：函数返回值与临时变量</a> 介绍了，一般函数返回值是非引用类型的时候，函数会创建临时对象，函数返回的就是这个临时对象，如果有=，那么就用临时变量初始化=左边的参数。  </p>
+<p>但返回值为非引用int这种类型的时候，是没有构造临时对象的，为什么呢？满足什么条件的返回值是不会构造临时对象的呢？不能直接用寄存器表示，必须放在内存中的value，就必须构造临时对象；可以直接放在寄存器中的value，就不会构造临时对象。  </p>
+<p>可以像上面这么理解吗？  </p>
+<p>现在回到另外一个问题，为什么const 临时对象就不可以呢？ 明明临时对象就是具有const属性，我们const = const不可以吗？  </p>
+<p>问题还是出在到底这个类型的运算符重载=到底是怎么实现的？  </p>
+<p>现在问题是上面提到的不允许对某个对象的const或const引用进行赋值操作？ 因为如果返回值是const，那么重载运算符=的返回值也要是const，这样会导致我们限定死了返回值不可被修改，它不能访问非const成员和变量。而一般情况下=的重载返回值都没有const限定符，因为这样返回对象就只能访问const成员和变量。  </p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>delete之后发生了什么</title>
+    <url>/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">char* p &#x3D; new char[1024];</span><br><span class="line">delete p;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; p[0] &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码会崩溃吗？  </p>
+<p>不一定，delete是释放堆空间，但实际上内存只是被回收了，p还是指向那块区域，所以我们还可以继续使用，但这块空间的value有可能已经不是我们原来的value了，因为如果这块空间被重新分配给其它变量的话，有可能就会读写这块空间，value就会被改变。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>git学习</title>
+    <url>/2020/10/22/git%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<p>今天找到一个非常直观的git学习网站 <a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
+<p>Let’s go!  </p>
+<a id="more"></a>
+
+
+
+
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a><strong>Appendix</strong></h2><h3 id="git-merge-3-way-merge-algorithm"><a href="#git-merge-3-way-merge-algorithm" class="headerlink" title="git merge : 3-way merge algorithm"></a><strong>git merge : 3-way merge algorithm</strong></h3><p><a href="https://stackoverflow.com/questions/14961255/how-does-git-merge-work-in-details">How does ‘git merge’ work in details?</a><br><a href="https://en.wikipedia.org/wiki/Merge_(version_control)">Merge (version control)</a><br><a href="https://www.savaslabs.com/blog/strategies-and-tools-resolving-git-merge-conflicts#:~:text=In%20a%20three%20way%20merge,before%20the%20two%20branches%20forked">Strategies and Tools for Resolving Git Merge Conflicts</a>  </p>
+<h3 id="git-rebase-变基的原理是什么"><a href="#git-rebase-变基的原理是什么" class="headerlink" title="git rebase: 变基的原理是什么"></a><strong>git rebase: 变基的原理是什么</strong></h3><h3 id="git-reset-reset之后某些丢掉的commit能被找回来吗"><a href="#git-reset-reset之后某些丢掉的commit能被找回来吗" class="headerlink" title="git reset: reset之后某些丢掉的commit能被找回来吗"></a><strong>git reset: reset之后某些丢掉的commit能被找回来吗</strong></h3><p><a href="https://stackoverflow.com/questions/10099258/how-can-i-recover-a-lost-commit-in-git">How can I recover a lost commit in Git?</a>  </p>
+<h3 id="git-reset-reset如何调整commit的顺序？"><a href="#git-reset-reset如何调整commit的顺序？" class="headerlink" title="git reset: reset如何调整commit的顺序？"></a><strong>git reset: reset如何调整commit的顺序？</strong></h3><p>rebase调整commit的原理是什么？</p>
+<h3 id="git-cherry-pick"><a href="#git-cherry-pick" class="headerlink" title="git cherry-pick"></a><strong>git cherry-pick</strong></h3><ol>
+<li>cherry-pick 多个不同branch的commit，可以直接像下面这么写吗 git cherry-pick commit1 commit4 commit9（这三个commit分属不同的branch）  </li>
+<li>cherry-pick的commit是由merge而来的，此时会出现什么问题？遇到这种情况，该怎么处理？  </li>
+</ol>
+<h3 id="如何定位哪个commit开始引入了某个bug"><a href="#如何定位哪个commit开始引入了某个bug" class="headerlink" title="如何定位哪个commit开始引入了某个bug"></a><strong>如何定位哪个commit开始引入了某个bug</strong></h3><h3 id="之前的某个commit存在bug，该如何修复"><a href="#之前的某个commit存在bug，该如何修复" class="headerlink" title="之前的某个commit存在bug，该如何修复"></a><strong>之前的某个commit存在bug，该如何修复</strong></h3><ul>
+<li>直接新加一个修复bug的commit，简单直接  </li>
+<li></li>
+</ul>
+]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>gtest学习</title>
+    <url>/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<p>如果让我设计一个测试框架，我会怎么弄？</p>
+<p>我有几个疑问：  </p>
+<ul>
+<li>是面向接口测试，还是面向功能测试？比如我要实现某个功能X，可能要调用接口A，接着B，最后C。当然可以采用test suite的概念，还是按照接口写test case，但一些test case可以组成test suite</li>
+<li>test case能否做到与input output无关？比如A-&gt;B A-&gt;C ， 这两个test suite，给A的输入不同，输出也不同，有人说那你test suite组合起来就好了，接口可以做到跟输入分离，可如果是单独测试A接口呢？有单独的input？ 这倒是也可以。</li>
+</ul>
+<p>这么一想，问题倒是都能解决，接口测试为基本的test case，接口与输入、输出分离，比如可以有config，不是写死的状态；根据功能性，某些test case可以组成test suite，这里面接口用到的input output也是不同的。  </p>
+<p>接下来我们看看Googletest的使用以及实现原理吧。  </p>
+<h2 id="1-大体思路"><a href="#1-大体思路" class="headerlink" title="1 大体思路"></a><strong>1 大体思路</strong></h2><p>gtest的github repository里有gtest和gmock，gmock可以认为是依托gtest实现了更高级的功能（现在还没看，后面写sample）。编译成功之后，会生成libgtest.a libgmock.a libgtest_main.a libgmock_main.a，这里libgtest_main.a 其实是包含了以下代码</p>
+<pre><code>int main(int argc, char* argv[])
+&#123;
+    testing::InitGoogleTest(&amp;argc, argv);
+    return RUN_ALL_TESTS();
+&#125;</code></pre>
+<p>这样我们写unit_test.cpp就可以了，然后直接编译进去，生成可执行，然后直接跑就会进入到libgtest_main.a的main函数里，跑所有的test。  </p>
+<h2 id="2-正式集成"><a href="#2-正式集成" class="headerlink" title="2 正式集成"></a><strong>2 正式集成</strong></h2><h3 id="2-1-现有工程的TestSuite"><a href="#2-1-现有工程的TestSuite" class="headerlink" title="2.1 现有工程的TestSuite"></a><strong>2.1 现有工程的TestSuite</strong></h3><p>今天看公司代码里的测试用例，全部是按照功能来写的，大概类似于</p>
+<pre><code>TEST(TestSuiteName, TestCaseName)
+&#123;
+    Init();
+    Start();
+    Stop();
+    Destroy();
+&#125;</code></pre>
+<p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
+]]></content>
+      <categories>
+        <category>tools</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Input/Output library</title>
+    <url>/2020/08/30/input-output-library/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
+<img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
+
+
+
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
+]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>leetcode 1 Two Sum</title>
+    <url>/2020/09/18/leetcode-1-Two-Sum/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>leetcode 前言</title>
+    <url>/2020/09/18/leetcode-%E5%89%8D%E8%A8%80/</url>
+    <content><![CDATA[<p>从今天开始刷题，时刻做好面试的准备，目前计划是在2月底之前刷完1587道题目，不仅仅是做题，希望自己能找到更底层的理论，比如根据信息论推导出排序最快也无法超过O(NlogN)，也希望自己能根据类别来做总结，leetcode上已经有category了，比如array，比如DP。  </p>
+<p>算了下，任务还是很重的，每天什么都不干，也得10道题，而且C++ Concurrency、 C++11/14/17新特性、Rust、Python这些都得掌握啊，任务还是非常艰巨的，目前来看没有完成的空间，但事在人为，如果我想摆脱现状，那么要做的就是最大可能激发自己的潜力，不然就只能陷入这种”差公司-&gt; 心情不好，技术无法提升，担心被淘汰 -&gt; 没有时间努力 -&gt; 找不到好公司 -&gt; 差公司“ 怪圈，我这辈子就再也没有机会出来了，因为我今年已经35了。  </p>
+<p>一个人的能力如果不能随着年龄增长而相应提升，那么在职场上他就会被淘汰。 </p>
+<p>年底媳妇儿就不上班了，我要努力换一份double的工作。  </p>
+<p>说实话，也该double了。  </p>
+<p><strong>update 2020.9.20</strong> </p>
+<p>打算用rust和c++ python同时刷leetcode，算是一个非常间距的任务了。加油吧。</p>
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
+    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
+    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma1.png" class=""> 
+
+<p>按两次shift就变成正常了  </p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma2.png" class="">  
+
+<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
+<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma3.png" class="">  
+
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma4.png" class="">  ]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>utf8 格式源代码跨平台编译</title>
+    <url>/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/</url>
+    <content><![CDATA[<p>在Windows平台，如果不指定bom头的话，是不清楚当前是什么编码格式的，如果我们在代码中使用了中文，系统根本不知道是utf-8 还是unicode-16，而对Linux来说，默认就是utf-8，所以写中文没关系。</p>
+<p>现在VS已经可以支持utf-8 without BOM的源码编译了，VS2015 update2之后就支持附加编译选项/utf-8，支持直接输出中文。  <a href="https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?redirectedfrom=MSDN&view=vs-2019">/utf-8 (Set Source and Executable character sets to UTF-8)</a>  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>一台机器最多可以维持多少TCP连接</title>
+    <url>/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/</url>
+    <content><![CDATA[<p><code>server code</code></p>
+<pre><code>import socket  
+
+if __name__ == &#39;__main__&#39;:
+    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
+    while True:
+        pass</code></pre>
+<p><code>client code</code>  </p>
+<pre><code>import socket
+if __name__ == &#39;__main__&#39;:
+    i = 0
+    while True:
+        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
+        if mySocket is None:
+            print(&quot;create client connect failed&quot;)
+            break
+        else:
+            print(&quot;create client connection succeed&quot;)
+            i = i + 1
+            print(&#39;current connection count &#39;, i)  </code></pre>
+<p>可以创建连接，但存在几个现象  </p>
+<ol>
+<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
+<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
+<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
+<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
+</ol>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>倒计时55天</title>
+    <url>/2021/01/05/%E5%80%92%E8%AE%A1%E6%97%B655%E5%A4%A9/</url>
+    <content><![CDATA[<p>活了35年，得到的了几个教训：果断取舍、勇敢面对、理性控制。  </p>
+<p>果断取舍，得出优劣之后，果断做出选择，不优柔寡断，浪费时间。  </p>
+<p>勇敢面对，不自欺欺人，理性分析当前境况，为决断收集足够多的信息。</p>
+<p>理性控制，不感情用事，以利益的角度来看待问题，不乱说话，理性指定计划，包括树立自己的自信心，不被别人pua，不被困难打倒。  </p>
+<p>总共55天的时间，可能不会每一天都学习，每天学习的时间也无法控制，但无论有多少成效，我都要坚持下去，虽然说是55天，但这只是一个引子，55天之后，我也会坚持下去。  </p>
+<p>作为通信毕业生，我的计算机理论基础很差，即使我已经35岁，在外面看来是要被淘汰的年纪了，但我一方面不care这个，你的公司有年龄限制，在我这也会加入黑名单，另一方面，我的基础确实差，我不以面试为结果导向，我以打基本功为基本导向。  </p>
+<p>不考虑找新工作，我想解决的问题，或者说让我感觉工作特别累、特别烦心的问题，有以下几个  </p>
+<ul>
+<li>多线程程序设计能力差，不知道该怎么分析多线程逻辑，怎么同步，怎么降低CPU轮询，mutex直接让线程等待到底为什么会卡住，或者耗时增加，等等问题都不明白</li>
+<li>C++代码不优雅，写的特别烂</li>
+<li>C++模板不太会用高级功能，比如result_of这种，也就是说自己基本上不用C++11及更新的C++特性或者说定义，感觉代码适配性差</li>
+<li>C++代码测试不会写，或者说搞不懂该怎么写，该怎么设计用例，代码测试框架为什么是这样的，为什么googletest要这么设计，它所遵循的核心原则是什么</li>
+<li>CMake不会用</li>
+<li>汇编能力差，虽然前期补了一点，但看代码的能力确实很差。现在的疑问是我的需求是什么？我该怎么学些汇编？现在看来我学习汇编有两个目的，一个是看dump，另一个是各种硬件加速，比如arm x86指令集加速等等，我还想学习cuda，但找不到自己适合的场景 </li>
+<li>我不懂编译原理，感觉对整个计算机体系的理解也差了很多，比如在了解memory order的时候，我就不理解cache的概念，对计算机系统的不理解导致我干很多事情都不知道底层原理，自己就没了信心</li>
+<li>我不懂Python，写小工具特别费劲，我到现在也不知道该怎么学习Python，特别痛苦，要先总结自己的使用场景吗？ 真想成为Python大拿，这样很多事情不用C++来搞也方便。</li>
+<li>C++的文件读写我是真的有病，这一块也没有搞懂，每次写文件操作，还要上网查。</li>
+<li>C++的数据结构，我在使用的过程中经常会感到痛苦，不知道为什么，现在想想可能是因为自己对他们缺乏了解？每次都要查API</li>
+<li>我对算法几乎一无所知，感觉像个傻子，在做各种编程题目的时候特别难受，虽然不以面试为结果导向，但实际上算法跟计算机体系结构和编译原理是有很强的相关性的</li>
+<li>我不会OpenGL，我对图形学一无所知，感觉要继续看Games101才可以。</li>
+<li>不会shell编程</li>
+<li>不会Linux编程</li>
+</ul>
+<p>先列出来的就是这些，那么接下来我要分析梳理这些问题，然后集中精力解决它们，也许有的可以集中几天搞定，有的因为耗时太长，需要跟其它的一起进行，总之，先整理信息。</p>
+<table>
+<thead>
+<tr>
+<th align="left">大类</th>
+<th align="left">子问题</th>
+<th align="left">解决方案</th>
+<th align="left">轻重缓急</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">工具类</td>
+<td align="left">代码测试</td>
+<td align="left">gtest</td>
+<td align="left">重急</td>
+</tr>
+<tr>
+<td align="left">工具类</td>
+<td align="left">CMake</td>
+<td align="left">《CMake Tutorial》</td>
+<td align="left">重急</td>
+</tr>
+<tr>
+<td align="left">工具类</td>
+<td align="left">python</td>
+<td align="left">python tutorial全部库掌握，多写例子</td>
+<td align="left">重急</td>
+</tr>
+<tr>
+<td align="left">工具类</td>
+<td align="left">shell编程</td>
+<td align="left">先弄明白，要专门学习shell编程吗？感觉脚本放在那，自己过段时间看都无权不明白什么意思</td>
+<td align="left">重急</td>
+</tr>
+<tr>
+<td align="left">语言</td>
+<td align="left">C++代码不优雅，C++11及newer的新特性不会用，多线程代码不会写</td>
+<td align="left">《C++ Concurrency》 &amp;&amp; cppreference全文尝试，自己多写例子，上传github</td>
+<td align="left">重缓</td>
+</tr>
+<tr>
+<td align="left">理论</td>
+<td align="left">不理解cache，不能熟练应对原码补码反码的推导，不理解内核态用户态，不理解程序如何被加载起来的</td>
+<td align="left">CSAPP</td>
+<td align="left">重急</td>
+</tr>
+<tr>
+<td align="left">理论</td>
+<td align="left">不理解在CMake里写编译选项的时候，这些选项都是什么意思，怎么减少符号导出，怎么减少包的体积，代码混淆是如何做到的</td>
+<td align="left">重缓</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">理论</td>
+<td align="left">不会OpenGL</td>
+<td align="left">Games101先把这个教程看完，完整的题目做完，思考总结</td>
+<td align="left">重缓</td>
+</tr>
+<tr>
+<td align="left">理论及工程</td>
+<td align="left">不懂模型</td>
+<td align="left">模型的结构，如何训练模型，如何在C++中展开神经网络</td>
+<td align="left">重急</td>
+</tr>
+</tbody></table>
+<h2 id="54天-2021-1-6"><a href="#54天-2021-1-6" class="headerlink" title="54天 2021.1.6"></a><strong>54天 2021.1.6</strong></h2><p>今天想的集成PPG方案，但没有做，看似有很多事情，但自己什么都没完成。  </p>
+<p>昨天看了gtest，本来想这两天弄完gtest和CMake，但看上去不可能了。  </p>
+<p>gtest看懂了大概的流程（编译、集成），但没有深入，比如如何测试类这种。</p>
+<p>今天剩下的时间看CMake吧。</p>
+<h2 id="53天-2021-1-7"><a href="#53天-2021-1-7" class="headerlink" title="53天 2021.1.7"></a><strong>53天 2021.1.7</strong></h2><p>昨天啥也没干，浪费了时间。<br>今天先看gtest的YouTube资料。  </p>
+<h2 id="52天-2021-1-8"><a href="#52天-2021-1-8" class="headerlink" title="52天 2021.1.8"></a><strong>52天 2021.1.8</strong></h2>]]></content>
+      <categories>
+        <category>Career</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何从100亿个url中找出相同的url</title>
+    <url>/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/</url>
+    <content><![CDATA[<p>看到这道题目的第一反应，HashMap，但100亿真的太多了，我不可能在内存中建立一个这个大的HashMap。</p>
+<p>这里面需要的操作是</p>
+<ol>
+<li>计算所有文件的hash（还要解决可能出现的哈希冲突）</li>
+<li>内存中要保存一个几百G的哈希表</li>
+</ol>
+<p>查找的时候因为是哈希，所以不需要遍历匹配，所以这块消耗不大。</p>
+<p>但内存就否决了方案。  </p>
+<p>一个优化思路是 计算出hash之后%1000，这样可以分成1000个文件夹，这次每次处理其中一个文件夹就好。  </p>
+<p>但这里也要问题</p>
+<ol>
+<li>如何保证尽量均为分布到1000个文件夹？很难，尽量选用合适的哈希算法。  </li>
+<li>IO操作大，因为计算哈希之后要先保存下来，再%1000。  </li>
+</ol>
+<p>还有一个思路，就是外部排序，然后逐个比较，但外部排序100亿个，O(NlogN)，而且也不能一次加载到内存中。 </p>
+<p>从知乎一个回答上看可以用布隆filter，而这又是redis里的概念，所以</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mapreduce redis是怎么实现的呢？</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>指令集加速</title>
+    <url>/2020/09/24/%E6%8C%87%E4%BB%A4%E9%9B%86%E5%8A%A0%E9%80%9F/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>hardware speedup</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据格式比较 json xml protobuf yaml及others</title>
+    <url>/2021/01/04/%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E6%AF%94%E8%BE%83-json-xml-protobuf-yaml%E5%8F%8Aothers/</url>
+    <content><![CDATA[<p>在开发过程中，我们会把自己的数据做一些定义，在程序中表示是数据结构，在本地保存成文件时，就要在文件中定义格式。  </p>
+<p>那么数据以什么样的形式组织比较好呢？  </p>
+<p>首先，要明确需求，也就是我们关注的点有哪些？</p>
+<ul>
+<li>当前数据集的特点</li>
+<li>有没有好的第三方库（稳定，bug少，支持特性多，漏洞少，接口友好）</li>
+<li>效率（内存等，不同使用场景下也许不同库存在不同，比如A库在某些场景下优于B，B在某些场景下优于A）</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p> <a href="https://blog.mbedded.ninja/programming/serialization-formats/a-comparison-of-serialization-formats/">A Comparison Of Serialization Formats</a></p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>文件格式之我见</title>
+    <url>/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>神经网络与模型浅析</title>
+    <url>/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/</url>
+    <content><![CDATA[<p>一直在用研究提供的模型，底层提供的SDK，但模型里面到底是什么，SDK又是怎么加载不同模型的呢？ 在这里，我们学习一下。  </p>
+]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python学习路线</title>
+    <url>/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
+    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+<a id="more"></a>
+
+
+<h1 id="2-我所理解的语言特性"><a href="#2-我所理解的语言特性" class="headerlink" title="2 我所理解的语言特性"></a><strong>2 我所理解的语言特性</strong></h1><p>语言是特性的集合。</p>
+<h2 id="2-1-运算符"><a href="#2-1-运算符" class="headerlink" title="2.1 运算符"></a><strong>2.1 运算符</strong></h2><p>标配。转自Python-100-Days<br>| 运算符                                                       | 描述                           |<br>| ———————————————————— | —————————— |<br>| <code>[]</code> <code>[:]</code>                                                   | 下标，切片                     |<br>| <code>**</code>                                                         | 指数                           |<br>| <code>~</code> <code>+</code> <code>-</code>                                                  | 按位取反, 正负号               |<br>| <code>*</code> <code>/</code> <code>%</code> <code>//</code>                                             | 乘，除，模，整除               |<br>| <code>+</code> <code>-</code>                                                      | 加，减                         |<br>| <code>&gt;&gt;</code> <code>&lt;&lt;</code>                                                    | 右移，左移                     |<br>| <code>&amp;</code>                                                          | 按位与                         |<br>| <code>^</code> <code>|</code>                                                      | 按位异或，按位或               |<br>| <code>&lt;=</code> <code>&lt;</code> <code>&gt;</code> <code>&gt;=</code>                                            | 小于等于，小于，大于，大于等于 |<br>| <code>==</code> <code>!=</code>                                                    | 等于，不等于                   |<br>| <code>is</code>  <code>is not</code>                                               | 身份运算符                     |<br>| <code>in</code> <code>not in</code>                                                | 成员运算符                     |<br>| <code>not</code> <code>or</code> <code>and</code>                                             | 逻辑运算符                     |<br>| <code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>//=</code> <code>**=</code> <code>&amp;=</code> <code>|=</code> <code>^=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code> | （复合）赋值运算符             |</p>
+<p>is、is not、in、not in </p>
+<p>在Python中is是用来表示内存地址（引用）的一致性；in是值判断，同时我们要注意嵌套内容是无法判断的，比如 4 in [1, [1,4]]就是False，[1,4] in [1, [1,4]] 是True。</p>
+<h2 id="2-2-分支及循环"><a href="#2-2-分支及循环" class="headerlink" title="2.2 分支及循环"></a><strong>2.2 分支及循环</strong></h2><p>if for while就是我们所说的分支和循环，在C++中，我们会用上面的运算符来作为分支的判断条件，在Python中稍有不同。  </p>
+<ul>
+<li>如果我们明确知道循环的次数，或者要对一个容器进行迭代，那么建议使用for-in结构</li>
+<li>如果要构造不知道具体循环次数的循环结构，我们推荐使用while循环。while循环通过一个能够产生或转换出bool值的表达式来控制循环，表达式的值为True则继续循环；表达式的值为False则结束循环。</li>
+</ul>
+<p>用jupyter写test case的时候，下意识用了 i++ i–结果发现Python中没有这个语法，后来想了下Python中并没有这样的语法，同时也不明白为什么C/C++中要有自增自减运算符，是为了提升效率吗？ 不得而知。  </p>
+<h2 id="2-3-函数-类"><a href="#2-3-函数-类" class="headerlink" title="2.3 函数 类"></a><strong>2.3 函数 类</strong></h2><h3 id="2-3-1-函数"><a href="#2-3-1-函数" class="headerlink" title="2.3.1 函数"></a><strong>2.3.1 函数</strong></h3><p>先说函数，函数包含函数名称，参数，以及返回值，在Python中不显式指明返回值类型，所以我们关注的重点是参数。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关于函数返回值，Python最开始是不会直接声明返回值类型的，一般都要看API docstring，如果我们用到了一个文档很差的库，只能看源码了。当然，不直接声明返回值类型主要也是因为有些function的返回值类型并不确定，比如我们可以返回int，也可以返回list，tuple，但return type并不确定的时候，函数声明中也就没必要写了。后来Python也发现，有的时候还是需要return type的，或者说我们写的大部分函数的return type都是明确的，在声明的时候明确return type也能让使用者更加方便。</span><br><span class="line"></span><br><span class="line">下面这种写法就是明确了return type，不过这个是3.5之后才支持的</span><br><span class="line"></span><br><span class="line">def greeting(name: str) -&gt; str:</span><br><span class="line">  return &#39;Hello, &#123;&#125;&#39;.format(name)</span><br></pre></td></tr></table></figure>
+
+<p>接着谈参数，Python的参数大概有两种，一种叫position argument，一个类似于keyword argument，这两个都好理解，一个是根据位置，一个是根据参数名，那我们在传参的时候到底是根据position还是根据keyword呢？</p>
+<p>我这边有一个简单的想法就是，无论我们以何种方式传参，都不能让函数调用的时候产生歧义，最终要跟函数声明一致，另外Python还是支持动态参数，类似于C++中的argc和argv。</p>
+<h2 id="2-4-字符串和常用数据结构"><a href="#2-4-字符串和常用数据结构" class="headerlink" title="2.4 字符串和常用数据结构"></a><strong>2.4 字符串和常用数据结构</strong></h2><h3 id="2-4-1-字符串"><a href="#2-4-1-字符串" class="headerlink" title="2.4.1 字符串"></a><strong>2.4.1 字符串</strong></h3><p>要说起字符串，那真的是五味杂陈，使用频率特别高，操作特别多，而且还涉及到不同的编码格式，我能想到的  </p>
+<ul>
+<li>切片</li>
+<li></li>
+</ul>
+<p>切片的话，需要知道start和end，一般有find_first_of find_last_of</p>
+<p>还有什么呢？</p>
+<p>leetcode上那些字符串算法其实在char数组上也适用，所以所谓的字符串算法跟字符串关系不大。</p>
+<h3 id="2-4-2-列表"><a href="#2-4-2-列表" class="headerlink" title="2.4.2 列表"></a><strong>2.4.2 列表</strong></h3><p>列表也可以切片，跟string不同的是，string是immutable，list是mutable。  </p>
+<h3 id="2-4-3-生成式与生成器"><a href="#2-4-3-生成式与生成器" class="headerlink" title="2.4.3 生成式与生成器"></a><strong>2.4.3 <a href="https://docs.python.org/3/tutorial/classes.html#generators">生成式与生成器</a></strong></h3><p>[x for x in range(1, 10)] 是生成式<br>(x for x in range(1, 10)) 是生成器  </p>
+<p><strong><font color=green size=4>yield构造生成器</font></strong>  </p>
+<p>如何理解yield呢，我的理解 yield = return_pause </p>
+<p>这里的意思是，yield构成的是一个generator，next的时候开始执行程序，直到遇到yield就把yield后面的value返回，同时整个程序pause，如果再次调用next，那么从当前pause的地方开始继续执行，直到遇到下一个yield语句。  </p>
+<p>下面是一个例子  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">def fib(n):  </span><br><span class="line">    a, b &#x3D; 0, 1  </span><br><span class="line">    for _ in range(n):  </span><br><span class="line">        a, b &#x3D; b, a+b  </span><br><span class="line">        yield a  </span><br><span class="line">        yield &quot;hello &quot;  </span><br><span class="line"></span><br><span class="line">def main():  </span><br><span class="line">    for x in fib(5):  </span><br><span class="line">        print(x)  </span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:  </span><br><span class="line">    main()  </span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，generator的返回值甚至可以不是同一种类型，感觉这种写法有两个好处 </p>
+<ol>
+<li>能够写更复杂的generator，比(x for x in range(100))这种复杂多了。  </li>
+<li>不用非得保存成list或者tuple，然后for 遍历，像上面的fib例子，如果我们的正常写法，有可能是fib的结果保存成一个list，然后返回，最后我们for遍历这个list，但我们直接用yield就省略了中间环节，直接输出我们想要的结果。  </li>
+</ol>
+<h3 id="2-4-4-元组"><a href="#2-4-4-元组" class="headerlink" title="2.4.4 元组"></a><strong>2.4.4 元组</strong></h3><p>元组可以储存不同乐行的变量，不过元组是immutable。既然我们有了list，为什么还需要tuple？  </p>
+<p>下面转自Python-100-days </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">这里有一个非常值得探讨的问题，我们已经有了列表这种数据结构，为什么还需要元组这样的类型呢？</span><br><span class="line"></span><br><span class="line">元组中的元素是无法修改的，事实上我们在项目中尤其是多线程环境（后面会讲到）中可能更喜欢使用的是那些不变对象（一方面因为对象状态不能修改，所以可以避免由此引起的不必要的程序错误，简单的说就是一个不变的对象要比可变的对象更加容易维护；另一方面因为没有任何一个线程能够修改不变对象的内部状态，一个不变对象自动就是线程安全的，这样就可以省掉处理同步化的开销。一个不变对象可以方便的被共享访问）。所以结论就是：如果不需要对元素进行添加、删除、修改的时候，可以考虑使用元组，当然如果一个方法要返回多个值，使用元组也是不错的选择。</span><br><span class="line">元组在创建时间和占用的空间上面都优于列表。我们可以使用sys模块的getsizeof函数来检查存储同样的元素的元组和列表各自占用了多少内存空间，这个很容易做到。我们也可以在ipython中使用魔法指令%timeit来分析创建同样内容的元组和列表所花费的时间，下图是我的macOS系统上测试的结果。</span><br><span class="line">&#96;&#96;&#96;  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="定义元组"><a href="#定义元组" class="headerlink" title="定义元组"></a>定义元组</h1><p>t = (‘骆昊’, 38, True, ‘四川成都’)<br>print(t)</p>
+<h1 id="获取元组中的元素"><a href="#获取元组中的元素" class="headerlink" title="获取元组中的元素"></a>获取元组中的元素</h1><p>print(t[0])<br>print(t[3])</p>
+<h1 id="遍历元组中的值"><a href="#遍历元组中的值" class="headerlink" title="遍历元组中的值"></a>遍历元组中的值</h1><p>for member in t:<br>    print(member)</p>
+<h1 id="重新给元组赋值"><a href="#重新给元组赋值" class="headerlink" title="重新给元组赋值"></a>重新给元组赋值</h1><h1 id="t-0-‘王大锤’-TypeError"><a href="#t-0-‘王大锤’-TypeError" class="headerlink" title="t[0] = ‘王大锤’  # TypeError"></a>t[0] = ‘王大锤’  # TypeError</h1><h1 id="变量t重新引用了新的元组原来的元组将被垃圾回收"><a href="#变量t重新引用了新的元组原来的元组将被垃圾回收" class="headerlink" title="变量t重新引用了新的元组原来的元组将被垃圾回收"></a>变量t重新引用了新的元组原来的元组将被垃圾回收</h1><p>t = (‘王大锤’, 20, True, ‘云南昆明’)<br>print(t)</p>
+<h1 id="将元组转换成列表"><a href="#将元组转换成列表" class="headerlink" title="将元组转换成列表"></a>将元组转换成列表</h1><p>person = list(t)<br>print(person)</p>
+<h1 id="列表是可以修改它的元素的"><a href="#列表是可以修改它的元素的" class="headerlink" title="列表是可以修改它的元素的"></a>列表是可以修改它的元素的</h1><p>person[0] = ‘李小龙’<br>person[1] = 25<br>print(person)</p>
+<h1 id="将列表转换成元组"><a href="#将列表转换成元组" class="headerlink" title="将列表转换成元组"></a>将列表转换成元组</h1><p>fruits_list = [‘apple’, ‘banana’, ‘orange’]<br>fruits_tuple = tuple(fruits_list)<br>print(fruits_tuple)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">### __2.4.5 set__  </span><br><span class="line"></span><br><span class="line">在这里没有multiset，不允许有重复元素。  </span><br></pre></td></tr></table></figure>
+<h1 id="创建集合的字面量语法"><a href="#创建集合的字面量语法" class="headerlink" title="创建集合的字面量语法"></a>创建集合的字面量语法</h1><p>set1 = {1, 2, 3, 3, 3, 2}<br>print(set1)<br>print(‘Length =’, len(set1))</p>
+<h1 id="创建集合的构造器语法-面向对象部分会进行详细讲解"><a href="#创建集合的构造器语法-面向对象部分会进行详细讲解" class="headerlink" title="创建集合的构造器语法(面向对象部分会进行详细讲解)"></a>创建集合的构造器语法(面向对象部分会进行详细讲解)</h1><p>set2 = set(range(1, 10))<br>set3 = set((1, 2, 3, 3, 2, 1))<br>print(set2, set3)</p>
+<h1 id="创建集合的推导式语法-推导式也可以用于推导集合"><a href="#创建集合的推导式语法-推导式也可以用于推导集合" class="headerlink" title="创建集合的推导式语法(推导式也可以用于推导集合)"></a>创建集合的推导式语法(推导式也可以用于推导集合)</h1><p>set4 = {num for num in range(1, 100) if num % 3 == 0 or num % 5 == 0}<br>print(set4)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">向集合添加元素和从集合删除元素。</span><br></pre></td></tr></table></figure>
+<p>set1.add(4)<br>set1.add(5)<br>set2.update([11, 12])<br>set2.discard(5)<br>if 4 in set2:<br>    set2.remove(4)<br>print(set1, set2)<br>print(set3.pop())<br>print(set3)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">集合的成员、交集、并集、差集等运算。</span><br></pre></td></tr></table></figure>
+<h1 id="集合的交集、并集、差集、对称差运算"><a href="#集合的交集、并集、差集、对称差运算" class="headerlink" title="集合的交集、并集、差集、对称差运算"></a>集合的交集、并集、差集、对称差运算</h1><p>print(set1 &amp; set2)</p>
+<h1 id="print-set1-intersection-set2"><a href="#print-set1-intersection-set2" class="headerlink" title="print(set1.intersection(set2))"></a>print(set1.intersection(set2))</h1><p>print(set1 | set2)</p>
+<h1 id="print-set1-union-set2"><a href="#print-set1-union-set2" class="headerlink" title="print(set1.union(set2))"></a>print(set1.union(set2))</h1><p>print(set1 - set2)</p>
+<h1 id="print-set1-difference-set2"><a href="#print-set1-difference-set2" class="headerlink" title="print(set1.difference(set2))"></a>print(set1.difference(set2))</h1><p>print(set1 ^ set2)</p>
+<h1 id="print-set1-symmetric-difference-set2"><a href="#print-set1-symmetric-difference-set2" class="headerlink" title="print(set1.symmetric_difference(set2))"></a>print(set1.symmetric_difference(set2))</h1><h1 id="判断子集和超集"><a href="#判断子集和超集" class="headerlink" title="判断子集和超集"></a>判断子集和超集</h1><p>print(set2 &lt;= set1)</p>
+<h1 id="print-set2-issubset-set1"><a href="#print-set2-issubset-set1" class="headerlink" title="print(set2.issubset(set1))"></a>print(set2.issubset(set1))</h1><p>print(set3 &lt;= set1)</p>
+<h1 id="print-set3-issubset-set1"><a href="#print-set3-issubset-set1" class="headerlink" title="print(set3.issubset(set1))"></a>print(set3.issubset(set1))</h1><p>print(set1 &gt;= set2)</p>
+<h1 id="print-set1-issuperset-set2"><a href="#print-set1-issuperset-set2" class="headerlink" title="print(set1.issuperset(set2))"></a>print(set1.issuperset(set2))</h1><p>print(set1 &gt;= set3)</p>
+<h1 id="print-set1-issuperset-set3"><a href="#print-set1-issuperset-set3" class="headerlink" title="print(set1.issuperset(set3))"></a>print(set1.issuperset(set3))</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    说明： Python中允许通过一些特殊的方法来为某种类型或数据结构自定义运算符（后面的章节中会讲到），上面的代码中我们对集合进行运算的时候可以调用集合对象的方法，也可以直接使用对应的运算符，例如&amp;运算符跟intersection方法的作用就是一样的，但是使用运算符让代码更加直观。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### __2.4.6 字典__  </span><br><span class="line"></span><br><span class="line">字典类似于C++中的map。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="创建字典的字面量语法"><a href="#创建字典的字面量语法" class="headerlink" title="创建字典的字面量语法"></a>创建字典的字面量语法</h1><p>scores = {‘骆昊’: 95, ‘白元芳’: 78, ‘狄仁杰’: 82}<br>print(scores)</p>
+<h1 id="创建字典的构造器语法"><a href="#创建字典的构造器语法" class="headerlink" title="创建字典的构造器语法"></a>创建字典的构造器语法</h1><p>items1 = dict(one=1, two=2, three=3, four=4)</p>
+<h1 id="通过zip函数将两个序列压成字典"><a href="#通过zip函数将两个序列压成字典" class="headerlink" title="通过zip函数将两个序列压成字典"></a>通过zip函数将两个序列压成字典</h1><p>items2 = dict(zip([‘a’, ‘b’, ‘c’], ‘123’))</p>
+<h1 id="创建字典的推导式语法"><a href="#创建字典的推导式语法" class="headerlink" title="创建字典的推导式语法"></a>创建字典的推导式语法</h1><p>items3 = {num: num ** 2 for num in range(1, 10)}<br>print(items1, items2, items3)</p>
+<h1 id="通过键可以获取字典中对应的值"><a href="#通过键可以获取字典中对应的值" class="headerlink" title="通过键可以获取字典中对应的值"></a>通过键可以获取字典中对应的值</h1><p>print(scores[‘骆昊’])<br>print(scores[‘狄仁杰’])</p>
+<h1 id="对字典中所有键值对进行遍历"><a href="#对字典中所有键值对进行遍历" class="headerlink" title="对字典中所有键值对进行遍历"></a>对字典中所有键值对进行遍历</h1><p>for key in scores:<br>    print(f’{key}: {scores[key]}’)</p>
+<h1 id="更新字典中的元素"><a href="#更新字典中的元素" class="headerlink" title="更新字典中的元素"></a>更新字典中的元素</h1><p>scores[‘白元芳’] = 65<br>scores[‘诸葛王朗’] = 71<br>scores.update(冷面=67, 方启鹤=85)<br>print(scores)<br>if ‘武则天’ in scores:<br>    print(scores[‘武则天’])<br>print(scores.get(‘武则天’))</p>
+<h1 id="get方法也是通过键获取对应的值但是可以设置默认值"><a href="#get方法也是通过键获取对应的值但是可以设置默认值" class="headerlink" title="get方法也是通过键获取对应的值但是可以设置默认值"></a>get方法也是通过键获取对应的值但是可以设置默认值</h1><p>print(scores.get(‘武则天’, 60))</p>
+<h1 id="删除字典中的元素"><a href="#删除字典中的元素" class="headerlink" title="删除字典中的元素"></a>删除字典中的元素</h1><p>print(scores.popitem())<br>print(scores.popitem())<br>print(scores.pop(‘骆昊’, 100))</p>
+<h1 id="清空字典"><a href="#清空字典" class="headerlink" title="清空字典"></a>清空字典</h1><p>scores.clear()<br>print(scores)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">### __2.4.6 数据结构总结__   </span><br><span class="line"></span><br><span class="line">按照是否可以被修改  </span><br></pre></td></tr></table></figure>
+<p>immutable: string tuple<br>mutable : list set dict</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">不同的创建方式 </span><br></pre></td></tr></table></figure>
+<p>list []<br>tuple ()<br>set{}<br>dict{:, :}</p>
+<p>当然这都是通过字面量来构造，每种类型也有自己的构造方式，比如set(), 比如dict()，创建方式并不固定，没有什么特殊的规律，都只是规则，规则不需要死记硬背，懂基本的构造方式，其他的方式，写代码熟练了也就知道了，长时间不用也会忘记。 还是要懂得输入输出，我们的大脑不是为了记住这些教条，而是为了形成模式，可以应对各种输入。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## __2.5 类__  </span><br><span class="line"></span><br><span class="line">跟C++类似，这里也有访问权限的问题，私有和公有，不过Python中对这块的限定没有那么严格，这也是我所认为的Python适合做对工程化要求没有那么严格的事情。  </span><br><span class="line"></span><br><span class="line">_name : 表示私有变量  </span><br><span class="line">__name : 表示私有成员  </span><br><span class="line"></span><br><span class="line">其实即使加上了前缀，也可以访问，Python在内部只是把前缀换了个名字。  </span><br><span class="line"></span><br><span class="line">如果确实要限制访问权限，那么就用修改器和访问器。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>class Person(object):</p>
+<pre><code>def __init__(self, name, age):
+    self._name = name
+    self._age = age
+
+# 访问器 - getter方法
+@property
+def name(self):
+    return self._name
+
+# 访问器 - getter方法
+@property
+def age(self):
+    return self._age
+
+# 修改器 - setter方法
+@age.setter
+def age(self, age):
+    self._age = age
+
+def play(self):
+    if self._age &lt;= 16:
+        print(&#39;%s正在玩飞行棋.&#39; % self._name)
+    else:
+        print(&#39;%s正在玩斗地主.&#39; % self._name)</code></pre>
+<p>def main():<br>    person = Person(‘王大锤’, 12)<br>    person.play()<br>    person.age = 22<br>    person.play()<br>    # person.name = ‘白元芳’  # AttributeError: can’t set attribute</p>
+<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    main()</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">### __2.5.1\_\_slots\_\_魔法__   </span><br><span class="line"></span><br><span class="line">Python是动态语言，他们说动态语言可以动态绑定属性和方法，可以把属性和方法动态绑定到类或者实例。  </span><br><span class="line"></span><br><span class="line">绑定规则如下</span><br><span class="line">* 绑定属性 ： 可以直接绑定属性到类和类实例</span><br><span class="line">* 绑定方法 ：  1. 绑定到实例 instance.function &#x3D; MethodType(function, instance)  2. class.function &#x3D; MethodType(function, class) 或者class.function &#x3D; function</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">__&lt;font color&#x3D;green&gt;绑定到实例&lt;&#x2F;font&gt;__</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>stu1 = Student();<br>stu1.name = ‘Tom’<br>print(stu1.name)<br>Tom<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘name’]</p>
+<p>def set_age(self, age):<br>…     self.age = age<br>…<br>set_age(stu1, 20)<br>print(stu1.age)<br>20<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’]<br>#并没有绑定方法到实例上<br>…<br>from types import MethodType<br>stu1.set_age = MethodType(set_age, stu1)<br>stu1.set_age(33)<br>print(stu1.age)<br>33<br>print(dir(stu1))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’, ‘set_age’]<br>#绑定的属性和方法只属于stu1的，对于其他实例不起作用<br>…<br>stu2 = Student()<br>print(dir(stu2))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">__&lt;font color&#x3D;green&gt;绑定到类&lt;&#x2F;font&gt;__  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>from types import MethodType<br>Student.set_name = MethodType(set_name, Student)<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Jack<br>print(stu2.name)<br>Jack<br>########<br>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>Student.set_name = set_name<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x</strong>‘, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Rose<br>print(stu2.name)<br>Jack</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">如果不想绑定那么多属性，那么可以通过__slots__来限定只允许添加某些属性，但这里有一个&lt;font color&#x3D;red&gt;__漏洞，我们可以通过动态添加方法，而方法中添加属性来迂回这个限制，所以我不明白这么操作的意义是什么__&lt;&#x2F;font&gt;。  </span><br><span class="line"></span><br><span class="line">### __2.5.2 staticmethod classmethod__   </span><br><span class="line"></span><br><span class="line">Python中也有静态方法，这个很好理解，就是跟实例没什么关系，classmethod则相当于C++中的拷贝构造函数。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### __2.5.3 类之间的关系__   </span><br><span class="line"></span><br><span class="line">is-a : 继承  </span><br><span class="line">has-a : 属性</span><br><span class="line">use-a： 方法参数</span><br><span class="line"></span><br><span class="line">继承很好理解，就是重写overwrite，如果想明确基类为抽象类的话，可以通过ABCMeta和abstractclass来实现。</span><br><span class="line"></span><br><span class="line">### __2.5.4 奇怪的lambda表达式__  </span><br><span class="line"></span><br><span class="line">在C++中我们写lambda [&#x3D;](int x, int y)  int &#123; return x + y;&#125;</span><br><span class="line"></span><br><span class="line">在python中竟然有这样的定义，看着也不是很正常啊，这里的return type是一个lambda。在C++中我们是不可以这么写的。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>def make_incrementor(n):<br>    return lambda x: x + n</p>
+<p>f = make_incrementor(42)<br>print(f(0))<br>print(f(1))</p>
+<pre><code>
+# __3 界面开发__  
+
+有tkinter pygame，对我来说，最起码目前无意义，没有做界面开发的需求。  
+
+# __4 文件和异常__    
+
+任何一门编程语言，关于文件操作都会关注这几个方面
+
+_&lt;font color=red&gt;以何种方式打开&lt;/font&gt;_  
+这个的打开方式是指： 打开什么样的文件（文本还是二进制）、做什么样的操作（读、写、还是追加）  
+
+| 操作模式 | 具体含义                         |
+| -------- | -------------------------------- |
+| `&#39;r&#39;`    | 读取 （默认）                    |
+| `&#39;w&#39;`    | 写入（会先截断之前的内容）       |
+| `&#39;x&#39;`    | 写入，如果文件已经存在会产生异常 |
+| `&#39;a&#39;`    | 追加，将内容写入到已有文件的末尾 |
+| `&#39;b&#39;`    | 二进制模式                       |
+| `&#39;t&#39;`    | 文本模式（默认）                 |
+| `&#39;+&#39;`    | 更新（既可以读又可以写）         |
+
+
+_&lt;font color=red&gt;要调用的接口&lt;/font&gt;_  
+
+
+## __4.1 文本文件__  
+
+    f = open()  
+    f.read()  
+    f.close()  
+
+或者 
+
+    f = open()  
+    for line in f:  
+        print(line)
+
+
+又或者    
+
+    f = open()  
+    lines = f.readlines()  //此时lines是列表  
+
+写文本文件把read换成write就好。  
+
+## __4.2 二进制文件__  
+
+跟文本文件类型，只不过read和write的操作对象是byte  
+
+## __4.3 JSON文件__  
+
+JSON的数据类型和Python的数据类型是很容易找到对应关系的，如下面两张表所示。
+
+| JSON                | Python       |
+| ------------------- | ------------ |
+| object              | dict         |
+| array               | list         |
+| string              | str          |
+| number (int / real) | int / float  |
+| true / false        | True / False |
+| null                | None         |
+
+| Python                                 | JSON         |
+| -------------------------------------- | ------------ |
+| dict                                   | object       |
+| list, tuple                            | array        |
+| str                                    | string       |
+| int, float, int- &amp; float-derived Enums | number       |
+| True / False                           | true / false |
+| None                                   | null         |  
+
+* dump - 将Python对象按照JSON格式序列化到文件中
+* dumps - 将Python对象处理成JSON格式的字符串
+* load - 将文件中的JSON数据反序列化成对象
+* loads - 将字符串的内容反序列化成Python对象  
+
+
+
+# __5 正则表达式__    
+
+个人认为正则表达式分为两部分  
+
+1. 判断是否适合用正则，如果适合，制定正则规则  
+2. 用语言规则实现  
+
+所以，我觉得没有必要记住这些语法，到用的时候再看就是了。  
+
+# __6 进程和线程__  
+
+与其它语言相比，理念都是一样的。  
+
+问题是我们是否要学习Python进程和线程中的基本概念？还是直接用Python提供的库？  
+</code></pre>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+</search>
