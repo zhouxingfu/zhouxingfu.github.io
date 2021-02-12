@@ -142,7 +142,11 @@ Output: [1,1,8,8]  </code></pre>
     <title>Diagnostics_Library(Error-Handling)</title>
     <url>/2020/09/02/Diagnostics-Library-Error-Handling/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2>]]></content>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/error">Error handling</a></p>
+]]></content>
       <categories>
         <category>STL</category>
       </categories>
