@@ -184,6 +184,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">拷贝构造函数 赋值运算符和强保证异常安全代码</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-14 02:09:15 / Modified: 04:12:27" itemprop="dateCreated datePublished" datetime="2021-02-14T02:09:15-08:00">2021-02-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">    public:</span><br><span class="line">    Test()&#123;cout &lt;&lt; &quot;explicit constructor with no argument&quot; &lt;&lt; endl;&#125;</span><br><span class="line">    &#x2F;&#x2F;Test(Test t)&#123;cout &lt;&lt; &quot;copy constructor&quot; &lt;&lt;endl;&#125;  &#x2F;&#x2F;1</span><br><span class="line">    Test(const Test&amp; t)&#123;cout &lt;&lt;&quot;copy constructor&quot; &lt;&lt; endl;&#125; &#x2F;&#x2F;2</span><br><span class="line">    Test&amp; operator&#x3D;(const Test&amp; t)&#123;</span><br><span class="line">        cout &lt;&lt; &quot;operator&#x3D;(const Test&amp; t)&quot; &lt;&lt;endl;</span><br><span class="line">    &#125; &#x2F;&#x2F;3</span><br><span class="line">    Test&amp; operator&#x3D;(Test t)&#123;</span><br><span class="line">        cout &lt;&lt; &quot;operator&#x3D;(Test t)&quot; &lt;&lt;endl;</span><br><span class="line">    &#125;&#x2F;&#x2F;4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么拷贝构造函数不能写成1的形式，必须写成2 的形式？  </p>
+<p>之前的回答是 减少一次拷贝，因为传值的时候会调用拷贝构造函数，传引用可以避免掉，至于传const引用，主要是避免实参被修改。<br>但现在深入的再思考就会发现，传值的时候调用拷贝构造函数，但实际上这是一个无限套娃，调用拷贝构造函数的时候，传入参数也是传值，这又要调用拷贝构造函数。<br>循环往复，没有尽头了。  </p>
+<p>至于3和4的区别在哪里呢？<br>3和4是两种写法。  </p>
+<p>用写法3的时候，就是operator=的实现就是拷贝构造函数的另一种实现，唯一的区别是要多一步检查（检查= 两边的对象是否相同，如果相同的话不做任何操作，否则，就要释放掉当前的内存，申请新内存，并拷贝内容过来）。  </p>
+<p>写法4的时候，就是我的申请内存的操作都是放在拷贝构造函数里的，这样我们的operator=的实现就很简单了，因为构造的临时变量已经分配了内存，那么代码中只需要进行swap就好了。 而且在swap的时候，我们交换的是临时变量和this的内容，离开当前堆栈销毁临时变量的时候，释放的也是我们原先this指向的this的内容，还减少了我们释放旧内存的操作。  </p>
+<p>4相比于3的写法，个人认为最大的好处是确保了 the strong guarantee。因为operator=如果不调用拷贝构造函数的话，也要自己在内部申请内存，拷贝内容，而且内部申请内存 抛出异常的话，还要确保代码满足the strong gurantee。而在拷贝构造函数中申请内存的话，其实也要处理异常，不过这就保证operator=是nothrow的。<br>既然拷贝构造函数本身就有异常处理，那我们何苦在operator=中也要再加上抛出exception的风险呢。  而且swap本身也是nothrow的。  </p>
+<p>至于3和4的返回值都是 引用类型。如果我们返回的是普通值类型，那么返回值这里要调用拷贝构造函数，这里就会造成内存泄漏，就拿4来说，我们本身就调用拷贝构造生成了一个临时变量（虽然是临时变量，但内存不会被销毁）</p>
+<p>下面是我们的一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">class TestArray&#123;</span><br><span class="line">public:</span><br><span class="line">    TestArray(): len_(0), data_(nullptr)&#123;</span><br><span class="line">        cout &lt;&lt; &quot;TestArray()&quot;&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    TestArray(const TestArray&amp; ta):len_(ta.len_), data_(len_? new char[len_] : nullptr)&#123;</span><br><span class="line">        std::copy(ta.data_, ta.data_ + len_, data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TestArray&amp; operator&#x3D;(TestArray other)&#123;</span><br><span class="line">        swap(*this, other);</span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~TestArray()&#123;</span><br><span class="line">        cout &lt;&lt; &quot;destructor&quot; &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">private:</span><br><span class="line">    size_t len_;</span><br><span class="line">    char* data_;</span><br><span class="line"></span><br><span class="line">    void swap(TestArray&amp; one, TestArray&amp; another)noexcept&#123;</span><br><span class="line">        using std::swap;</span><br><span class="line">        swap(one.len_, another.len_);</span><br><span class="line">        swap(one.data_, another.data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    TestArray a; &#x2F;&#x2F;1</span><br><span class="line">    TestArray b(a); &#x2F;&#x2F;2</span><br><span class="line">    TestArray c &#x3D; a;&#x2F;&#x2F;3</span><br><span class="line">    TestArray d;&#x2F;&#x2F;4</span><br><span class="line">    d &#x3D; a;&#x2F;&#x2F;5</span><br><span class="line">    return 0;&#x2F;&#x2F;6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1 的输出 应该是 TestArray这没有疑问<br>2 的输出是 Copy Constructor 也没问题<br>3 的输出，照着我最初的理解，是TestArray c; c = a; 那么输出应该是TestArray Copy Constructor 26 destructor，但最终的输出是 Copy Constructor。<br>这是什么原因呢？ 在编译器看来，不会做这么麻烦的操作，因为c没有被构造，所以这里TestArray c = a 是初始化而不是赋值，可以被看作TestArray c(a)。这样理解的话，就能理解为什么3的输出只有一个copy constructor了。<br>4 的输出 是TestArray<br>5 =左边d是已经被初始化的值，所以，此时才适用于 赋值运算符，此时在调用=的时候，传值会导致调用copy constructor。所以输出是copy constructor 26。此时，swap之后，临时变量要被释放，此时会调用destructor。  </p>
+<p>接着在离开main函数的时候，依次调用d c b a的析构函数。 </p>
+<p>那么最终的输出是 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">Copy Constructor</span><br><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">26</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -327,7 +411,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -341,7 +425,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/" class="post-title-link" itemprop="url">神经网络与模型浅析</a>
+            <a href="/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/" class="post-title-link" itemprop="url">文件格式之我见</a>
         </h2>
 
         <div class="post-meta">
@@ -351,7 +435,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-24 14:17:16" itemprop="dateCreated datePublished" datetime="2020-09-24T14:17:16-07:00">2020-09-24</time>
+              <time title="Created: 2020-09-23 21:22:03" itemprop="dateCreated datePublished" datetime="2020-09-23T21:22:03-07:00">2020-09-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -366,7 +450,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
                 </span>
             </span>
 
@@ -381,8 +465,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>一直在用研究提供的模型，底层提供的SDK，但模型里面到底是什么，SDK又是怎么加载不同模型的呢？ 在这里，我们学习一下。  </p>
-
+          
       
     </div>
 
@@ -483,7 +566,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -497,7 +580,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/" class="post-title-link" itemprop="url">文件格式之我见</a>
+            <a href="/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/" class="post-title-link" itemprop="url">神经网络与模型浅析</a>
         </h2>
 
         <div class="post-meta">
@@ -507,7 +590,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-23 21:22:03" itemprop="dateCreated datePublished" datetime="2020-09-23T21:22:03-07:00">2020-09-23</time>
+              <time title="Created: 2020-09-24 14:17:16" itemprop="dateCreated datePublished" datetime="2020-09-24T14:17:16-07:00">2020-09-24</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -522,7 +605,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
                 </span>
             </span>
 
@@ -537,7 +620,91 @@
     <div class="post-body" itemprop="articleBody">
 
       
+          <p>一直在用研究提供的模型，底层提供的SDK，但模型里面到底是什么，SDK又是怎么加载不同模型的呢？ 在这里，我们学习一下。  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
           
+            <a href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="post-title-link" itemprop="url">Python学习路线</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26-07:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -630,89 +797,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="post-title-link" itemprop="url">Python学习路线</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26-07:00">2020-10-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
-<p>下面开始正经的学习一下Python。</p>
-<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1073,79 +1157,6 @@ if __name__ == &#39;__main__&#39;:
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/24/%E6%8C%87%E4%BB%A4%E9%9B%86%E5%8A%A0%E9%80%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/24/%E6%8C%87%E4%BB%A4%E9%9B%86%E5%8A%A0%E9%80%9F/" class="post-title-link" itemprop="url">指令集加速</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-24 14:46:27" itemprop="dateCreated datePublished" datetime="2020-09-24T14:46:27-07:00">2020-09-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hardware-speedup/" itemprop="url" rel="index"><span itemprop="name">hardware speedup</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1215,7 +1226,7 @@ if __name__ == &#39;__main__&#39;:
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">114</span>
+          <span class="site-state-item-count">115</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
