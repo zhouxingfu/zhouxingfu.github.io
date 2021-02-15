@@ -699,7 +699,8 @@ Output: [1,1,8,8]  </code></pre>
   <entry>
     <title>Language support library</title>
     <url>/2020/09/02/Language-support-library/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a><strong>参考内容</strong></h2><p><a href="">Item 47: Use traits classes for information about types</a><br><a href="https://en.cppreference.com/w/cpp/types">Type support (basic types, RTTI, type traits)</a><br><a href="https://www.youtube.com/watch?v=VvbTP_k_Df4">CppCon 2015:Marshall Clow “Type Traits - what are they and why should I use them?”</a><br><a href="https://www.youtube.com/watch?v=tiAVWcjIF6o">Template Metaprogramming: Type Traits (part 1 of 2) - Jody Hagins - CppCon 2020</a><br><a href="https://www.youtube.com/watch?v=dLZcocFOb5Q">Template Metaprogramming: Type Traits (part 2 of 2) - Jody Hagins - CppCon 2020</a></p>
+]]></content>
       <categories>
         <category>STL</category>
       </categories>
@@ -1985,10 +1986,45 @@ npm install</code></pre>
 <img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
 
 
+<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
 
+<p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
+<font color=green>
+NOTE:
+这里有两个需要注意的点  
+1. 文件IO也是有缓存的，只不过标准IO是用户态缓存，文件IO是内核态缓存，标准IO的好处是可以减少访问CPU的次数。  
+2. 文件IO也叫低级别IO，所以不要以为fread fwrite就是文件IO，这里其实有混淆，感觉起名字不严谨。  
+</font>
 
-
-
+<table>
+<thead>
+<tr>
+<th align="left">操作</th>
+<th align="left">标准ＩＯ</th>
+<th align="left">文件ＩＯ(低级IO)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">打开</td>
+<td align="left">fopen,freopen,fdopen</td>
+<td align="left">open</td>
+</tr>
+<tr>
+<td align="left">关闭</td>
+<td align="left">fclose</td>
+<td align="left">close</td>
+</tr>
+<tr>
+<td align="left">读</td>
+<td align="left">getc,fgetc,getchar fgets,gets,fread</td>
+<td align="left">read</td>
+</tr>
+<tr>
+<td align="left">写</td>
+<td align="left">putc,fputc,putchar fputs,puts,fwrite</td>
+<td align="left">write</td>
+</tr>
+</tbody></table>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
 ]]></content>
       <categories>
@@ -2504,6 +2540,14 @@ JSON的数据类型和Python的数据类型是很容易找到对应关系的，�
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">Copy Constructor</span><br><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">26</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br></pre></td></tr></table></figure>
 
 ]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>讨厌的ABI</title>
+    <url>/2021/02/15/%E8%AE%A8%E5%8E%8C%E7%9A%84ABI/</url>
+    <content><![CDATA[]]></content>
       <categories>
         <category>C++</category>
       </categories>
