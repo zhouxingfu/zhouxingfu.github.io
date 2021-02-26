@@ -12,7 +12,7 @@ categories: STL
 
 {% youtube W6jZKibuJpU %}
 
-
+<!--more-->
 __video time 1.05 EH is for Synchronous Program Errors__
 
 “异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。

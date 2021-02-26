@@ -42,7 +42,7 @@ Output: "10:00"
 
 最开始我的想法是要arr[0]<=2 arr[1]<=3 arr[2]<=5，由此写了下面的实现
 
-```
+```C++
 class Solution {
 public:
     string largestTimeFromDigits(vector<int>& arr) {
@@ -131,7 +131,7 @@ public:
 
 下面是我的实现，但从算法实现上看很繁琐，一点也不简洁。
 
-```
+```C++
 class Solution {
 public:
     string largestTimeFromDigits(vector<int>& arr) {

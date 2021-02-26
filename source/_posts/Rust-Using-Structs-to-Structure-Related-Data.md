@@ -23,7 +23,7 @@ String是我们最常使用的字符串类型，本质上是vector，具备跟ve
 
 也就是说，&str类型变量没有lifetime，所以下面的代码会报错  
 
-```
+```RUST
 struct User 
 {
     username: &str,
@@ -47,7 +47,7 @@ fn main() {
 
 ### __<font color=blue>非结构体用法</font>__  
 
-```
+```RUST
 fn main() {
     let width1 = 30;
     let height1 = 50;
@@ -68,7 +68,7 @@ fn area(width: u32, height: u32) -> u32 {
 ### __<font color=blue>简化用法</font>__  
 可以在传入参数时临时构造结构体，但这样有一个问题，就是不知道结构体中成员的意义。
 
-```
+```RUST
 fn main() {
     let rect1 = (30, 50);
 
@@ -87,7 +87,7 @@ fn area(dimensions: (u32, u32)) -> u32 {
 ### __<font color=blue>常规用法</font>__    
 定义新的结构体，在传参时把结构体作为参数，不管是mut还是immutable。这种使用方式跟C++非常类似。
 
-```
+```RUST
 struct Rectangle {
     width: u32,
     height: u32,
@@ -113,7 +113,7 @@ fn area(rectangle: &Rectangle) -> u32 {
 ### __<font color=blue>用Derived Traits打印struct内容</font>__    
 
 __<font color=red>错误写法</font>__  
-```
+```RUST
 struct Rectangle {
     width: u32,
     height: u32,
@@ -131,7 +131,7 @@ fn main() {
 
 __<font color=red>正确写法</font>__  
 
-```
+```RUST
 #[derive(Debug)]
 struct Rectangle {
     width: u32,

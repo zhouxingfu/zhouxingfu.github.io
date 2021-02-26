@@ -102,7 +102,7 @@ __<font color=green size=4>yield构造生成器</font>__
 这里的意思是，yield构成的是一个generator，next的时候开始执行程序，直到遇到yield就把yield后面的value返回，同时整个程序pause，如果再次调用next，那么从当前pause的地方开始继续执行，直到遇到下一个yield语句。  
 
 下面是一个例子  
-```
+```PYTHON
   def fib(n):  
       a, b = 0, 1  
       for _ in range(n):  

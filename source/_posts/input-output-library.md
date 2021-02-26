@@ -21,6 +21,8 @@ categories: STL
 
 文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 
 
+<!--more-->
+
 <font color=green>
 NOTE:
 这里有两个需要注意的点  

@@ -9,7 +9,7 @@ categories: C++
 
 我们先看下面的例子。
 
-```
+```C++
 int func_1() {return 6;}
 int func_2(int x){
     int temp = x;

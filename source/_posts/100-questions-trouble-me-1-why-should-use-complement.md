@@ -67,7 +67,7 @@ categories: cs
 
 __练习题 2.13__  
 _用bis bic实现bool_or bool_xor_  
-
+    ```C++
     int bis(int x, int m);
     int bic(int x, int m);
     int bool_or(int x, int y)  
@@ -80,6 +80,7 @@ _用bis bic实现bool_or bool_xor_
         int result = bic(bis(x, y), bis(bic(0xFF, x), bic(0xFF, y)));
         return result;
     }
+    ```
     关于bool_xor = (x | y) & (~x | ~y)，这个跟模拟电路的与非门概念很接近，很多的功能都是通过简单的与非门实现的。  
     我们知道1 xor 1 = 0 xor 0 = 0, 1 ^ 0 = 0 ^ 1 = 1  
     输入是x y, 输出是1个z，这时候中间肯定还有一层（类似于神经网络），只是这一层的我们不知道有几个系数，最后输出z的公式是什么。有可能是非常简单的&，|，也有可能是非常复杂的一个公式，比如用到了好几个与非，打个比方，中间这一层有N个系数，然后通过一个非常复杂的与非门设计。  
@@ -87,7 +88,7 @@ _用bis bic实现bool_or bool_xor_
     幸好，异或门没有那么复杂。 我们先做一个假设，中间一层也是两个输入，最后通过 & 操作输出。好吧，我写不出来我的思考过程，或者说很难用简练的语言说出来。  
 
     回到bool_xor，我们要首先实现bit_not 和 bit_and
-
+    ```C++
     int bit_not(int x)
     {
         return bic(0xFF, x);
@@ -97,7 +98,7 @@ _用bis bic实现bool_or bool_xor_
     {
         return bic(x, bit_not(y));
     }
-
+    ```
     
 __练习题 2.15__  
 只使用位级和逻辑运算，编写一个C表达式，它等价于 x==y。换句话说，当x和y相等时它将返回1，否则就返回0。  

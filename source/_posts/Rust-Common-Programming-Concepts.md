@@ -21,7 +21,7 @@ _"This chapter covers concepts that appear in almost every programming language 
 
 ## __<font color=0xFFFFFF>shadowing和mut 区别</font>__  
 
-```
+```RUST
 let mut x = 10;
 x = 100;
 和
@@ -84,7 +84,7 @@ Rust中的tuple也可以包含各种数据类型，比如
     let tp = (10, 10.0, 'a', "hello");  
 
 __destructuring解构__   
-
+```RUST
     let tup: (i32, f64, u8) = (500, 6.4, 1);  
     let (x, y, z) = tup;  
 
@@ -99,7 +99,7 @@ array声明方式
 
     let a:[i32;5] = [1,2,3,4,5];  
     let a = [3;5];  //same with let a = [3, 3, 3, 3, 3];  
-
+```
 使用方式也是通过下标索引。  
 
 现在总结一下tuple和array

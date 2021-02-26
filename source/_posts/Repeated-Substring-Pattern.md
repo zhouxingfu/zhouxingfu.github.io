@@ -41,7 +41,7 @@ length : 代表当前的字串长度, length最多为str.length()/2长度，而�
 这样就是说我们要比较compare_times次，其中每一次比较要比较length长度
 
 
-```
+```C++
 class Solution {
 public:
     bool repeatedSubstringPattern(string s) {

@@ -23,14 +23,14 @@ __<font color=red>不能进行单个元素的赋值操作</font>__
 上面这句话会报 TypeError: 'tuple' object does not support item assignment.  
 
 __<font color=red>对变量进行整体赋值</font>__  
-
+```PYTHON
     a = (1, 2)  
     id(a) #140036094436208
     a = -2, -1 # right (-2, -1)
     id(a) #140036072923616
     a += (-1, 4) # right (-2, -1, -1, 4)
     id(a) # 140036094653072
-
+```
     
 上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  
 

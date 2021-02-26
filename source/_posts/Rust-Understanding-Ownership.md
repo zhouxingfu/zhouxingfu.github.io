@@ -16,7 +16,7 @@ Rust文档上说
 
 也就是一个数据，如果要存储在栈上，那么在编译的时候就必须确定大小，并且大小不能更改？  
 这句话和我之前的认知是矛盾的
-```
+```RUST
 int main(int argc, char* argv[])
 {
     int a;
@@ -65,7 +65,7 @@ Rust为了解决这个问题，直接在编译阶段就报错。
 
 在这里，首先要理解同一个作用域的概念。  
 
-```
+```RUST
 let mut x = String::from("hello")
 {
     let y = &mut x;
@@ -74,7 +74,7 @@ let mut& z = x;
 ```
 在上面的例子中，跟C/C++的作用域的概念类似，离开了代码块，我们就可以重新borrow了。
 
-```
+```RUST
 fn main() {
     let mut s = String::from("hello");
 
@@ -86,7 +86,7 @@ fn main() {
 }
 ```
 上面的例子中，r3和r1 r2的作用域重叠，如果我们这些改写
-```
+```RUST
 fn main() {
     let mut s = String::from("hello");
 
@@ -110,7 +110,7 @@ Rust为了解决这个问题，在编译的时候就会给予提示。
 
 不光是上面说的情况，只要是指针指向的memory已经被drop掉了，那么指针就会编程野指针，下面的代码，在C++ compile的时候不会报错，但运行的时候会crash，Rust是在compile的时候做了强检查。  
 
-```
+```RUST
 fn main() {
     let reference_to_nothing = dangle();
 }
@@ -123,7 +123,7 @@ fn dangle() -> &String {
 ```
 
 该怎么解决这个问题呢？可以照着下面改
-```
+```RUST
 fn main() {
     let string = no_dangle();
 }

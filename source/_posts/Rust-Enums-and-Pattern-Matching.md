@@ -7,7 +7,7 @@ categories: Rust
 
 ## __<font color=0xFFFFFF>介绍</font>__
 正常情况下，我们声明enum的格式如下
-```
+```RUST
 fn main() 
 {
     enum IpAddrKind {
@@ -33,7 +33,7 @@ fn main()
 ```
 <!--more-->
 这种写法本质上跟C的语法一样，但在Rust中还有一种更加简洁的写法
-```
+```RUST
 fn main() {
     enum IpAddr {
         V4(String),
@@ -47,7 +47,7 @@ fn main() {
 ```
 在上面，我们可以直接把enum绑定到一个类型上，也就是enum中的element对应的必须是某个类型的value。  
 
-```
+```RUST
 enum Message 
 {
     Quit,
@@ -68,8 +68,9 @@ fn main() {}
 
 在[How do you access enum values in Rust?](https://stackoverflow.com/questions/9109872/how-do-you-access-enum-values-in-rust)通过match，可以得到内部的数据。
 
+```RUST
 let (x, y) = Shape::Circle(Point { x: 0.0, y: 0.0 }, 10.0);
-```
+
 struct Point {
     x: f64,
     y: f64,
@@ -131,14 +132,14 @@ __<font color=gray>Rust的解决方法</font>__
 可不用null，该怎么表示空引用呢？  
 
 Rust采用
-```
+```RUST
 enum Option<T>{
     Some(T),
     None,
 }
 ```
 这里我们用了泛型，也就是每一个类型，我们都有一个对应的null，比如
-```
+```RUST
 fn main() {
     let some_number = Some(5);
     let some_string = Some("a string");
@@ -153,7 +154,7 @@ _注意：None和Some可以直接调用，而不用通过Option::，这是什么
 ## __<font color=0xFFFFFF>match</font>__  
 match类似于switch case  
 
-```
+```RUST
 #[derive(Debug)]
 enum UsState {
     Alabama,
