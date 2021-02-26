@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg">
 <meta property="article:published_time" content="2020-09-03T21:25:48.000Z">
-<meta property="article:modified_time" content="2021-02-11T08:01:08.851Z">
+<meta property="article:modified_time" content="2021-02-26T13:53:27.644Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg">
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+                <time title="Modified: 2021-02-26 05:53:27" itemprop="dateModified" datetime="2021-02-26T05:53:27-08:00">2021-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,36 +276,11 @@
 <p>也就是说 i - j = i + (-j) = i + (-j) + 2^n -1 + 1 = i + (2^n - j - 1) + 1</p>
 <p>这里我们在计算2^n - 1和 j 的时候，没有符号位</p>
 <p>所以 2^n - 1 - j = 1111 1111 - 0000 0010 = 1111 1101<br>看起来就是-j = 1000 0010保持符号位不变，其它位置取反，这里我们称 1111 1101 为-2的反码，那么 反码 +1 就是我们想要的结果了，最终得到1111 1111，这是反码的计算结果，最终我们要把反码转变成原码，那就是先减去1，然后保持符号位不变，其它位取反，最终得到 1000 0001。与预期结果相符合。</p>
-<h4 id="CSAPP-Chapter2-信息的表示和处理"><a href="#CSAPP-Chapter2-信息的表示和处理" class="headerlink" title="CSAPP Chapter2 信息的表示和处理"></a><strong>CSAPP Chapter2 信息的表示和处理</strong></h4><p><strong>练习题 2.13</strong><br><em>用bis bic实现bool_or bool_xor</em>  </p>
-<pre><code>int bis(int x, int m);
-int bic(int x, int m);
-int bool_or(int x, int y)  
-&#123;
-    int result = bis(x, y);
-    return result;
-&#125;
-int bool_xor(int x, int y)  
-&#123;
-    int result = bic(bis(x, y), bis(bic(0xFF, x), bic(0xFF, y)));
-    return result;
-&#125;
-关于bool_xor = (x | y) &amp; (~x | ~y)，这个跟模拟电路的与非门概念很接近，很多的功能都是通过简单的与非门实现的。  
-我们知道1 xor 1 = 0 xor 0 = 0, 1 ^ 0 = 0 ^ 1 = 1  
-输入是x y, 输出是1个z，这时候中间肯定还有一层（类似于神经网络），只是这一层的我们不知道有几个系数，最后输出z的公式是什么。有可能是非常简单的&amp;，|，也有可能是非常复杂的一个公式，比如用到了好几个与非，打个比方，中间这一层有N个系数，然后通过一个非常复杂的与非门设计。  
-
-幸好，异或门没有那么复杂。 我们先做一个假设，中间一层也是两个输入，最后通过 &amp; 操作输出。好吧，我写不出来我的思考过程，或者说很难用简练的语言说出来。  
+<h4 id="CSAPP-Chapter2-信息的表示和处理"><a href="#CSAPP-Chapter2-信息的表示和处理" class="headerlink" title="CSAPP Chapter2 信息的表示和处理"></a><strong>CSAPP Chapter2 信息的表示和处理</strong></h4><p><strong>练习题 2.13</strong><br><em>用bis bic实现bool_or bool_xor</em><br>    <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bis</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bic</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bool_or</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = bis(x, y);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bool_xor</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = bic(bis(x, y), bis(bic(<span class="number">0xFF</span>, x), bic(<span class="number">0xFF</span>, y)));</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>    关于bool_xor = (x | y) &amp; (~x | ~y)，这个跟模拟电路的与非门概念很接近，很多的功能都是通过简单的与非门实现的。<br>    我们知道1 xor 1 = 0 xor 0 = 0, 1 ^ 0 = 0 ^ 1 = 1<br>    输入是x y, 输出是1个z，这时候中间肯定还有一层（类似于神经网络），只是这一层的我们不知道有几个系数，最后输出z的公式是什么。有可能是非常简单的&amp;，|，也有可能是非常复杂的一个公式，比如用到了好几个与非，打个比方，中间这一层有N个系数，然后通过一个非常复杂的与非门设计。  </p>
+<pre><code>幸好，异或门没有那么复杂。 我们先做一个假设，中间一层也是两个输入，最后通过 &amp; 操作输出。好吧，我写不出来我的思考过程，或者说很难用简练的语言说出来。  
 
 回到bool_xor，我们要首先实现bit_not 和 bit_and
-
-int bit_not(int x)
-&#123;
-    return bic(0xFF, x);
-&#125;
-
-int bit_add(int x, int y)
-&#123;
-    return bic(x, bit_not(y));
-&#125;</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bit_not</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bic(<span class="number">0xFF</span>, x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bit_add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bic(x, bit_not(y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></code></pre>
 <p><strong>练习题 2.15</strong><br>只使用位级和逻辑运算，编写一个C表达式，它等价于 x==y。换句话说，当x和y相等时它将返回1，否则就返回0。  </p>
 <pre><code>! (x ^ y)</code></pre>
 <h4 id="CSAPP-Data-Lab"><a href="#CSAPP-Data-Lab" class="headerlink" title="CSAPP Data Lab"></a><strong>CSAPP Data Lab</strong></h4><p><a target="_blank" rel="noopener" href="http://csapp.cs.cmu.edu/3e/labs.html">CSAPP Labs</a>  </p>

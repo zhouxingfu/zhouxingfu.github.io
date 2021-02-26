@@ -28,7 +28,7 @@
 <meta property="og:description" content="“This chapter covers concepts that appear in almost every programming language and how they work in Rust. Many programming languages have much in common at their core. None of the concepts presented i">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-09-03T04:45:45.000Z">
-<meta property="article:modified_time" content="2021-02-11T08:01:08.975Z">
+<meta property="article:modified_time" content="2021-02-26T14:00:15.802Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
@@ -219,7 +219,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+                <time title="Modified: 2021-02-26 06:00:15" itemprop="dateModified" datetime="2021-02-26T06:00:15-08:00">2021-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,7 +269,7 @@
 <td align="left">可以？</td>
 </tr>
 </tbody></table>
-<h2 id="shadowing和mut-区别"><a href="#shadowing和mut-区别" class="headerlink" title="shadowing和mut 区别"></a><strong><font color=0xFFFFFF>shadowing和mut 区别</font></strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let mut x &#x3D; 10;</span><br><span class="line">x &#x3D; 100;</span><br><span class="line">和</span><br><span class="line">let x &#x3D; 10;</span><br><span class="line">let x&#x3D; x + 100;</span><br><span class="line">的区别</span><br></pre></td></tr></table></figure>
+<h2 id="shadowing和mut-区别"><a href="#shadowing和mut-区别" class="headerlink" title="shadowing和mut 区别"></a><strong><font color=0xFFFFFF>shadowing和mut 区别</font></strong></h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> x = <span class="number">10</span>;</span><br><span class="line">x = <span class="number">100</span>;</span><br><span class="line">和</span><br><span class="line"><span class="keyword">let</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">let</span> x= x + <span class="number">100</span>;</span><br><span class="line">的区别</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -371,16 +371,7 @@
 <p>Rust中的tuple也可以包含各种数据类型，比如</p>
 <pre><code>let tp = (10, 10.0, &#39;a&#39;, &quot;hello&quot;);  </code></pre>
 <p><strong>destructuring解构</strong>   </p>
-<pre><code>let tup: (i32, f64, u8) = (500, 6.4, 1);  
-let (x, y, z) = tup;  </code></pre>
-<p>还可以根据下标索引来访问tuple中的元素  </p>
-<pre><code>let x: (i32, f64, u8) = (500, 6.4, 1);
-let five_hundred = x.0;
-let six_point_four = x.1;
-let one = x.2;  </code></pre>
-<p>array声明方式 </p>
-<pre><code>let a:[i32;5] = [1,2,3,4,5];  
-let a = [3;5];  //same with let a = [3, 3, 3, 3, 3];  </code></pre>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">let</span> tup: (<span class="built_in">i32</span>, <span class="built_in">f64</span>, <span class="built_in">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);  </span><br><span class="line">    <span class="keyword">let</span> (x, y, z) = tup;  </span><br><span class="line"></span><br><span class="line">还可以根据下标索引来访问tuple中的元素  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> x: (<span class="built_in">i32</span>, <span class="built_in">f64</span>, <span class="built_in">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> five_hundred = x.<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> six_point_four = x.<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> one = x.<span class="number">2</span>;  </span><br><span class="line"></span><br><span class="line">array声明方式 </span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> a:[<span class="built_in">i32</span>;<span class="number">5</span>] = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];  </span><br><span class="line">    <span class="keyword">let</span> a = [<span class="number">3</span>;<span class="number">5</span>];  <span class="comment">//same with let a = [3, 3, 3, 3, 3];  </span></span><br></pre></td></tr></table></figure>
 <p>使用方式也是通过下标索引。  </p>
 <p>现在总结一下tuple和array</p>
 <table>

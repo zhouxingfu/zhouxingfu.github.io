@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/13/Rust-Generic-Types-Traits-and-Lifetimes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/" class="post-title-link" itemprop="url">Python中mutable与immutable</a>
+            <a href="/2020/09/13/Rust-Generic-Types-Traits-and-Lifetimes/" class="post-title-link" itemprop="url">Rust(10) Generic Types Traits and Lifetimes</a>
         </h2>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-10-20 14:40:54" itemprop="dateCreated datePublished" datetime="2020-10-20T14:40:54-07:00">2020-10-20</time>
+              <time title="Created: 2020-09-13 18:18:16" itemprop="dateCreated datePublished" datetime="2020-09-13T18:18:16-07:00">2020-09-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -223,178 +223,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在Python的数据类型中，根据是否可改变，分为mutable与immutable。   </p>
-<p>那么跟C/C++相比，所谓的不可修改是什么意思？  </p>
-<ul>
-<li>不能进行单个元素的赋值操作</li>
-<li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
-</ul>
-<p>下面我们针对tuple来写几个例子。  </p>
-<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
-<pre><code>a = (1, 2)  
-a[0] = 2 #error</code></pre>
-<p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
-<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
-<pre><code>a = (1, 2)  
-id(a) #140036094436208
-a = -2, -1 # right (-2, -1)
-id(a) #140036072923616
-a += (-1, 4) # right (-2, -1, -1, 4)
-id(a) # 140036094653072</code></pre>
-<p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
-<p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
-<p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
-<p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
-<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
-<p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
-<p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/03/Introduction-to-Algorithm-Chapter-5-Probabilistic-Analysis-and-Randomized-Algorithms/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/Introduction-to-Algorithm-Chapter-5-Probabilistic-Analysis-and-Randomized-Algorithms/" class="post-title-link" itemprop="url">Introduction to Algorithm Chapter 5 Probabilistic Analysis and Randomized Algorithms</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-03 16:35:05" itemprop="dateCreated datePublished" datetime="2020-09-03T16:35:05-07:00">2020-09-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/03/Introduction-to-Algorithm-Chapter-6-Heapsort/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/Introduction-to-Algorithm-Chapter-6-Heapsort/" class="post-title-link" itemprop="url">Introduction to Algorithm Chapter 6 Heapsort</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-03 16:35:19" itemprop="dateCreated datePublished" datetime="2020-09-03T16:35:19-07:00">2020-09-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+                  <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
                 </span>
             </span>
 
@@ -784,7 +613,7 @@ id(a) # 140036094653072</code></pre>
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/22/Largest-Time-for-Given-Digits/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/03/Introduction-to-Algorithm-Chapter-4-Divide-and-Conquer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -798,7 +627,7 @@ id(a) # 140036094653072</code></pre>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/22/Largest-Time-for-Given-Digits/" class="post-title-link" itemprop="url">Largest Time for Given Digits</a>
+            <a href="/2020/09/03/Introduction-to-Algorithm-Chapter-4-Divide-and-Conquer/" class="post-title-link" itemprop="url">Introduction to Algorithm Chapter 4 Divide and Conquer</a>
         </h2>
 
         <div class="post-meta">
@@ -808,7 +637,7 @@ id(a) # 140036094653072</code></pre>
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-22 14:30:15" itemprop="dateCreated datePublished" datetime="2020-09-22T14:30:15-07:00">2020-09-22</time>
+              <time title="Created: 2020-09-03 16:34:37" itemprop="dateCreated datePublished" datetime="2020-09-03T16:34:37-07:00">2020-09-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -823,7 +652,7 @@ id(a) # 140036094653072</code></pre>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
                 </span>
             </span>
 
@@ -838,26 +667,7 @@ id(a) # 140036094653072</code></pre>
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong><font color=green>题目描述</font></strong></p>
-<p>Given an array arr of 4 digits, find the latest 24-hour time that can be made using each digit exactly once.</p>
-<p>24-hour times are formatted as “HH:MM”, where HH is between 00 and 23, and MM is between 00 and 59. The earliest 24-hour time is 00:00, and the latest is 23:59.</p>
-<p>Return the latest 24-hour time in “HH:MM” format.  If no valid time can be made, return an empty string.</p>
-<p>Example 1:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: A &#x3D; [1,2,3,4]</span><br><span class="line">Output: &quot;23:41&quot;</span><br><span class="line">Explanation: The valid 24-hour times are &quot;12:34&quot;, &quot;12:43&quot;, &quot;13:24&quot;, &quot;13:42&quot;, &quot;14:23&quot;, &quot;14:32&quot;, &quot;21:34&quot;, &quot;21:43&quot;, &quot;23:14&quot;, and &quot;23:41&quot;. Of these times, &quot;23:41&quot; is the latest.</span><br></pre></td></tr></table></figure>
-<p>Example 2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: A &#x3D; [5,5,5,5]</span><br><span class="line">Output: &quot;&quot;</span><br><span class="line">Explanation: There are no valid 24-hour times as &quot;55:55&quot; is not valid.</span><br></pre></td></tr></table></figure>
-<p>Example 3:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: A &#x3D; [0,0,0,0]</span><br><span class="line">Output: &quot;00:00&quot;</span><br></pre></td></tr></table></figure>
-<p>Example 4:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: A &#x3D; [0,0,1,0]</span><br><span class="line">Output: &quot;10:00&quot;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/22/Largest-Time-for-Given-Digits/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          
       
     </div>
 
@@ -943,6 +753,134 @@ id(a) # 140036094653072</code></pre>
 </li>
 </ul>
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/12/01/Max-Points-on-a-Line/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/01/Max-Points-on-a-Line/" class="post-title-link" itemprop="url">Max Points on a Line</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-01 15:06:22" itemprop="dateCreated datePublished" datetime="2020-12-01T15:06:22-08:00">2020-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/12/01/Missing-Number/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/01/Missing-Number/" class="post-title-link" itemprop="url">Missing Number</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-01 15:09:36" itemprop="dateCreated datePublished" datetime="2020-12-01T15:09:36-08:00">2020-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
       
     </div>
 

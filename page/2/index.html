@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
+            <a href="/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">拷贝构造函数 赋值运算符和强保证异常安全代码</a>
         </h2>
 
         <div class="post-meta">
@@ -208,594 +208,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06-08:00">2020-11-20</time>
+              <time title="Created: 2021-02-14 02:09:15" itemprop="dateCreated datePublished" datetime="2021-02-14T02:09:15-08:00">2021-02-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><code>server code</code></p>
-<pre><code>import socket  
-
-if __name__ == &#39;__main__&#39;:
-    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
-    while True:
-        pass</code></pre>
-<p><code>client code</code>  </p>
-<pre><code>import socket
-if __name__ == &#39;__main__&#39;:
-    i = 0
-    while True:
-        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
-        if mySocket is None:
-            print(&quot;create client connect failed&quot;)
-            break
-        else:
-            print(&quot;create client connection succeed&quot;)
-            i = i + 1
-            print(&#39;current connection count &#39;, i)  </code></pre>
-<p>可以创建连接，但存在几个现象  </p>
-<ol>
-<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
-<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
-<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
-<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/" class="post-title-link" itemprop="url">如何从100亿个url中找出相同的url</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-21 12:17:33" itemprop="dateCreated datePublished" datetime="2020-09-21T12:17:33-07:00">2020-09-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>看到这道题目的第一反应，HashMap，但100亿真的太多了，我不可能在内存中建立一个这个大的HashMap。</p>
-<p>这里面需要的操作是</p>
-<ol>
-<li>计算所有文件的hash（还要解决可能出现的哈希冲突）</li>
-<li>内存中要保存一个几百G的哈希表</li>
-</ol>
-<p>查找的时候因为是哈希，所以不需要遍历匹配，所以这块消耗不大。</p>
-<p>但内存就否决了方案。  </p>
-<p>一个优化思路是 计算出hash之后%1000，这样可以分成1000个文件夹，这次每次处理其中一个文件夹就好。  </p>
-<p>但这里也要问题</p>
-<ol>
-<li>如何保证尽量均为分布到1000个文件夹？很难，尽量选用合适的哈希算法。  </li>
-<li>IO操作大，因为计算哈希之后要先保存下来，再%1000。  </li>
-</ol>
-<p>还有一个思路，就是外部排序，然后逐个比较，但外部排序100亿个，O(NlogN)，而且也不能一次加载到内存中。 </p>
-<p>从知乎一个回答上看可以用布隆filter，而这又是redis里的概念，所以</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mapreduce redis是怎么实现的呢？</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/18/leetcode-%E5%89%8D%E8%A8%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/18/leetcode-%E5%89%8D%E8%A8%80/" class="post-title-link" itemprop="url">leetcode 前言</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-18 17:19:41" itemprop="dateCreated datePublished" datetime="2020-09-18T17:19:41-07:00">2020-09-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>从今天开始刷题，时刻做好面试的准备，目前计划是在2月底之前刷完1587道题目，不仅仅是做题，希望自己能找到更底层的理论，比如根据信息论推导出排序最快也无法超过O(NlogN)，也希望自己能根据类别来做总结，leetcode上已经有category了，比如array，比如DP。  </p>
-<p>算了下，任务还是很重的，每天什么都不干，也得10道题，而且C++ Concurrency、 C++11/14/17新特性、Rust、Python这些都得掌握啊，任务还是非常艰巨的，目前来看没有完成的空间，但事在人为，如果我想摆脱现状，那么要做的就是最大可能激发自己的潜力，不然就只能陷入这种”差公司-&gt; 心情不好，技术无法提升，担心被淘汰 -&gt; 没有时间努力 -&gt; 找不到好公司 -&gt; 差公司“ 怪圈，我这辈子就再也没有机会出来了，因为我今年已经35了。  </p>
-<p>一个人的能力如果不能随着年龄增长而相应提升，那么在职场上他就会被淘汰。 </p>
-<p>年底媳妇儿就不上班了，我要努力换一份double的工作。  </p>
-<p>说实话，也该double了。  </p>
-<p><strong>update 2020.9.20</strong> </p>
-<p>打算用rust和c++ python同时刷leetcode，算是一个非常间距的任务了。加油吧。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/18/leetcode-1-Two-Sum/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/18/leetcode-1-Two-Sum/" class="post-title-link" itemprop="url">leetcode 1 Two Sum</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-18 17:18:44" itemprop="dateCreated datePublished" datetime="2020-09-18T17:18:44-07:00">2020-09-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/24/%E6%8C%87%E4%BB%A4%E9%9B%86%E5%8A%A0%E9%80%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/24/%E6%8C%87%E4%BB%A4%E9%9B%86%E5%8A%A0%E9%80%9F/" class="post-title-link" itemprop="url">指令集加速</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-24 14:46:27" itemprop="dateCreated datePublished" datetime="2020-09-24T14:46:27-07:00">2020-09-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hardware-speedup/" itemprop="url" rel="index"><span itemprop="name">hardware speedup</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/" class="post-title-link" itemprop="url">utf8 格式源代码跨平台编译</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-28 17:00:42" itemprop="dateCreated datePublished" datetime="2020-09-28T17:00:42-07:00">2020-09-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在Windows平台，如果不指定bom头的话，是不清楚当前是什么编码格式的，如果我们在代码中使用了中文，系统根本不知道是utf-8 还是unicode-16，而对Linux来说，默认就是utf-8，所以写中文没关系。</p>
-<p>现在VS已经可以支持utf-8 without BOM的源码编译了，VS2015 update2之后就支持附加编译选项/utf-8，支持直接输出中文。  <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?redirectedfrom=MSDN&view=vs-2019">/utf-8 (Set Source and Executable character sets to UTF-8)</a>  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/22/git%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">git学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-22 18:08:07" itemprop="dateCreated datePublished" datetime="2020-10-22T18:08:07-07:00">2020-10-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>今天找到一个非常直观的git学习网站 <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
-<p>Let’s go!  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">delete之后发生了什么</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-27 20:20:53" itemprop="dateCreated datePublished" datetime="2020-09-27T20:20:53-07:00">2020-09-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+                <time title="Modified: 2021-02-26 05:50:54" itemprop="dateModified" datetime="2021-02-26T05:50:54-08:00">2021-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -818,11 +238,17 @@ if __name__ == &#39;__main__&#39;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">char* p &#x3D; new char[1024];</span><br><span class="line">delete p;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; p[0] &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+          <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Test()&#123;<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;explicit constructor with no argument&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125;</span><br><span class="line">    <span class="comment">//Test(Test t)&#123;cout &lt;&lt; &quot;copy constructor&quot; &lt;&lt;endl;&#125;  //1</span></span><br><span class="line">    Test(<span class="keyword">const</span> Test&amp; t)&#123;<span class="built_in">cout</span> &lt;&lt;<span class="string">&quot;copy constructor&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125; <span class="comment">//2</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Test&amp; t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(const Test&amp; t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125; <span class="comment">//3</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(Test t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(Test t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="comment">//4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面这段代码会崩溃吗？  </p>
-<p>不一定，delete是释放堆空间，但实际上内存只是被回收了，p还是指向那块区域，所以我们还可以继续使用，但这块空间的value有可能已经不是我们原来的value了，因为如果这块空间被重新分配给其它变量的话，有可能就会读写这块空间，value就会被改变。</p>
-
+<p>为什么拷贝构造函数不能写成1的形式，必须写成2 的形式？  </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -841,7 +267,7 @@ if __name__ == &#39;__main__&#39;:
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/const-in-c/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -855,7 +281,7 @@ if __name__ == &#39;__main__&#39;:
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/02/const-in-c/" class="post-title-link" itemprop="url">const in c++</a>
+            <a href="/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">enable_if_t分析</a>
         </h2>
 
         <div class="post-meta">
@@ -864,16 +290,10 @@ if __name__ == &#39;__main__&#39;:
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-09-02 22:11:04" itemprop="dateCreated datePublished" datetime="2020-09-02T22:11:04-07:00">2020-09-02</time>
+              <time title="Created: 2021-02-26 05:45:03 / Modified: 05:46:20" itemprop="dateCreated datePublished" datetime="2021-02-26T05:45:03-08:00">2021-02-26</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -895,44 +315,7 @@ if __name__ == &#39;__main__&#39;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在C++中，const用来表示常量、不变的涵义。  </p>
-<p>我们先看下面的例子。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">int func_1() &#123;return 6;&#125;</span><br><span class="line">int func_2(int x)&#123;</span><br><span class="line">    int temp &#x3D; x;</span><br><span class="line">    return temp;</span><br><span class="line">&#125;</span><br><span class="line">string func_3()&#123;</span><br><span class="line">    return &quot;hello&quot;;</span><br><span class="line">&#125;</span><br><span class="line">string func_4()&#123;</span><br><span class="line">    string temp &#x3D; &quot;hello&quot;;</span><br><span class="line">    return temp;</span><br><span class="line">&#125;</span><br><span class="line">typedef struct HaHa&#123;</span><br><span class="line">    int a;</span><br><span class="line">    float b;</span><br><span class="line">    char c;</span><br><span class="line">&#125;*pHaHa;</span><br><span class="line">HaHa func_5()</span><br><span class="line">&#123;</span><br><span class="line">    return &#123;1, 1.0f, &#39;a&#39;&#125;;</span><br><span class="line">&#125;</span><br><span class="line">const HaHa func_6()&#123;</span><br><span class="line">    return &#123;1, 1.0f, &#39;a&#39;&#125;;</span><br><span class="line">&#125;</span><br><span class="line">func_1() &#x3D; 1;              &#x2F;&#x2F;error   </span><br><span class="line">func_2() &#x3D; 2;              &#x2F;&#x2F;error</span><br><span class="line">func_3() &#x3D; &quot;3&quot;;            &#x2F;&#x2F;error</span><br><span class="line">func_4() &#x3D; &quot;4&quot;;            &#x2F;&#x2F;right</span><br><span class="line">func_5() &#x3D; &#123;2, 2.0f, &#39;b&#39;&#125;; &#x2F;&#x2F;right</span><br><span class="line">func_6() &#x3D; &#123;2, 2.0f, &#39;b&#39;&#125;; &#x2F;&#x2F;error: passing ‘const haha’ as ‘this’ argument of ‘haha&amp; haha::operator&#x3D;(haha&amp;&amp;)’ discards qualifiers [-fpermissive]</span><br></pre></td></tr></table></figure>
-
-<p>目前已知的规则，有如下几个</p>
-<table>
-<thead>
-<tr>
-<th align="left">规则</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">const修饰变量，value不可修改</td>
-</tr>
-<tr>
-<td align="left">指针使用const，指针自身不可修改 int * const p 修饰的是指针； const int <em>p 修饰的是变量； const int</em> const p; 二者皆被修改</td>
-</tr>
-<tr>
-<td align="left">const 修饰函数参数，参数在函数内不可修改</td>
-</tr>
-<tr>
-<td align="left">const指针所指向的内容不可修改 void func(const char* var)</td>
-</tr>
-<tr>
-<td align="left">参数为引用，为了增加效率同时防止修改 void func(const Type&amp; var)</td>
-</tr>
-</tbody></table>
-<p>现在我们单独说一说 <strong><font color=red>const修饰函数返回值</font></strong> 的情况。  </p>
-<p>如果返回值为某个对象的const或者某个对象的引用const，则返回值具有const属性，则返回实例只能访问A中的public protect数据成员和const成员函数，并且 <strong><font color=red>不允许对其进行赋值操作</font></strong> 。  </p>
-<p>上面的例子中，返回值为int的都是右值，看汇编中是直接把结果放到%rax中，而寄存器我们都知道是没有地址的。</p>
-<p>区分左值和右值的一种简单方法是看能否对该值取地址&amp;。  </p>
-<p>但为什么返回值是string的时候就可以了呢？</p>
-<p>在<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_22660775/article/details/89854545">C++：函数返回值与临时变量</a> 介绍了，一般函数返回值是非引用类型的时候，函数会创建临时对象，函数返回的就是这个临时对象，如果有=，那么就用临时变量初始化=左边的参数。  </p>
-<p>但返回值为非引用int这种类型的时候，是没有构造临时对象的，为什么呢？满足什么条件的返回值是不会构造临时对象的呢？不能直接用寄存器表示，必须放在内存中的value，就必须构造临时对象；可以直接放在寄存器中的value，就不会构造临时对象。  </p>
-<p>可以像上面这么理解吗？  </p>
-<p>现在回到另外一个问题，为什么const 临时对象就不可以呢？ 明明临时对象就是具有const属性，我们const = const不可以吗？  </p>
-<p>问题还是出在到底这个类型的运算符重载=到底是怎么实现的？  </p>
-<p>现在问题是上面提到的不允许对某个对象的const或const引用进行赋值操作？ 因为如果返回值是const，那么重载运算符=的返回值也要是const，这样会导致我们限定死了返回值不可被修改，它不能访问非const成员和变量。而一般情况下=的重载返回值都没有const限定符，因为这样返回对象就只能访问const成员和变量。  </p>
+          <p>在看VS版本的thread库源码时，发现了这么一段</p>
 
       
     </div>
@@ -952,7 +335,7 @@ if __name__ == &#39;__main__&#39;:
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/31/Debug-and-Assembly/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -966,7 +349,7 @@ if __name__ == &#39;__main__&#39;:
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/08/29/build-and-backup-github-pages-with-hexo/" class="post-title-link" itemprop="url">用hexo搭建github blog</a>
+            <a href="/2020/08/31/Debug-and-Assembly/" class="post-title-link" itemprop="url">调试与汇编</a>
         </h2>
 
         <div class="post-meta">
@@ -976,7 +359,572 @@ if __name__ == &#39;__main__&#39;:
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-08-29 16:46:06" itemprop="dateCreated datePublished" datetime="2020-08-29T16:46:06-07:00">2020-08-29</time>
+              <time title="Created: 2020-08-31 11:36:09" itemprop="dateCreated datePublished" datetime="2020-08-31T11:36:09-07:00">2020-08-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 05:44:10" itemprop="dateModified" datetime="2021-02-26T05:44:10-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/assembly/" itemprop="url" rel="index"><span itemprop="name">assembly</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
+<p>C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。  </p>
+<p>对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从这个角度看，C++语言的代码耦合度太高了。至少以下几个方面并不适合C++  </p>
+<pre><code>1. 界面开发: 很多大厂的PC端用的是directUI架构，要想写好需要对C++熟练，而且要自己做各种精细控制。  
+2. 小工具开发：胶水语言不香吗？  
+3. 科学试验性质项目：比如机器学习模型训练  </code></pre>
+<p>其他：比如一般的程序开发，除非其它语言没有对应的库，否则都应该选用JAVA/C#/PYTHON这类语言开发，或者golang/rust。总之，C++的学习曲线太陡峭，但跟rust相比，历史包袱又很重。<br>既然这样，为什么我们还要学习C++呢？就是因为目前来说没有特别好能替代的，或许再过两年，rust和go成长起来之后，C++的市场份额会进一步萎缩，慢慢地被淘汰掉吧，淘汰也不是仅仅靠喊就行的，新语言还是得加油努力喔。  </p>
+<p>在Linux下我们用gdb进行代码调试和crash分析。在Windows平台我们有很多工具，一般是用IDA进行静态反汇编，用OD或者WinDbg进行动态分析，WinDbg也可以反汇编。<br>现在写blog的平台是Linux，所以先写linux的。我们的重点放在分析crashdump上。  </p>
+<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color=0xFFFFFF>gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
+<p>一般发布版本，要从几个方面考虑</p>
+<ol>
+<li>可追溯</li>
+<li>自动化  </li>
+<li>防破解  </li>
+</ol>
+<p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
+<h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/31/Debug-and-Assembly/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/30/input-output-library/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/30/input-output-library/" class="post-title-link" itemprop="url">Input/Output library</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-30 13:27:34" itemprop="dateCreated datePublished" datetime="2020-08-30T13:27:34-07:00">2020-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 05:31:50" itemprop="dateModified" datetime="2021-02-26T05:31:50-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
+<img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
+
+
+<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
+
+<p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/30/input-output-library/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/02/Diagnostics-Library-Error-Handling/" class="post-title-link" itemprop="url">Diagnostics_Library(Error-Handling)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 13:24:02" itemprop="dateCreated datePublished" datetime="2020-09-02T13:24:02-07:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 05:30:41" itemprop="dateModified" datetime="2021-02-26T05:30:41-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/02/Diagnostics-Library-Error-Handling/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/" class="post-title-link" itemprop="url">并行编成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-24 15:02:16 / Modified: 22:25:24" itemprop="dateCreated datePublished" datetime="2021-02-24T15:02:16-08:00">2021-02-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><p>《C++ Concurrency In Action》<br>《Concurrency With Modern CPP》</p>
+<h2 id="并发和并行的概念"><a href="#并发和并行的概念" class="headerlink" title="并发和并行的概念"></a><strong>并发和并行的概念</strong></h2><p>在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。  </p>
+<p>在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，并不意味着线程间完全没有交互或者耦合，实际工作中我遇到的基本上线程间还是要访问共享内存的，很少遇到那种[0,10e8]相加这种可以完全没有耦合的情况。</p>
+<p>并行可以分成两种：</p>
+<ol>
+<li>数据并行<br>数据并行是指 可以将数据切分，然后每个部分同时执行相同的逻辑，最终合并结果就可以了。  这是非常完美符合并行概念的。</li>
+<li>业务并行<br>业务并行，就是将业务切分，每个线程执行其中一个业务，但每个业务中数据是全程参与的，比如业务分为A B C D，raw_data 进入A， 出来data1 进入B，出来data2 进入C, 出来data3 进入D。 当然这里的raw_data必须是流式的，否则不如单线程 顺序处理所有业务。</li>
+</ol>
+<h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
+<h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>分析一段业务逻辑是否可以采用多线程，至于能否充分利用硬件并行的概念再说（我的理解是，将简单的任务切分成子任务 增加的负担 远远超过了带来的益处，负担有可能是代码复杂度的提升，减少的时间远远不能弥补，子任务切分的太多，远远超过了硬件所支持的最优线程数，导致context切换负担太重）。 </p>
+<p><strong><font color=red>总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
+<h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><p>Todo</p>
+<h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3><p>Todo</p>
+<h2 id="C-线程库概述"><a href="#C-线程库概述" class="headerlink" title="C++线程库概述"></a><strong>C++线程库概述</strong></h2><p>C++11开始提供thread库，一直以来大家都有顾虑，就是抽象的代价高不高？  </p>
+<p>从网上的资料看，标准委员会在设计线程库时，就力求实现相同功能的情况下，高级API和底层API的性能收益相当。而且很多情况下，使用底层API带来的一点点便利，也会带来更高的代码复杂度和出错率，这样是不划算的。即便是瓶颈出现在C++标准库的工具中，也可能由低劣的程序设计造成。例如，如果过多的线程竞争一个互斥单元，将会很明显的影响性能。与其在互斥操作上耗费时间，不如重新设计，减少互斥单元上的竞争。</p>
+<p>如果系统API提供了一些线程库没有的功能，那么还可以通过native_handle获取句柄 来调用系统 API。</p>
+<h2 id="线程的创建启动和执行"><a href="#线程的创建启动和执行" class="headerlink" title="线程的创建启动和执行"></a><strong>线程的创建启动和执行</strong></h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/15/%E8%AE%A8%E5%8E%8C%E7%9A%84ABI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/15/%E8%AE%A8%E5%8E%8C%E7%9A%84ABI/" class="post-title-link" itemprop="url">讨厌的ABI</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-15 00:19:01 / Modified: 00:19:21" itemprop="dateCreated datePublished" datetime="2021-02-15T00:19:01-08:00">2021-02-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Language-support-library/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/02/Language-support-library/" class="post-title-link" itemprop="url">Language support library</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 14:03:29" itemprop="dateCreated datePublished" datetime="2020-09-02T14:03:29-07:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-15 00:17:24" itemprop="dateModified" datetime="2021-02-15T00:17:24-08:00">2021-02-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a><strong>参考内容</strong></h2><p><a href="">Item 47: Use traits classes for information about types</a><br><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/types">Type support (basic types, RTTI, type traits)</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=VvbTP_k_Df4">CppCon 2015:Marshall Clow “Type Traits - what are they and why should I use them?”</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=tiAVWcjIF6o">Template Metaprogramming: Type Traits (part 1 of 2) - Jody Hagins - CppCon 2020</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=dLZcocFOb5Q">Template Metaprogramming: Type Traits (part 2 of 2) - Jody Hagins - CppCon 2020</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/24/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%B5%85%E6%9E%90/" class="post-title-link" itemprop="url">神经网络与模型浅析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-24 14:17:16" itemprop="dateCreated datePublished" datetime="2020-09-24T14:17:16-07:00">2020-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一直在用研究提供的模型，底层提供的SDK，但模型里面到底是什么，SDK又是怎么加载不同模型的呢？ 在这里，我们学习一下。  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/" class="post-title-link" itemprop="url">文件格式之我见</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-23 21:22:03" itemprop="dateCreated datePublished" datetime="2020-09-23T21:22:03-07:00">2020-09-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -1006,22 +954,7 @@ if __name__ == &#39;__main__&#39;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
-<p>我们的操作步骤是</p>
-<ol>
-<li>在github.io　hexo分支备份源文件</li>
-<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
-</ol>
-<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/29/build-and-backup-github-pages-with-hexo/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          
       
     </div>
 
