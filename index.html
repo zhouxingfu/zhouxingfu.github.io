@@ -184,83 +184,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/" class="post-title-link" itemprop="url">并行编成</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-02-24 15:02:16 / Modified: 15:30:13" itemprop="dateCreated datePublished" datetime="2021-02-24T15:02:16-08:00">2021-02-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><p>《C++ Concurrency In Action》<br>《Concurrency With Modern CPP》</p>
-<h2 id="并发和并行的概念"><a href="#并发和并行的概念" class="headerlink" title="并发和并行的概念"></a><strong>并发和并行的概念</strong></h2><p>在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。  </p>
-<p>在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，并不意味着线程间完全没有交互或者耦合，实际工作中我遇到的基本上线程间还是要访问共享内存的，很少遇到那种[0,10e8]相加这种可以完全没有耦合的情况。</p>
-<p>并行可以分成两种：</p>
-<ol>
-<li>数据并行<br>数据并行是指 可以将数据切分，然后每个部分同时执行相同的逻辑，最终合并结果就可以了。  这是非常完美符合并行概念的。</li>
-<li>业务并行<br>业务并行，就是将业务切分，每个线程执行其中一个业务，但每个业务中数据是全程参与的，比如业务分为A B C D，raw_data 进入A， 出来data1 进入B，出来data2 进入C, 出来data3 进入D。 当然这里的raw_data必须是流式的，否则不如单线程 顺序处理所有业务。</li>
-</ol>
-<h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
-<h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>开发一个需求之前，要进行代码设计，这时候我们要分析这块业务的逻辑，有没有可以并行处理的部分，</p>
-<h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/30/input-output-library/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -292,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-21 05:23:26" itemprop="dateModified" datetime="2021-02-21T05:23:26-08:00">2021-02-21</time>
+                <time title="Modified: 2021-02-26 05:31:50" itemprop="dateModified" datetime="2021-02-26T05:31:50-08:00">2021-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -322,73 +245,180 @@
 <h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
 
 <p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
-<font color=green>
-NOTE:
-这里有两个需要注意的点  
-1. 文件IO也是有缓存的，只不过标准IO是用户态缓存，文件IO是内核态缓存，标准IO的好处是可以减少访问CPU的次数。  
-2. 文件IO也叫低级别IO，所以不要以为fread fwrite就是文件IO，这里其实有混淆，感觉起名字不严谨。  
-</font>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/30/input-output-library/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
-<table>
-<thead>
-<tr>
-<th align="left">操作</th>
-<th align="left">标准ＩＯ</th>
-<th align="left">文件ＩＯ(低级IO)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">打开</td>
-<td align="left">fopen,freopen,fdopen</td>
-<td align="left">open</td>
-</tr>
-<tr>
-<td align="left">关闭</td>
-<td align="left">fclose</td>
-<td align="left">close</td>
-</tr>
-<tr>
-<td align="left">读</td>
-<td align="left">getc,fgetc,getchar fgets,gets,fread</td>
-<td align="left">read</td>
-</tr>
-<tr>
-<td align="left">写</td>
-<td align="left">putc,fputc,putchar fputs,puts,fwrite</td>
-<td align="left">write</td>
-</tr>
-</tbody></table>
-<h2 id="状态标志符"><a href="#状态标志符" class="headerlink" title="状态标志符"></a><strong>状态标志符</strong></h2><p>以VC中实现为例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">template &lt;class _Dummy&gt;</span><br><span class="line">class _Iosb &#123; &#x2F;&#x2F; define templatized bitmask&#x2F;enumerated types, instantiate on demand</span><br><span class="line">public:</span><br><span class="line">    enum _Dummy_enum &#123; _Dummy_enum_val &#x3D; 1 &#125;; &#x2F;&#x2F; don&#39;t ask, TRANSITION, ABI</span><br><span class="line">    enum _Fmtflags &#123; &#x2F;&#x2F; constants for formatting options</span><br><span class="line">        _Fmtmask &#x3D; 0xffff,</span><br><span class="line">        _Fmtzero &#x3D; 0</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    static constexpr _Fmtflags skipws     &#x3D; static_cast&lt;_Fmtflags&gt;(0x0001);</span><br><span class="line">    static constexpr _Fmtflags unitbuf    &#x3D; static_cast&lt;_Fmtflags&gt;(0x0002);</span><br><span class="line">    static constexpr _Fmtflags uppercase  &#x3D; static_cast&lt;_Fmtflags&gt;(0x0004);</span><br><span class="line">    static constexpr _Fmtflags showbase   &#x3D; static_cast&lt;_Fmtflags&gt;(0x0008);</span><br><span class="line">    static constexpr _Fmtflags showpoint  &#x3D; static_cast&lt;_Fmtflags&gt;(0x0010);</span><br><span class="line">    static constexpr _Fmtflags showpos    &#x3D; static_cast&lt;_Fmtflags&gt;(0x0020);</span><br><span class="line">    static constexpr _Fmtflags left       &#x3D; static_cast&lt;_Fmtflags&gt;(0x0040);</span><br><span class="line">    static constexpr _Fmtflags right      &#x3D; static_cast&lt;_Fmtflags&gt;(0x0080);</span><br><span class="line">    static constexpr _Fmtflags internal   &#x3D; static_cast&lt;_Fmtflags&gt;(0x0100);</span><br><span class="line">    static constexpr _Fmtflags dec        &#x3D; static_cast&lt;_Fmtflags&gt;(0x0200);</span><br><span class="line">    static constexpr _Fmtflags oct        &#x3D; static_cast&lt;_Fmtflags&gt;(0x0400);</span><br><span class="line">    static constexpr _Fmtflags hex        &#x3D; static_cast&lt;_Fmtflags&gt;(0x0800);</span><br><span class="line">    static constexpr _Fmtflags scientific &#x3D; static_cast&lt;_Fmtflags&gt;(0x1000);</span><br><span class="line">    static constexpr _Fmtflags fixed      &#x3D; static_cast&lt;_Fmtflags&gt;(0x2000);</span><br><span class="line"></span><br><span class="line">    static constexpr _Fmtflags hexfloat &#x3D; static_cast&lt;_Fmtflags&gt;(0x3000); &#x2F;&#x2F; added with TR1 (not in C++11)</span><br><span class="line"></span><br><span class="line">    static constexpr _Fmtflags boolalpha   &#x3D; static_cast&lt;_Fmtflags&gt;(0x4000);</span><br><span class="line">    static constexpr _Fmtflags _Stdio      &#x3D; static_cast&lt;_Fmtflags&gt;(0x8000);</span><br><span class="line">    static constexpr _Fmtflags adjustfield &#x3D; static_cast&lt;_Fmtflags&gt;(0x01C0); &#x2F;&#x2F; left | right | internal</span><br><span class="line">    static constexpr _Fmtflags basefield   &#x3D; static_cast&lt;_Fmtflags&gt;(0x0E00); &#x2F;&#x2F; dec | oct | hex</span><br><span class="line">    static constexpr _Fmtflags floatfield  &#x3D; static_cast&lt;_Fmtflags&gt;(0x3000); &#x2F;&#x2F; scientific | fixed</span><br><span class="line"></span><br><span class="line">    enum _Iostate &#123; &#x2F;&#x2F; constants for stream states</span><br><span class="line">        _Statmask &#x3D; 0x17</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    static constexpr _Iostate goodbit &#x3D; static_cast&lt;_Iostate&gt;(0x0);</span><br><span class="line">    static constexpr _Iostate eofbit  &#x3D; static_cast&lt;_Iostate&gt;(0x1);</span><br><span class="line">    static constexpr _Iostate failbit &#x3D; static_cast&lt;_Iostate&gt;(0x2);</span><br><span class="line">    static constexpr _Iostate badbit  &#x3D; static_cast&lt;_Iostate&gt;(0x4);</span><br><span class="line"></span><br><span class="line">    enum _Openmode &#123; &#x2F;&#x2F; constants for file opening options</span><br><span class="line">        _Openmask &#x3D; 0xff</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    static constexpr _Openmode in         &#x3D; static_cast&lt;_Openmode&gt;(0x01);</span><br><span class="line">    static constexpr _Openmode out        &#x3D; static_cast&lt;_Openmode&gt;(0x02);</span><br><span class="line">    static constexpr _Openmode ate        &#x3D; static_cast&lt;_Openmode&gt;(0x04);</span><br><span class="line">    static constexpr _Openmode app        &#x3D; static_cast&lt;_Openmode&gt;(0x08);</span><br><span class="line">    static constexpr _Openmode trunc      &#x3D; static_cast&lt;_Openmode&gt;(0x10);</span><br><span class="line">    static constexpr _Openmode _Nocreate  &#x3D; static_cast&lt;_Openmode&gt;(0x40);</span><br><span class="line">    static constexpr _Openmode _Noreplace &#x3D; static_cast&lt;_Openmode&gt;(0x80);</span><br><span class="line">    static constexpr _Openmode binary     &#x3D; static_cast&lt;_Openmode&gt;(0x20);</span><br><span class="line"></span><br><span class="line">    enum _Seekdir &#123; &#x2F;&#x2F; constants for file positioning options</span><br><span class="line">        _Seekbeg,</span><br><span class="line">        _Seekcur,</span><br><span class="line">        _Seekend</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    static constexpr _Seekdir beg &#x3D; _Seekbeg;</span><br><span class="line">    static constexpr _Seekdir cur &#x3D; _Seekcur;</span><br><span class="line">    static constexpr _Seekdir end &#x3D; _Seekend;</span><br><span class="line"></span><br><span class="line">    enum &#123; &#x2F;&#x2F; TRANSITION, ABI</span><br><span class="line">        _Openprot &#x3D; _SH_DENYNO</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    static constexpr int _Default_open_prot &#x3D; _SH_DENYNO; &#x2F;&#x2F; constant for default file opening protection</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>在_Iosb中的实现为例，里面有四个关于文件的状态定义</p>
-<ul>
-<li>_Fmtflags = format flags</li>
-<li>_Iostate = io state   当前iosbase的状态位（通过调用iosbase::rdstate()随时可以与这些预定义好的常量对比）</li>
-<li>_Openmode = open mode  以什么样的方式打开文件（读取或写入，包括文件本身的性质，以及我们会如何使用它）</li>
-<li>_Seekdir = seek dir 从哪个地方开始访问（更加智能便捷，不用每次都把position 0当作start index）</li>
-</ul>
-<p><em><font color=red>注意</font>:为什么_Fmtflags enum只有一个成员，而_Seekdir enum就定义完全了呢？</em>  </p>
-<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a><strong>文件操作</strong></h2><h3 id="文件读"><a href="#文件读" class="headerlink" title="文件读"></a><strong>文件读</strong></h3><p>我所理解的读取一个文件的正常思路</p>
-<ul>
-<li>确定要访问的初始位置</li>
-<li>确定当前距离文件结尾的数据长度</li>
-<li>read读取（按照需要读取，只要是&lt;= left_length就可以）</li>
-</ul>
-<p>如果我们想要读取文本一行呢？<br>我们可以调用basic_istream::getline()，当然也有全局性的函数getline(std::basic_istream&amp;, , )，效果是一致的（其实我一直认为这种实现本质上是一样的，为什么要有两个接口？还一个global，一个类接口）</p>
-<h3 id="文件写"><a href="#文件写" class="headerlink" title="文件写"></a><strong>文件写</strong></h3><p>文件写的思路</p>
-<ul>
-<li>确定写的方式（追加，清空，还是截断truncate）</li>
-<li>确定要访问的初始位置</li>
-<li>write写入  </li>
-</ul>
-<p>写入文本一行没有writeline，因为没有必要，直接write之后，再写入一个endl就可以了。<br>其实读取的道理也是一样，也是一个个字符读取，然后遇到endl就把buffer中的数据作为一行输出。  </p>
-<h2 id="stringstream"><a href="#stringstream" class="headerlink" title="stringstream"></a><strong>stringstream</strong></h2><p>stringstream有什么用途呢？如果是内存操作，我们直接用string是不是就可以了呢？ </p>
-<p>stringstream不仅仅是string，更重要的是stream的特性。  </p>
-<p>比如ss &gt;&gt; 100; stringstream重载的&lt;&lt; &gt;&gt;。</p>
-<p>比如 str=  “ hello world “; string word;如果要想按照单词来读，那么可以通过ss &gt;&gt; word 来操作。</p>
-<p>在我看来，stringstream就是在内存中操作io（这是与文件IO的本质区别），本质上还是io 流，只不过在内存中是以string来作为对外沟通的数据结构。  </p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/02/Diagnostics-Library-Error-Handling/" class="post-title-link" itemprop="url">Diagnostics_Library(Error-Handling)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 13:24:02" itemprop="dateCreated datePublished" datetime="2020-09-02T13:24:02-07:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 05:30:41" itemprop="dateModified" datetime="2021-02-26T05:30:41-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/02/Diagnostics-Library-Error-Handling/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E6%88%90/" class="post-title-link" itemprop="url">并行编成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-02-24 15:02:16 / Modified: 22:25:24" itemprop="dateCreated datePublished" datetime="2021-02-24T15:02:16-08:00">2021-02-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><p>《C++ Concurrency In Action》<br>《Concurrency With Modern CPP》</p>
+<h2 id="并发和并行的概念"><a href="#并发和并行的概念" class="headerlink" title="并发和并行的概念"></a><strong>并发和并行的概念</strong></h2><p>在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。  </p>
+<p>在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，并不意味着线程间完全没有交互或者耦合，实际工作中我遇到的基本上线程间还是要访问共享内存的，很少遇到那种[0,10e8]相加这种可以完全没有耦合的情况。</p>
+<p>并行可以分成两种：</p>
+<ol>
+<li>数据并行<br>数据并行是指 可以将数据切分，然后每个部分同时执行相同的逻辑，最终合并结果就可以了。  这是非常完美符合并行概念的。</li>
+<li>业务并行<br>业务并行，就是将业务切分，每个线程执行其中一个业务，但每个业务中数据是全程参与的，比如业务分为A B C D，raw_data 进入A， 出来data1 进入B，出来data2 进入C, 出来data3 进入D。 当然这里的raw_data必须是流式的，否则不如单线程 顺序处理所有业务。</li>
+</ol>
+<h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
+<h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>分析一段业务逻辑是否可以采用多线程，至于能否充分利用硬件并行的概念再说（我的理解是，将简单的任务切分成子任务 增加的负担 远远超过了带来的益处，负担有可能是代码复杂度的提升，减少的时间远远不能弥补，子任务切分的太多，远远超过了硬件所支持的最优线程数，导致context切换负担太重）。 </p>
+<p><strong><font color=red>总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
+<h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><p>Todo</p>
+<h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3><p>Todo</p>
+<h2 id="C-线程库概述"><a href="#C-线程库概述" class="headerlink" title="C++线程库概述"></a><strong>C++线程库概述</strong></h2><p>C++11开始提供thread库，一直以来大家都有顾虑，就是抽象的代价高不高？  </p>
+<p>从网上的资料看，标准委员会在设计线程库时，就力求实现相同功能的情况下，高级API和底层API的性能收益相当。而且很多情况下，使用底层API带来的一点点便利，也会带来更高的代码复杂度和出错率，这样是不划算的。即便是瓶颈出现在C++标准库的工具中，也可能由低劣的程序设计造成。例如，如果过多的线程竞争一个互斥单元，将会很明显的影响性能。与其在互斥操作上耗费时间，不如重新设计，减少互斥单元上的竞争。</p>
+<p>如果系统API提供了一些线程库没有的功能，那么还可以通过native_handle获取句柄 来调用系统 API。</p>
+<h2 id="线程的创建启动和执行"><a href="#线程的创建启动和执行" class="headerlink" title="线程的创建启动和执行"></a><strong>线程的创建启动和执行</strong></h2>
       
     </div>
 
@@ -613,149 +643,6 @@ NOTE:
 <p>那么最终的输出是 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">Copy Constructor</span><br><span class="line">TestArray</span><br><span class="line">Copy Constructor</span><br><span class="line">26</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br><span class="line">destructor</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/02/Diagnostics-Library-Error-Handling/" class="post-title-link" itemprop="url">Diagnostics_Library(Error-Handling)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-02 13:24:02" itemprop="dateCreated datePublished" datetime="2020-09-02T13:24:02-07:00">2020-09-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-13 05:53:53" itemprop="dateModified" datetime="2021-02-13T05:53:53-08:00">2021-02-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
-<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-
-<p><strong>video time 1.05 EH is for Synchronous Program Errors</strong></p>
-<p>“异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。</p>
-<p>通俗一点的将就是：中断异步就是我可以不用立即处理，而是等执行完一条指令时候才可能处理，异常同步是指出了异常必须立马处理。”</p>
-<p><strong>video time 3:11 Returning Error Indicators</strong></p>
-<p>C语言中没有异常处理，所有的错误都是通过返回值的方式来告知调用者。</p>
-<p>但是通过返回值的方式通知 变得越来越臃肿  在很多情况下，接收返回值的函数不能处理错误，只能一步步往上传。这确实把错误检测和错误处理解耦了，但代价是高昂的，通过call chain传递错误码增加了分支处理，源代码增加，程序变大，可读性也变差。 </p>
-<p>而且，很多情况下我们会忘记检查错误码（这本身就不鲁棒）。</p>
-<p>但什么时候用返回码，什么时候用异常呢？  </p>
-<p><strong>video time 8:11 Exception Handling throw catch try</strong>  </p>
-<p>throw exception, the exception can be primitive values, but perferable to throw objects of class types.  </p>
-<p>base <exception><br>derived <stdexcept>  : invalid_argument out_of_range overflow_error<br>other derived exception defined in <new> <typeinfo></p>
-<p><strong>video time 10:56 throw by value, catch by reference</strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    throw &quot;error&quot;;</span><br><span class="line">&#125;catch(std::exception&amp; e)&#123;</span><br><span class="line">    std::cout &lt;&lt; e.what() &lt;&lt; std::endl;</span><br><span class="line">&#125;catch(int&amp; a)&#123;</span><br><span class="line">    std::cout &lt;&lt; a &lt;&lt; std::endl;</span><br><span class="line">&#125;catch(std::string&amp; msg)&#123;</span><br><span class="line">    std::cout &lt;&lt; std::string(msg) &lt;&lt; std::endl;</span><br><span class="line">&#125;catch(const char* msg)&#123;</span><br><span class="line">    std::cout &lt;&lt; std::string(msg) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line">catch(...)&#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;catch errors&quot; &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>video time 14:59 “Unwinding” the Stack</strong>  </p>
-<p>没看懂，很尴尬<br><strong>video time 19:58 nocept</strong>  </p>
-<p>void f() noexcept;</p>
-<p>noexcept不会在编译时起作用；如果一个noexcept实际上throw exception，那么std::terminate会被调用。  </p>
-<p>所以，确保声明为noexcept的函数不会throw exception。  </p>
-<p>这里有一个疑问，如果确信不会throw了，那么声明noexcept的意义在哪里？有利于编译器优化。</p>
-<p>noexcept还可以作有条件选择，比如 void swap(Type&amp; x, Type&amp; y) noexcept(noexcept(x.swap(y)))，如果x.swap(y)不发生异常，那么swap(Type&amp; x, Type&amp; y)一定不发生异常。  </p>
-<p>鼓励使用noexcept的情形：</p>
-<ul>
-<li>move constructor</li>
-<li>move assignment</li>
-<li>destructor</li>
-<li>Leaf Function 叶子函数是指在函数内部不分配栈空间，也不调用其它函数，也不存储非易失性寄存器，也不处理异常。  </li>
-</ul>
-<p><strong>video time 23:58 Exception Safety</strong>  </p>
-<ul>
-<li>the basic guarantee</li>
-<li>the strong guarantee</li>
-<li>the noexcept guarantee  </li>
-</ul>
-<p><strong>video time 31:05 RAII</strong></p>
-<p>还有Herb Sutter 2019 ACCU Conference上的演讲<br> KEYNOTE: De-fragmenting C++: Making exceptions more affordable and usable - Herb Sutter [ACCU 2019]</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/os7cqJ5qlzo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>Jon Kalb “Exception-Safe Code, Part I”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/W7fIy_54y-w&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=84" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-
-<p>Jon Kalb “Exception-Safe Code, Part II”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/b9xMIKb1jMk&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=83" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>Jon Kalb “Exception-Safe Code, Part III”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/MiKxfdkMJW8&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=82" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>在Jon Kalb的演讲里也提到了 the basic guarantee the strong guarantee the nothrow guarantee 这三个概念，无论哪种概念都要首先满足两点  </p>
-<ul>
-<li>异常发生后，不能有内存泄漏</li>
-<li>异常发生后，不允许数据结构恶化，比如 Object* p = new Object(“test”) 此时因为new异常，那么我们不知道此时到底分配了多少内存（对象构造到什么程度了），或者说p指向的是一块销毁的区域。</li>
-</ul>
-<p>保证没有内存泄漏很简单，靠RAII的锁机制。  std::unique_lock m(&amp;mtx)<br>保证第二点有一个，可以通过<br>std::shared_ptr<Object> ptr_obj_;<br>ptr_obj_.reset(new Object(“test”))<br>此时当new Object产生异常的时候，根本不会走到reset中，也就不会对shared_ptr产生影响。<br>美中不足的是，如果是通过拷贝构造或者复制构造的方式来reset<br>ptr_obj_.reset(new Object(old_object))<br>如果new Object抛出异常，那么old_object到底会发生什么变化呢？此时，就不会满足strong guarantee了（要么成功，即使失败，也要像完全没调用过那样）。</p>
-<p>那么该怎么解决这个问题呢？ <em><font color=blue>copy and swap</font></em><br>“copy and swap”类似于buffer的概念，在某篇博文中是这么讲述的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 &quot;copy and swap&quot;。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 &quot;pimpl idiom&quot;，Item 31 描述了它的一些细节。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">struct PMImpl &#123; &#x2F;&#x2F; PMImpl &#x3D; &quot;PrettyMenu</span><br><span class="line">　std::tr1::shared_ptr&lt;Image&gt; bgImage; &#x2F;&#x2F; Impl.&quot;; see below for</span><br><span class="line">　int imageChanges; &#x2F;&#x2F; why it’s a struct</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class PrettyMenu &#123;</span><br><span class="line">　...</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">　Mutex mutex;</span><br><span class="line">　std::tr1::shared_ptr&lt;PMImpl&gt; pImpl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void PrettyMenu::changeBackground(std::istream&amp; imgSrc)</span><br><span class="line">&#123;</span><br><span class="line">　using std::swap; &#x2F;&#x2F; see Item 25</span><br><span class="line"></span><br><span class="line">　Lock ml(&amp;mutex); &#x2F;&#x2F; acquire the mutex</span><br><span class="line"></span><br><span class="line">　std::tr1::shared_ptr&lt;PMImpl&gt; &#x2F;&#x2F; copy obj. data</span><br><span class="line">　pNew(new PMImpl(*pImpl));</span><br><span class="line"></span><br><span class="line">　pNew-&gt;bgImage.reset(new Image(imgSrc)); &#x2F;&#x2F; modify the copy</span><br><span class="line">　++pNew-&gt;imageChanges;</span><br><span class="line"></span><br><span class="line">　swap(pImpl, pNew); &#x2F;&#x2F; swap the new</span><br><span class="line">　&#x2F;&#x2F; data into place</span><br><span class="line"></span><br><span class="line">&#125; &#x2F;&#x2F; release the mutex</span><br></pre></td></tr></table></figure>
-
-<p> 　在这个例子中，我选择将 PMImpl 做成一个结构体，而不是类，因为通过让 pImpl 是 private 就可以确保 PrettyMenu 数据的封装。将 PMImpl 做成一个类虽然有些不那么方便，却没有增加什么好处。（这也会使有面向对象洁癖者走投无路。）如果你愿意，PMImpl 可以嵌套在 PrettyMenu 内部，像这样的打包问题与我们这里所关心的写异常安全的代码的问题没有什么关系。</p>
-<p>　　 copy-and-swap 策略是一种全面改变或丝毫不变一个对象的状态的极好的方法，但是，在通常情况下，它不能保证全部函数都是强力异常安全的。因为如果在changeBackground中我们调用了其他函数比如func()，如果func()不能保证strong guarantee，那么changeBackground即使我们写的再好，也不能保证strong guarantee，俗称“一颗老鼠屎，坏了一锅粥”，就是这样的道理。</p>
-<p>有一篇讲述copy-and-swap的很好的文章 <a target="_blank" rel="noopener" href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36553031/article/details/89057433">C++ 拷贝构造函数和赋值构造函数</a></p>
-<p>其实copy-and-swap的思想确实很好，但也有一个疑问，就是这样会不会造成性能的损失？</p>
-<p><strong>疑问：但是basic guarantee跟strong guarantee相比，缺了什么呢？</strong></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/error">Error handling</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_37817539/article/details/102421184">中断是异步的，异常是同步的</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a></p>
 
       
     </div>
@@ -1004,7 +891,7 @@ NOTE:
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/01/05/%E5%80%92%E8%AE%A1%E6%97%B655%E5%A4%A9/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1018,7 +905,7 @@ NOTE:
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/01/05/%E5%80%92%E8%AE%A1%E6%97%B655%E5%A4%A9/" class="post-title-link" itemprop="url">倒计时55天</a>
+            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
         </h2>
 
         <div class="post-meta">
@@ -1028,7 +915,7 @@ NOTE:
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-01-05 09:01:42" itemprop="dateCreated datePublished" datetime="2021-01-05T09:01:42-08:00">2021-01-05</time>
+              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06-08:00">2020-11-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -1043,7 +930,7 @@ NOTE:
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Career/" itemprop="url" rel="index"><span itemprop="name">Career</span></a>
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
                 </span>
             </span>
 
@@ -1058,100 +945,34 @@ NOTE:
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>活了35年，得到的了几个教训：果断取舍、勇敢面对、理性控制。  </p>
-<p>果断取舍，得出优劣之后，果断做出选择，不优柔寡断，浪费时间。  </p>
-<p>勇敢面对，不自欺欺人，理性分析当前境况，为决断收集足够多的信息。</p>
-<p>理性控制，不感情用事，以利益的角度来看待问题，不乱说话，理性指定计划，包括树立自己的自信心，不被别人pua，不被困难打倒。  </p>
-<p>总共55天的时间，可能不会每一天都学习，每天学习的时间也无法控制，但无论有多少成效，我都要坚持下去，虽然说是55天，但这只是一个引子，55天之后，我也会坚持下去。  </p>
-<p>作为通信毕业生，我的计算机理论基础很差，即使我已经35岁，在外面看来是要被淘汰的年纪了，但我一方面不care这个，你的公司有年龄限制，在我这也会加入黑名单，另一方面，我的基础确实差，我不以面试为结果导向，我以打基本功为基本导向。  </p>
-<p>不考虑找新工作，我想解决的问题，或者说让我感觉工作特别累、特别烦心的问题，有以下几个  </p>
-<ul>
-<li>多线程程序设计能力差，不知道该怎么分析多线程逻辑，怎么同步，怎么降低CPU轮询，mutex直接让线程等待到底为什么会卡住，或者耗时增加，等等问题都不明白</li>
-<li>C++代码不优雅，写的特别烂</li>
-<li>C++模板不太会用高级功能，比如result_of这种，也就是说自己基本上不用C++11及更新的C++特性或者说定义，感觉代码适配性差</li>
-<li>C++代码测试不会写，或者说搞不懂该怎么写，该怎么设计用例，代码测试框架为什么是这样的，为什么googletest要这么设计，它所遵循的核心原则是什么</li>
-<li>CMake不会用</li>
-<li>汇编能力差，虽然前期补了一点，但看代码的能力确实很差。现在的疑问是我的需求是什么？我该怎么学些汇编？现在看来我学习汇编有两个目的，一个是看dump，另一个是各种硬件加速，比如arm x86指令集加速等等，我还想学习cuda，但找不到自己适合的场景 </li>
-<li>我不懂编译原理，感觉对整个计算机体系的理解也差了很多，比如在了解memory order的时候，我就不理解cache的概念，对计算机系统的不理解导致我干很多事情都不知道底层原理，自己就没了信心</li>
-<li>我不懂Python，写小工具特别费劲，我到现在也不知道该怎么学习Python，特别痛苦，要先总结自己的使用场景吗？ 真想成为Python大拿，这样很多事情不用C++来搞也方便。</li>
-<li>C++的文件读写我是真的有病，这一块也没有搞懂，每次写文件操作，还要上网查。</li>
-<li>C++的数据结构，我在使用的过程中经常会感到痛苦，不知道为什么，现在想想可能是因为自己对他们缺乏了解？每次都要查API</li>
-<li>我对算法几乎一无所知，感觉像个傻子，在做各种编程题目的时候特别难受，虽然不以面试为结果导向，但实际上算法跟计算机体系结构和编译原理是有很强的相关性的</li>
-<li>我不会OpenGL，我对图形学一无所知，感觉要继续看Games101才可以。</li>
-<li>不会shell编程</li>
-<li>不会Linux编程</li>
-</ul>
-<p>先列出来的就是这些，那么接下来我要分析梳理这些问题，然后集中精力解决它们，也许有的可以集中几天搞定，有的因为耗时太长，需要跟其它的一起进行，总之，先整理信息。</p>
-<table>
-<thead>
-<tr>
-<th align="left">大类</th>
-<th align="left">子问题</th>
-<th align="left">解决方案</th>
-<th align="left">轻重缓急</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">工具类</td>
-<td align="left">代码测试</td>
-<td align="left">gtest</td>
-<td align="left">重急</td>
-</tr>
-<tr>
-<td align="left">工具类</td>
-<td align="left">CMake</td>
-<td align="left">《CMake Tutorial》</td>
-<td align="left">重急</td>
-</tr>
-<tr>
-<td align="left">工具类</td>
-<td align="left">python</td>
-<td align="left">python tutorial全部库掌握，多写例子</td>
-<td align="left">重急</td>
-</tr>
-<tr>
-<td align="left">工具类</td>
-<td align="left">shell编程</td>
-<td align="left">先弄明白，要专门学习shell编程吗？感觉脚本放在那，自己过段时间看都无权不明白什么意思</td>
-<td align="left">重急</td>
-</tr>
-<tr>
-<td align="left">语言</td>
-<td align="left">C++代码不优雅，C++11及newer的新特性不会用，多线程代码不会写</td>
-<td align="left">《C++ Concurrency》 &amp;&amp; cppreference全文尝试，自己多写例子，上传github</td>
-<td align="left">重缓</td>
-</tr>
-<tr>
-<td align="left">理论</td>
-<td align="left">不理解cache，不能熟练应对原码补码反码的推导，不理解内核态用户态，不理解程序如何被加载起来的</td>
-<td align="left">CSAPP</td>
-<td align="left">重急</td>
-</tr>
-<tr>
-<td align="left">理论</td>
-<td align="left">不理解在CMake里写编译选项的时候，这些选项都是什么意思，怎么减少符号导出，怎么减少包的体积，代码混淆是如何做到的</td>
-<td align="left">重缓</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">理论</td>
-<td align="left">不会OpenGL</td>
-<td align="left">Games101先把这个教程看完，完整的题目做完，思考总结</td>
-<td align="left">重缓</td>
-</tr>
-<tr>
-<td align="left">理论及工程</td>
-<td align="left">不懂模型</td>
-<td align="left">模型的结构，如何训练模型，如何在C++中展开神经网络</td>
-<td align="left">重急</td>
-</tr>
-</tbody></table>
-<h2 id="54天-2021-1-6"><a href="#54天-2021-1-6" class="headerlink" title="54天 2021.1.6"></a><strong>54天 2021.1.6</strong></h2><p>今天想的集成PPG方案，但没有做，看似有很多事情，但自己什么都没完成。  </p>
-<p>昨天看了gtest，本来想这两天弄完gtest和CMake，但看上去不可能了。  </p>
-<p>gtest看懂了大概的流程（编译、集成），但没有深入，比如如何测试类这种。</p>
-<p>今天剩下的时间看CMake吧。</p>
-<h2 id="53天-2021-1-7"><a href="#53天-2021-1-7" class="headerlink" title="53天 2021.1.7"></a><strong>53天 2021.1.7</strong></h2><p>昨天啥也没干，浪费了时间。<br>今天先看gtest的YouTube资料。  </p>
-<h2 id="52天-2021-1-8"><a href="#52天-2021-1-8" class="headerlink" title="52天 2021.1.8"></a><strong>52天 2021.1.8</strong></h2>
+          <p><code>server code</code></p>
+<pre><code>import socket  
+
+if __name__ == &#39;__main__&#39;:
+    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
+    while True:
+        pass</code></pre>
+<p><code>client code</code>  </p>
+<pre><code>import socket
+if __name__ == &#39;__main__&#39;:
+    i = 0
+    while True:
+        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
+        if mySocket is None:
+            print(&quot;create client connect failed&quot;)
+            break
+        else:
+            print(&quot;create client connection succeed&quot;)
+            i = i + 1
+            print(&#39;current connection count &#39;, i)  </code></pre>
+<p>可以创建连接，但存在几个现象  </p>
+<ol>
+<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
+<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
+<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
+<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
+</ol>
+
       
     </div>
 
@@ -1235,14 +1056,14 @@ NOTE:
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">117</span>
+          <span class="site-state-item-count">116</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
