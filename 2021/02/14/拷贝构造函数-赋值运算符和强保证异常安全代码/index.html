@@ -28,7 +28,7 @@
 <meta property="og:description" content="123456789101112class Test&amp;#123;    public:    Test()&amp;#123;cout &lt;&lt; &quot;explicit constructor with no argument&quot; &lt;&lt; endl;&amp;#125;    &#x2F;&#x2F;Test(Test t)&amp;#123;cout &lt;&lt; &quot;copy">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-02-14T10:09:15.000Z">
-<meta property="article:modified_time" content="2021-02-14T12:12:27.434Z">
+<meta property="article:modified_time" content="2021-02-26T13:33:04.629Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
@@ -211,10 +211,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-14 02:09:15 / Modified: 04:12:27" itemprop="dateCreated datePublished" datetime="2021-02-14T02:09:15-08:00">2021-02-14</time>
+              <time title="Created: 2021-02-14 02:09:15" itemprop="dateCreated datePublished" datetime="2021-02-14T02:09:15-08:00">2021-02-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 05:33:04" itemprop="dateModified" datetime="2021-02-26T05:33:04-08:00">2021-02-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,6 +245,8 @@
         <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">    public:</span><br><span class="line">    Test()&#123;cout &lt;&lt; &quot;explicit constructor with no argument&quot; &lt;&lt; endl;&#125;</span><br><span class="line">    &#x2F;&#x2F;Test(Test t)&#123;cout &lt;&lt; &quot;copy constructor&quot; &lt;&lt;endl;&#125;  &#x2F;&#x2F;1</span><br><span class="line">    Test(const Test&amp; t)&#123;cout &lt;&lt;&quot;copy constructor&quot; &lt;&lt; endl;&#125; &#x2F;&#x2F;2</span><br><span class="line">    Test&amp; operator&#x3D;(const Test&amp; t)&#123;</span><br><span class="line">        cout &lt;&lt; &quot;operator&#x3D;(const Test&amp; t)&quot; &lt;&lt;endl;</span><br><span class="line">    &#125; &#x2F;&#x2F;3</span><br><span class="line">    Test&amp; operator&#x3D;(Test t)&#123;</span><br><span class="line">        cout &lt;&lt; &quot;operator&#x3D;(Test t)&quot; &lt;&lt;endl;</span><br><span class="line">    &#125;&#x2F;&#x2F;4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>为什么拷贝构造函数不能写成1的形式，必须写成2 的形式？  </p>
+<a id="more"></a>
+
 <p>之前的回答是 减少一次拷贝，因为传值的时候会调用拷贝构造函数，传引用可以避免掉，至于传const引用，主要是避免实参被修改。<br>但现在深入的再思考就会发现，传值的时候调用拷贝构造函数，但实际上这是一个无限套娃，调用拷贝构造函数的时候，传入参数也是传值，这又要调用拷贝构造函数。<br>循环往复，没有尽头了。  </p>
 <p>至于3和4的区别在哪里呢？<br>3和4是两种写法。  </p>
 <p>用写法3的时候，就是operator=的实现就是拷贝构造函数的另一种实现，唯一的区别是要多一步检查（检查= 两边的对象是否相同，如果相同的话不做任何操作，否则，就要释放掉当前的内存，申请新内存，并拷贝内容过来）。  </p>
