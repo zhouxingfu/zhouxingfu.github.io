@@ -40,7 +40,7 @@ NOTE:
 ## __状态标志符__  
 
 以VC中实现为例
-```
+```C++
 template <class _Dummy>
 class _Iosb { // define templatized bitmask/enumerated types, instantiate on demand
 public:

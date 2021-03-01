@@ -39,7 +39,7 @@ other derived exception defined in <new> <typeinfo>
 
 __video time 10:56 throw by value, catch by reference__  
 
-```
+```C++
     try{
         throw "error";
     }catch(std::exception& e){
@@ -120,7 +120,7 @@ ptr_obj_.reset(new Object(old_object))
 有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 "copy and swap"。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 "pimpl idiom"，Item 31 描述了它的一些细节。
 ```
 
-```
+```C++
 struct PMImpl { // PMImpl = "PrettyMenu
 　std::tr1::shared_ptr<Image> bgImage; // Impl."; see below for
 　int imageChanges; // why it’s a struct

@@ -37,7 +37,7 @@ __思路__
 
 现在相出的解决方案是map<K, T> 重新保存为map<T, K>，但这样也就增加耗时。
 
-```
+```C++
 class Solution {
 public:
     vector<int> partitionLabels(string S) {
