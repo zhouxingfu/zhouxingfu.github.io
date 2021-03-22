@@ -184,6 +184,280 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/08/Rust-Enums-and-Pattern-Matching/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/08/Rust-Enums-and-Pattern-Matching/" class="post-title-link" itemprop="url">Rust(6) Enums and Pattern Matching</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-08 22:02:24" itemprop="dateCreated datePublished" datetime="2020-09-08T22:02:24-07:00">2020-09-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 06:01:26" itemprop="dateModified" datetime="2021-02-26T06:01:26-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a><strong><font color=0xFFFFFF>介绍</font></strong></h2><p>正常情况下，我们声明enum的格式如下</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() </span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">IpAddrKind</span></span> &#123;</span><br><span class="line">        V4,</span><br><span class="line">        V6,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">IpAddr</span></span> &#123;</span><br><span class="line">        kind: IpAddrKind,</span><br><span class="line">        address: <span class="built_in">String</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> home = IpAddr &#123;</span><br><span class="line">        kind: IpAddrKind::V4,</span><br><span class="line">        address: <span class="built_in">String</span>::from(<span class="string">&quot;127.0.0.1&quot;</span>),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> loopback = IpAddr &#123;</span><br><span class="line">        kind: IpAddrKind::V6,</span><br><span class="line">        address: <span class="built_in">String</span>::from(<span class="string">&quot;::1&quot;</span>),</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/08/Rust-Enums-and-Pattern-Matching/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Rust-Common-Programming-Concepts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/02/Rust-Common-Programming-Concepts/" class="post-title-link" itemprop="url">Rust(3) Common Programming Concepts</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 21:45:45" itemprop="dateCreated datePublished" datetime="2020-09-02T21:45:45-07:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 06:00:15" itemprop="dateModified" datetime="2021-02-26T06:00:15-08:00">2021-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust/" itemprop="url" rel="index"><span itemprop="name">Rust</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><em>“This chapter covers concepts that appear in almost every programming language and how they work in Rust. <strong><font color =red>Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Rust</font></strong>, but we’ll discuss them in the context of Rust and explain the conventions around using these concepts.”</em> </p>
+<p>跟王垠之前在某篇blog里谈到的一样，有一个特性的集合，每个语言是里面的一个子集，C++也是如此。至于为什么C++的学习曲线这么抖，我想大概是因为它要的东西太多，什么都能做，但有的语言比它更专业，虽然功能比它少。也就是说C++是一门不够专注的语言。  </p>
+<p>好了，C++的话题到此为止，我们看Rust。  </p>
+<h2 id="immutable-constant-区别"><a href="#immutable-constant-区别" class="headerlink" title="immutable constant 区别"></a><strong><font color=0xFFFFFF>immutable constant 区别</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">const</th>
+<th align="left">variable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">在整个生命周期内value不可更改</td>
+<td align="left">var可随时重新定义，比如let x= 10; let mut x = 20;默认为immutable，可随时更改为mutable</td>
+</tr>
+<tr>
+<td align="left">必须注明类型</td>
+<td align="left">不必注明类型</td>
+</tr>
+<tr>
+<td align="left">可以在任何范围内定义，比如全局</td>
+<td align="left">貌似不可以？</td>
+</tr>
+<tr>
+<td align="left">const赋值时必须是常亮表达式，或者至少能找到初始值，而不能是一个function call或者运行时才能获取的值</td>
+<td align="left">可以？</td>
+</tr>
+</tbody></table>
+<h2 id="shadowing和mut-区别"><a href="#shadowing和mut-区别" class="headerlink" title="shadowing和mut 区别"></a><strong><font color=0xFFFFFF>shadowing和mut 区别</font></strong></h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> x = <span class="number">10</span>;</span><br><span class="line">x = <span class="number">100</span>;</span><br><span class="line">和</span><br><span class="line"><span class="keyword">let</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">let</span> x= x + <span class="number">100</span>;</span><br><span class="line">的区别</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">shadowing</th>
+<th align="left">mut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">通过let，我们会改变暂时改变x的状态为mutable，等操作结束，x重新变为immutable</td>
+<td align="left">mut表示variable的value是可以被修改的</td>
+</tr>
+<tr>
+<td align="left">shadowing只是重用了variable的name，第二次或者后面let的时候可以更改它的类型</td>
+<td align="left">mut不可以，没有let的情况下，前面是什么类型，后面赋值的时候也必须是相同类型</td>
+</tr>
+</tbody></table>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a><strong><font color=0xFFFFFF>数据类型</font></strong></h2><table>
+<thead>
+<tr>
+<th align="left">length</th>
+<th align="left">signed</th>
+<th align="left">unsigned</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">8-bit</td>
+<td align="left">i8</td>
+<td align="left">u8</td>
+</tr>
+<tr>
+<td align="left">16-bit</td>
+<td align="left">i16</td>
+<td align="left">u16</td>
+</tr>
+<tr>
+<td align="left">32-bit</td>
+<td align="left">i32</td>
+<td align="left">u32</td>
+</tr>
+<tr>
+<td align="left">64-bit</td>
+<td align="left">i64</td>
+<td align="left">u64</td>
+</tr>
+<tr>
+<td align="left">128-bit</td>
+<td align="left">i128</td>
+<td align="left">u128</td>
+</tr>
+<tr>
+<td align="left">arch 类似于c++ size_t，取决于当前程序是64bit or 32bit</td>
+<td align="left">isize</td>
+<td align="left">usize</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">Number literals</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Decimal</td>
+<td align="left">98_222</td>
+</tr>
+<tr>
+<td align="left">Hex</td>
+<td align="left">0xff</td>
+</tr>
+<tr>
+<td align="left">Octal</td>
+<td align="left">0o77</td>
+</tr>
+<tr>
+<td align="left">Binary</td>
+<td align="left">0b1111_0000</td>
+</tr>
+<tr>
+<td align="left">Byte (u8 only)</td>
+<td align="left">b’A’</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/02/Rust-Common-Programming-Concepts/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/Repeated-Substring-Pattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -905,153 +1179,6 @@ a[0] = 2 #error</code></pre>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Language-support-library/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/02/Language-support-library/" class="post-title-link" itemprop="url">Language support library</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-02 14:03:29" itemprop="dateCreated datePublished" datetime="2020-09-02T14:03:29-07:00">2020-09-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-15 00:17:24" itemprop="dateModified" datetime="2021-02-15T00:17:24-08:00">2021-02-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a><strong>参考内容</strong></h2><p><a href="">Item 47: Use traits classes for information about types</a><br><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/types">Type support (basic types, RTTI, type traits)</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=VvbTP_k_Df4">CppCon 2015:Marshall Clow “Type Traits - what are they and why should I use them?”</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=tiAVWcjIF6o">Template Metaprogramming: Type Traits (part 1 of 2) - Jody Hagins - CppCon 2020</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=dLZcocFOb5Q">Template Metaprogramming: Type Traits (part 2 of 2) - Jody Hagins - CppCon 2020</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/23/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E6%88%91%E8%A7%81/" class="post-title-link" itemprop="url">文件格式之我见</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-23 21:22:03" itemprop="dateCreated datePublished" datetime="2020-09-23T21:22:03-07:00">2020-09-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-11 00:01:08" itemprop="dateModified" datetime="2021-02-11T00:01:08-08:00">2021-02-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1121,7 +1248,7 @@ a[0] = 2 #error</code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">116</span>
+          <span class="site-state-item-count">118</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
