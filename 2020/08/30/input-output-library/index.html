@@ -27,13 +27,10 @@
 <meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
 <meta property="og:description" content="前言现代语言都有抽象出来的IO操作库。在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen&#x2F;fread&#x2F;fwrite&#x2F;fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="/2020/08/30/input-output-library/input_output_hierarchy.png">
-<meta property="og:image" content="/2020/08/30/input-output-library/posix_and_c.png">
 <meta property="article:published_time" content="2020-08-30T05:27:34.000Z">
 <meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="/2020/08/30/input-output-library/input_output_hierarchy.png">
 
 <link rel="canonical" href="zhouxingfu.github.io/2020/08/30/input-output-library/">
 
@@ -246,10 +243,10 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
-<img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
+   
 
 
-<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
+<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2>   
 
 <p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
 <a id="more"></a>
