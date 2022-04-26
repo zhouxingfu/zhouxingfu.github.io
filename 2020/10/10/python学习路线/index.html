@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1 前言编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python学习路线">
+<meta property="og:url" content="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="1 前言编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-10T12:33:26.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Python学习路线 | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python学习路线
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26+08:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+<a id="more"></a>
+
+
+<h1 id="2-我所理解的语言特性"><a href="#2-我所理解的语言特性" class="headerlink" title="2 我所理解的语言特性"></a><strong>2 我所理解的语言特性</strong></h1><p>语言是特性的集合。</p>
+<h2 id="2-1-运算符"><a href="#2-1-运算符" class="headerlink" title="2.1 运算符"></a><strong>2.1 运算符</strong></h2><p>标配。转自Python-100-Days<br>| 运算符                                                       | 描述                           |<br>| ———————————————————— | —————————— |<br>| <code>[]</code> <code>[:]</code>                                                   | 下标，切片                     |<br>| <code>**</code>                                                         | 指数                           |<br>| <code>~</code> <code>+</code> <code>-</code>                                                  | 按位取反, 正负号               |<br>| <code>*</code> <code>/</code> <code>%</code> <code>//</code>                                             | 乘，除，模，整除               |<br>| <code>+</code> <code>-</code>                                                      | 加，减                         |<br>| <code>&gt;&gt;</code> <code>&lt;&lt;</code>                                                    | 右移，左移                     |<br>| <code>&amp;</code>                                                          | 按位与                         |<br>| <code>^</code> <code>|</code>                                                      | 按位异或，按位或               |<br>| <code>&lt;=</code> <code>&lt;</code> <code>&gt;</code> <code>&gt;=</code>                                            | 小于等于，小于，大于，大于等于 |<br>| <code>==</code> <code>!=</code>                                                    | 等于，不等于                   |<br>| <code>is</code>  <code>is not</code>                                               | 身份运算符                     |<br>| <code>in</code> <code>not in</code>                                                | 成员运算符                     |<br>| <code>not</code> <code>or</code> <code>and</code>                                             | 逻辑运算符                     |<br>| <code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>//=</code> <code>**=</code> <code>&amp;=</code> <code>|=</code> <code>^=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code> | （复合）赋值运算符             |</p>
+<p>is、is not、in、not in </p>
+<p>在Python中is是用来表示内存地址（引用）的一致性；in是值判断，同时我们要注意嵌套内容是无法判断的，比如 4 in [1, [1,4]]就是False，[1,4] in [1, [1,4]] 是True。</p>
+<h2 id="2-2-分支及循环"><a href="#2-2-分支及循环" class="headerlink" title="2.2 分支及循环"></a><strong>2.2 分支及循环</strong></h2><p>if for while就是我们所说的分支和循环，在C++中，我们会用上面的运算符来作为分支的判断条件，在Python中稍有不同。  </p>
+<ul>
+<li>如果我们明确知道循环的次数，或者要对一个容器进行迭代，那么建议使用for-in结构</li>
+<li>如果要构造不知道具体循环次数的循环结构，我们推荐使用while循环。while循环通过一个能够产生或转换出bool值的表达式来控制循环，表达式的值为True则继续循环；表达式的值为False则结束循环。</li>
+</ul>
+<p>用jupyter写test case的时候，下意识用了 i++ i–结果发现Python中没有这个语法，后来想了下Python中并没有这样的语法，同时也不明白为什么C/C++中要有自增自减运算符，是为了提升效率吗？ 不得而知。  </p>
+<h2 id="2-3-函数-类"><a href="#2-3-函数-类" class="headerlink" title="2.3 函数 类"></a><strong>2.3 函数 类</strong></h2><h3 id="2-3-1-函数"><a href="#2-3-1-函数" class="headerlink" title="2.3.1 函数"></a><strong>2.3.1 函数</strong></h3><p>先说函数，函数包含函数名称，参数，以及返回值，在Python中不显式指明返回值类型，所以我们关注的重点是参数。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">关于函数返回值，Python最开始是不会直接声明返回值类型的，一般都要看API docstring，如果我们用到了一个文档很差的库，只能看源码了。当然，不直接声明返回值类型主要也是因为有些<span class="function"><span class="keyword">function</span></span>的返回值类型并不确定，比如我们可以返回<span class="built_in">int</span>，也可以返回list，tuple，但<span class="keyword">return</span> <span class="keyword">type</span>并不确定的时候，函数声明中也就没必要写了。后来Python也发现，有的时候还是需要<span class="keyword">return</span> <span class="keyword">type</span>的，或者说我们写的大部分函数的<span class="keyword">return</span> <span class="keyword">type</span>都是明确的，在声明的时候明确<span class="keyword">return</span> <span class="keyword">type</span>也能让使用者更加方便。</span><br><span class="line"></span><br><span class="line">下面这种写法就是明确了<span class="keyword">return</span> <span class="keyword">type</span>，不过这个是<span class="number">3.5</span>之后才支持的</span><br><span class="line"></span><br><span class="line">def greeting(<span class="keyword">name</span>: str) -&gt; str:</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;Hello, &#123;&#125;&#x27;</span><span class="number">.</span><span class="keyword">format</span>(<span class="keyword">name</span>)</span><br></pre></td></tr></table></figure>
+
+<p>接着谈参数，Python的参数大概有两种，一种叫position argument，一个类似于keyword argument，这两个都好理解，一个是根据位置，一个是根据参数名，那我们在传参的时候到底是根据position还是根据keyword呢？</p>
+<p>我这边有一个简单的想法就是，无论我们以何种方式传参，都不能让函数调用的时候产生歧义，最终要跟函数声明一致，另外Python还是支持动态参数，类似于C++中的argc和argv。</p>
+<h2 id="2-4-字符串和常用数据结构"><a href="#2-4-字符串和常用数据结构" class="headerlink" title="2.4 字符串和常用数据结构"></a><strong>2.4 字符串和常用数据结构</strong></h2><h3 id="2-4-1-字符串"><a href="#2-4-1-字符串" class="headerlink" title="2.4.1 字符串"></a><strong>2.4.1 字符串</strong></h3><p>要说起字符串，那真的是五味杂陈，使用频率特别高，操作特别多，而且还涉及到不同的编码格式，我能想到的  </p>
+<ul>
+<li>切片</li>
+<li></li>
+</ul>
+<p>切片的话，需要知道start和end，一般有find_first_of find_last_of</p>
+<p>还有什么呢？</p>
+<p>leetcode上那些字符串算法其实在char数组上也适用，所以所谓的字符串算法跟字符串关系不大。</p>
+<h3 id="2-4-2-列表"><a href="#2-4-2-列表" class="headerlink" title="2.4.2 列表"></a><strong>2.4.2 列表</strong></h3><p>列表也可以切片，跟string不同的是，string是immutable，list是mutable。  </p>
+<h3 id="2-4-3-生成式与生成器"><a href="#2-4-3-生成式与生成器" class="headerlink" title="2.4.3 生成式与生成器"></a><strong>2.4.3 <a target="_blank" rel="noopener" href="https://docs.python.org/3/tutorial/classes.html#generators">生成式与生成器</a></strong></h3><p>[x for x in range(1, 10)] 是生成式<br>(x for x in range(1, 10)) 是生成器  </p>
+<p><strong><font color=green size=4>yield构造生成器</font></strong>  </p>
+<p>如何理解yield呢，我的理解 yield = return_pause </p>
+<p>这里的意思是，yield构成的是一个generator，next的时候开始执行程序，直到遇到yield就把yield后面的value返回，同时整个程序pause，如果再次调用next，那么从当前pause的地方开始继续执行，直到遇到下一个yield语句。  </p>
+<p>下面是一个例子  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span>(<span class="params">n</span>):</span>  </span><br><span class="line">    a, b = <span class="number">0</span>, <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(n):  </span><br><span class="line">        a, b = b, a+b  </span><br><span class="line">        <span class="keyword">yield</span> a  </span><br><span class="line">        <span class="keyword">yield</span> <span class="string">&quot;hello &quot;</span>  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span>  </span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> fib(<span class="number">5</span>):  </span><br><span class="line">        print(x)  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:  </span><br><span class="line">    main()  </span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，generator的返回值甚至可以不是同一种类型，感觉这种写法有两个好处 </p>
+<ol>
+<li>能够写更复杂的generator，比(x for x in range(100))这种复杂多了。  </li>
+<li>不用非得保存成list或者tuple，然后for 遍历，像上面的fib例子，如果我们的正常写法，有可能是fib的结果保存成一个list，然后返回，最后我们for遍历这个list，但我们直接用yield就省略了中间环节，直接输出我们想要的结果。  </li>
+</ol>
+<h3 id="2-4-4-元组"><a href="#2-4-4-元组" class="headerlink" title="2.4.4 元组"></a><strong>2.4.4 元组</strong></h3><p>元组可以储存不同乐行的变量，不过元组是immutable。既然我们有了list，为什么还需要tuple？  </p>
+<p>下面转自Python-100-days </p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这里有一个非常值得探讨的问题，我们已经有了列表这种数据结构，为什么还需要元组这样的类型呢？</span><br><span class="line"></span><br><span class="line">元组中的元素是无法修改的，事实上我们在项目中尤其是多线程环境（后面会讲到）中可能更喜欢使用的是那些不变对象（一方面因为对象状态不能修改，所以可以避免由此引起的不必要的程序错误，简单的说就是一个不变的对象要比可变的对象更加容易维护；另一方面因为没有任何一个线程能够修改不变对象的内部状态，一个不变对象自动就是线程安全的，这样就可以省掉处理同步化的开销。一个不变对象可以方便的被共享访问）。所以结论就是：如果不需要对元素进行添加、删除、修改的时候，可以考虑使用元组，当然如果一个方法要返回多个值，使用元组也是不错的选择。</span><br><span class="line">元组在创建时间和占用的空间上面都优于列表。我们可以使用sys模块的getsizeof函数来检查存储同样的元素的元组和列表各自占用了多少内存空间，这个很容易做到。我们也可以在ipython中使用魔法指令%timeit来分析创建同样内容的元组和列表所花费的时间，下图是我的macOS系统上测试的结果。</span><br><span class="line">```  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="定义元组"><a href="#定义元组" class="headerlink" title="定义元组"></a>定义元组</h1><p>t = (‘骆昊’, 38, True, ‘四川成都’)<br>print(t)</p>
+<h1 id="获取元组中的元素"><a href="#获取元组中的元素" class="headerlink" title="获取元组中的元素"></a>获取元组中的元素</h1><p>print(t[0])<br>print(t[3])</p>
+<h1 id="遍历元组中的值"><a href="#遍历元组中的值" class="headerlink" title="遍历元组中的值"></a>遍历元组中的值</h1><p>for member in t:<br>    print(member)</p>
+<h1 id="重新给元组赋值"><a href="#重新给元组赋值" class="headerlink" title="重新给元组赋值"></a>重新给元组赋值</h1><h1 id="t-0-‘王大锤’-TypeError"><a href="#t-0-‘王大锤’-TypeError" class="headerlink" title="t[0] = ‘王大锤’  # TypeError"></a>t[0] = ‘王大锤’  # TypeError</h1><h1 id="变量t重新引用了新的元组原来的元组将被垃圾回收"><a href="#变量t重新引用了新的元组原来的元组将被垃圾回收" class="headerlink" title="变量t重新引用了新的元组原来的元组将被垃圾回收"></a>变量t重新引用了新的元组原来的元组将被垃圾回收</h1><p>t = (‘王大锤’, 20, True, ‘云南昆明’)<br>print(t)</p>
+<h1 id="将元组转换成列表"><a href="#将元组转换成列表" class="headerlink" title="将元组转换成列表"></a>将元组转换成列表</h1><p>person = list(t)<br>print(person)</p>
+<h1 id="列表是可以修改它的元素的"><a href="#列表是可以修改它的元素的" class="headerlink" title="列表是可以修改它的元素的"></a>列表是可以修改它的元素的</h1><p>person[0] = ‘李小龙’<br>person[1] = 25<br>print(person)</p>
+<h1 id="将列表转换成元组"><a href="#将列表转换成元组" class="headerlink" title="将列表转换成元组"></a>将列表转换成元组</h1><p>fruits_list = [‘apple’, ‘banana’, ‘orange’]<br>fruits_tuple = tuple(fruits_list)<br>print(fruits_tuple)</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">### __2.4.5 set__  </span><br><span class="line"></span><br><span class="line">在这里没有multiset，不允许有重复元素。  </span><br></pre></td></tr></table></figure>
+<h1 id="创建集合的字面量语法"><a href="#创建集合的字面量语法" class="headerlink" title="创建集合的字面量语法"></a>创建集合的字面量语法</h1><p>set1 = {1, 2, 3, 3, 3, 2}<br>print(set1)<br>print(‘Length =’, len(set1))</p>
+<h1 id="创建集合的构造器语法-面向对象部分会进行详细讲解"><a href="#创建集合的构造器语法-面向对象部分会进行详细讲解" class="headerlink" title="创建集合的构造器语法(面向对象部分会进行详细讲解)"></a>创建集合的构造器语法(面向对象部分会进行详细讲解)</h1><p>set2 = set(range(1, 10))<br>set3 = set((1, 2, 3, 3, 2, 1))<br>print(set2, set3)</p>
+<h1 id="创建集合的推导式语法-推导式也可以用于推导集合"><a href="#创建集合的推导式语法-推导式也可以用于推导集合" class="headerlink" title="创建集合的推导式语法(推导式也可以用于推导集合)"></a>创建集合的推导式语法(推导式也可以用于推导集合)</h1><p>set4 = {num for num in range(1, 100) if num % 3 == 0 or num % 5 == 0}<br>print(set4)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">向集合添加元素和从集合删除元素。</span><br></pre></td></tr></table></figure>
+<p>set1.add(4)<br>set1.add(5)<br>set2.update([11, 12])<br>set2.discard(5)<br>if 4 in set2:<br>    set2.remove(4)<br>print(set1, set2)<br>print(set3.pop())<br>print(set3)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">集合的成员、交集、并集、差集等运算。</span><br></pre></td></tr></table></figure>
+<h1 id="集合的交集、并集、差集、对称差运算"><a href="#集合的交集、并集、差集、对称差运算" class="headerlink" title="集合的交集、并集、差集、对称差运算"></a>集合的交集、并集、差集、对称差运算</h1><p>print(set1 &amp; set2)</p>
+<h1 id="print-set1-intersection-set2"><a href="#print-set1-intersection-set2" class="headerlink" title="print(set1.intersection(set2))"></a>print(set1.intersection(set2))</h1><p>print(set1 | set2)</p>
+<h1 id="print-set1-union-set2"><a href="#print-set1-union-set2" class="headerlink" title="print(set1.union(set2))"></a>print(set1.union(set2))</h1><p>print(set1 - set2)</p>
+<h1 id="print-set1-difference-set2"><a href="#print-set1-difference-set2" class="headerlink" title="print(set1.difference(set2))"></a>print(set1.difference(set2))</h1><p>print(set1 ^ set2)</p>
+<h1 id="print-set1-symmetric-difference-set2"><a href="#print-set1-symmetric-difference-set2" class="headerlink" title="print(set1.symmetric_difference(set2))"></a>print(set1.symmetric_difference(set2))</h1><h1 id="判断子集和超集"><a href="#判断子集和超集" class="headerlink" title="判断子集和超集"></a>判断子集和超集</h1><p>print(set2 &lt;= set1)</p>
+<h1 id="print-set2-issubset-set1"><a href="#print-set2-issubset-set1" class="headerlink" title="print(set2.issubset(set1))"></a>print(set2.issubset(set1))</h1><p>print(set3 &lt;= set1)</p>
+<h1 id="print-set3-issubset-set1"><a href="#print-set3-issubset-set1" class="headerlink" title="print(set3.issubset(set1))"></a>print(set3.issubset(set1))</h1><p>print(set1 &gt;= set2)</p>
+<h1 id="print-set1-issuperset-set2"><a href="#print-set1-issuperset-set2" class="headerlink" title="print(set1.issuperset(set2))"></a>print(set1.issuperset(set2))</h1><p>print(set1 &gt;= set3)</p>
+<h1 id="print-set1-issuperset-set3"><a href="#print-set1-issuperset-set3" class="headerlink" title="print(set1.issuperset(set3))"></a>print(set1.issuperset(set3))</h1><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    说明： Python中允许通过一些特殊的方法来为某种类型或数据结构自定义运算符（后面的章节中会讲到），上面的代码中我们对集合进行运算的时候可以调用集合对象的方法，也可以直接使用对应的运算符，例如&amp;运算符跟<span class="built_in">int</span>ersection方法的作用就是一样的，但是使用运算符让代码更加直观。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### __2<span class="number">.4</span><span class="number">.6</span> 字典__  </span><br><span class="line"></span><br><span class="line">字典类似于C++中的map。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="创建字典的字面量语法"><a href="#创建字典的字面量语法" class="headerlink" title="创建字典的字面量语法"></a>创建字典的字面量语法</h1><p>scores = {‘骆昊’: 95, ‘白元芳’: 78, ‘狄仁杰’: 82}<br>print(scores)</p>
+<h1 id="创建字典的构造器语法"><a href="#创建字典的构造器语法" class="headerlink" title="创建字典的构造器语法"></a>创建字典的构造器语法</h1><p>items1 = dict(one=1, two=2, three=3, four=4)</p>
+<h1 id="通过zip函数将两个序列压成字典"><a href="#通过zip函数将两个序列压成字典" class="headerlink" title="通过zip函数将两个序列压成字典"></a>通过zip函数将两个序列压成字典</h1><p>items2 = dict(zip([‘a’, ‘b’, ‘c’], ‘123’))</p>
+<h1 id="创建字典的推导式语法"><a href="#创建字典的推导式语法" class="headerlink" title="创建字典的推导式语法"></a>创建字典的推导式语法</h1><p>items3 = {num: num ** 2 for num in range(1, 10)}<br>print(items1, items2, items3)</p>
+<h1 id="通过键可以获取字典中对应的值"><a href="#通过键可以获取字典中对应的值" class="headerlink" title="通过键可以获取字典中对应的值"></a>通过键可以获取字典中对应的值</h1><p>print(scores[‘骆昊’])<br>print(scores[‘狄仁杰’])</p>
+<h1 id="对字典中所有键值对进行遍历"><a href="#对字典中所有键值对进行遍历" class="headerlink" title="对字典中所有键值对进行遍历"></a>对字典中所有键值对进行遍历</h1><p>for key in scores:<br>    print(f’{key}: {scores[key]}’)</p>
+<h1 id="更新字典中的元素"><a href="#更新字典中的元素" class="headerlink" title="更新字典中的元素"></a>更新字典中的元素</h1><p>scores[‘白元芳’] = 65<br>scores[‘诸葛王朗’] = 71<br>scores.update(冷面=67, 方启鹤=85)<br>print(scores)<br>if ‘武则天’ in scores:<br>    print(scores[‘武则天’])<br>print(scores.get(‘武则天’))</p>
+<h1 id="get方法也是通过键获取对应的值但是可以设置默认值"><a href="#get方法也是通过键获取对应的值但是可以设置默认值" class="headerlink" title="get方法也是通过键获取对应的值但是可以设置默认值"></a>get方法也是通过键获取对应的值但是可以设置默认值</h1><p>print(scores.get(‘武则天’, 60))</p>
+<h1 id="删除字典中的元素"><a href="#删除字典中的元素" class="headerlink" title="删除字典中的元素"></a>删除字典中的元素</h1><p>print(scores.popitem())<br>print(scores.popitem())<br>print(scores.pop(‘骆昊’, 100))</p>
+<h1 id="清空字典"><a href="#清空字典" class="headerlink" title="清空字典"></a>清空字典</h1><p>scores.clear()<br>print(scores)</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### __2<span class="number">.4</span><span class="number">.6</span> 数据结构总结__   </span><br><span class="line"></span><br><span class="line">按照是否可以被修改  </span><br></pre></td></tr></table></figure>
+<p>immutable: string tuple<br>mutable : list set dict</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不同的创建方式 </span><br></pre></td></tr></table></figure>
+<p>list []<br>tuple ()<br>set{}<br>dict{:, :}</p>
+<p>当然这都是通过字面量来构造，每种类型也有自己的构造方式，比如set(), 比如dict()，创建方式并不固定，没有什么特殊的规律，都只是规则，规则不需要死记硬背，懂基本的构造方式，其他的方式，写代码熟练了也就知道了，长时间不用也会忘记。 还是要懂得输入输出，我们的大脑不是为了记住这些教条，而是为了形成模式，可以应对各种输入。  </p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## __2.5 类__  </span></span><br><span class="line"></span><br><span class="line">跟C++类似，这里也有访问权限的问题，私有和公有，不过Python中对这块的限定没有那么严格，这也是我所认为的Python适合做对工程化要求没有那么严格的事情。  </span><br><span class="line"></span><br><span class="line"><span class="attribute">_name </span>: 表示私有变量  </span><br><span class="line"><span class="attribute">__name </span>: 表示私有成员  </span><br><span class="line"></span><br><span class="line">其实即使加上了前缀，也可以访问，Python在内部只是把前缀换了个名字。  </span><br><span class="line"></span><br><span class="line">如果确实要限制访问权限，那么就用修改器和访问器。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>class Person(object):</p>
+<pre><code>def __init__(self, name, age):
+    self._name = name
+    self._age = age
+
+# 访问器 - getter方法
+@property
+def name(self):
+    return self._name
+
+# 访问器 - getter方法
+@property
+def age(self):
+    return self._age
+
+# 修改器 - setter方法
+@age.setter
+def age(self, age):
+    self._age = age
+
+def play(self):
+    if self._age &lt;= 16:
+        print(&#39;%s正在玩飞行棋.&#39; % self._name)
+    else:
+        print(&#39;%s正在玩斗地主.&#39; % self._name)</code></pre>
+<p>def main():<br>    person = Person(‘王大锤’, 12)<br>    person.play()<br>    person.age = 22<br>    person.play()<br>    # person.name = ‘白元芳’  # AttributeError: can’t set attribute</p>
+<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    main()</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### __2.<span class="number">5.1</span>\_\_slots\_\_魔法__   </span><br><span class="line"></span><br><span class="line">Python是动态语言，他们说动态语言可以动态绑定属性和方法，可以把属性和方法动态绑定到类或者实例。  </span><br><span class="line"></span><br><span class="line">绑定规则如下</span><br><span class="line">* 绑定属性 ： 可以直接绑定属性到类和类实例</span><br><span class="line">* 绑定方法 ：  <span class="number">1.</span> 绑定到实例 instance.<span class="keyword">function</span> = <span class="constructor">MethodType(<span class="params">function</span>, <span class="params">instance</span>)</span>  <span class="number">2.</span> <span class="keyword">class</span>.<span class="keyword">function</span> = <span class="constructor">MethodType(<span class="params">function</span>, <span class="params">class</span>)</span> 或者<span class="keyword">class</span>.<span class="keyword">function</span> = <span class="keyword">function</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">__&lt;font color=green&gt;绑定到实例&lt;/font&gt;__</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>stu1 = Student();<br>stu1.name = ‘Tom’<br>print(stu1.name)<br>Tom<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘name’]</p>
+<p>def set_age(self, age):<br>…     self.age = age<br>…<br>set_age(stu1, 20)<br>print(stu1.age)<br>20<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’]<br>#并没有绑定方法到实例上<br>…<br>from types import MethodType<br>stu1.set_age = MethodType(set_age, stu1)<br>stu1.set_age(33)<br>print(stu1.age)<br>33<br>print(dir(stu1))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’, ‘set_age’]<br>#绑定的属性和方法只属于stu1的，对于其他实例不起作用<br>…<br>stu2 = Student()<br>print(dir(stu2))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">__</span>&lt;<span class="built_in">font</span> <span class="built_in">color</span>=green&gt;绑定到类&lt;/<span class="built_in">font</span>&gt;<span class="symbol">__</span>  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>from types import MethodType<br>Student.set_name = MethodType(set_name, Student)<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Jack<br>print(stu2.name)<br>Jack<br>########<br>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>Student.set_name = set_name<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x</strong>‘, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Rose<br>print(stu2.name)<br>Jack</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果不想绑定那么多属性，那么可以通过<span class="strong">__slots__</span>来限定只允许添加某些属性，但这里有一个<span class="xml"><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">red</span>&gt;</span></span><span class="strong">__漏洞，我们可以通过动态添加方法，而方法中添加属性来迂回这个限制，所以我不明白这么操作的意义是什么__</span><span class="xml"><span class="tag">&lt;/<span class="name">font</span>&gt;</span></span>。  </span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.2 staticmethod classmethod__</span>   </span></span><br><span class="line"></span><br><span class="line">Python中也有静态方法，这个很好理解，就是跟实例没什么关系，classmethod则相当于C++中的拷贝构造函数。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.3 类之间的关系__</span>   </span></span><br><span class="line"></span><br><span class="line">is-a : 继承  </span><br><span class="line">has-a : 属性</span><br><span class="line">use-a： 方法参数</span><br><span class="line"></span><br><span class="line">继承很好理解，就是重写overwrite，如果想明确基类为抽象类的话，可以通过ABCMeta和abstractclass来实现。</span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.4 奇怪的lambda表达式__</span>  </span></span><br><span class="line"></span><br><span class="line">在C++中我们写lambda [<span class="string">=</span>](<span class="link">int x, int y</span>)  int &#123; return x + y;&#125;</span><br><span class="line"></span><br><span class="line">在python中竟然有这样的定义，看着也不是很正常啊，这里的return type是一个lambda。在C++中我们是不可以这么写的。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>def make_incrementor(n):<br>    return lambda x: x + n</p>
+<p>f = make_incrementor(42)<br>print(f(0))<br>print(f(1))</p>
+<pre><code>
+# __3 界面开发__  
+
+有tkinter pygame，对我来说，最起码目前无意义，没有做界面开发的需求。  
+
+# __4 文件和异常__    
+
+任何一门编程语言，关于文件操作都会关注这几个方面
+
+_&lt;font color=red&gt;以何种方式打开&lt;/font&gt;_  
+这个的打开方式是指： 打开什么样的文件（文本还是二进制）、做什么样的操作（读、写、还是追加）  
+
+| 操作模式 | 具体含义                         |
+| -------- | -------------------------------- |
+| `&#39;r&#39;`    | 读取 （默认）                    |
+| `&#39;w&#39;`    | 写入（会先截断之前的内容）       |
+| `&#39;x&#39;`    | 写入，如果文件已经存在会产生异常 |
+| `&#39;a&#39;`    | 追加，将内容写入到已有文件的末尾 |
+| `&#39;b&#39;`    | 二进制模式                       |
+| `&#39;t&#39;`    | 文本模式（默认）                 |
+| `&#39;+&#39;`    | 更新（既可以读又可以写）         |
+
+
+_&lt;font color=red&gt;要调用的接口&lt;/font&gt;_  
+
+
+## __4.1 文本文件__  
+
+    f = open()  
+    f.read()  
+    f.close()  
+
+或者 
+
+    f = open()  
+    for line in f:  
+        print(line)
+
+
+又或者    
+
+    f = open()  
+    lines = f.readlines()  //此时lines是列表  
+
+写文本文件把read换成write就好。  
+
+## __4.2 二进制文件__  
+
+跟文本文件类型，只不过read和write的操作对象是byte  
+
+## __4.3 JSON文件__  
+
+JSON的数据类型和Python的数据类型是很容易找到对应关系的，如下面两张表所示。
+
+| JSON                | Python       |
+| ------------------- | ------------ |
+| object              | dict         |
+| array               | list         |
+| string              | str          |
+| number (int / real) | int / float  |
+| true / false        | True / False |
+| null                | None         |
+
+| Python                                 | JSON         |
+| -------------------------------------- | ------------ |
+| dict                                   | object       |
+| list, tuple                            | array        |
+| str                                    | string       |
+| int, float, int- &amp; float-derived Enums | number       |
+| True / False                           | true / false |
+| None                                   | null         |  
+
+* dump - 将Python对象按照JSON格式序列化到文件中
+* dumps - 将Python对象处理成JSON格式的字符串
+* load - 将文件中的JSON数据反序列化成对象
+* loads - 将字符串的内容反序列化成Python对象  
+
+
+
+# __5 正则表达式__    
+
+个人认为正则表达式分为两部分  
+
+1. 判断是否适合用正则，如果适合，制定正则规则  
+2. 用语言规则实现  
+
+所以，我觉得没有必要记住这些语法，到用的时候再看就是了。  
+
+# __6 进程和线程__  
+
+与其它语言相比，理念都是一样的。  
+
+问题是我们是否要学习Python进程和线程中的基本概念？还是直接用Python提供的库？  
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/" rel="prev" title="ubuntu搜狗输入法乱码需切换两次shift才恢复">
+      <i class="fa fa-chevron-left"></i> ubuntu搜狗输入法乱码需切换两次shift才恢复
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/" rel="next" title="Python中mutable与immutable">
+      Python中mutable与immutable <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%88%91%E6%89%80%E7%90%86%E8%A7%A3%E7%9A%84%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">2 我所理解的语言特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%88%86%E6%94%AF%E5%8F%8A%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 分支及循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E5%87%BD%E6%95%B0-%E7%B1%BB"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 函数 类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-%E5%87%BD%E6%95%B0"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1 函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 字符串和常用数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1-%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1 字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-2-%E5%88%97%E8%A1%A8"><span class="nav-number">2.4.2.</span> <span class="nav-text">2.4.2 列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-3-%E7%94%9F%E6%88%90%E5%BC%8F%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">2.4.3.</span> <span class="nav-text">2.4.3 生成式与生成器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-4-%E5%85%83%E7%BB%84"><span class="nav-number">2.4.4.</span> <span class="nav-text">2.4.4 元组</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%85%83%E7%BB%84"><span class="nav-number">3.</span> <span class="nav-text">定义元组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%BB%84%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="nav-number">4.</span> <span class="nav-text">获取元组中的元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%85%83%E7%BB%84%E4%B8%AD%E7%9A%84%E5%80%BC"><span class="nav-number">5.</span> <span class="nav-text">遍历元组中的值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E7%BB%99%E5%85%83%E7%BB%84%E8%B5%8B%E5%80%BC"><span class="nav-number">6.</span> <span class="nav-text">重新给元组赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#t-0-%E2%80%98%E7%8E%8B%E5%A4%A7%E9%94%A4%E2%80%99-TypeError"><span class="nav-number">7.</span> <span class="nav-text">t[0] &#x3D; ‘王大锤’  # TypeError</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8Ft%E9%87%8D%E6%96%B0%E5%BC%95%E7%94%A8%E4%BA%86%E6%96%B0%E7%9A%84%E5%85%83%E7%BB%84%E5%8E%9F%E6%9D%A5%E7%9A%84%E5%85%83%E7%BB%84%E5%B0%86%E8%A2%AB%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">8.</span> <span class="nav-text">变量t重新引用了新的元组原来的元组将被垃圾回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E6%88%90%E5%88%97%E8%A1%A8"><span class="nav-number">9.</span> <span class="nav-text">将元组转换成列表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E6%98%AF%E5%8F%AF%E4%BB%A5%E4%BF%AE%E6%94%B9%E5%AE%83%E7%9A%84%E5%85%83%E7%B4%A0%E7%9A%84"><span class="nav-number">10.</span> <span class="nav-text">列表是可以修改它的元素的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E5%88%97%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90%E5%85%83%E7%BB%84"><span class="nav-number">11.</span> <span class="nav-text">将列表转换成元组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E5%90%88%E7%9A%84%E5%AD%97%E9%9D%A2%E9%87%8F%E8%AF%AD%E6%B3%95"><span class="nav-number">12.</span> <span class="nav-text">创建集合的字面量语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E5%90%88%E7%9A%84%E6%9E%84%E9%80%A0%E5%99%A8%E8%AF%AD%E6%B3%95-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%83%A8%E5%88%86%E4%BC%9A%E8%BF%9B%E8%A1%8C%E8%AF%A6%E7%BB%86%E8%AE%B2%E8%A7%A3"><span class="nav-number">13.</span> <span class="nav-text">创建集合的构造器语法(面向对象部分会进行详细讲解)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E5%90%88%E7%9A%84%E6%8E%A8%E5%AF%BC%E5%BC%8F%E8%AF%AD%E6%B3%95-%E6%8E%A8%E5%AF%BC%E5%BC%8F%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BA%8E%E6%8E%A8%E5%AF%BC%E9%9B%86%E5%90%88"><span class="nav-number">14.</span> <span class="nav-text">创建集合的推导式语法(推导式也可以用于推导集合)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E7%9A%84%E4%BA%A4%E9%9B%86%E3%80%81%E5%B9%B6%E9%9B%86%E3%80%81%E5%B7%AE%E9%9B%86%E3%80%81%E5%AF%B9%E7%A7%B0%E5%B7%AE%E8%BF%90%E7%AE%97"><span class="nav-number">15.</span> <span class="nav-text">集合的交集、并集、差集、对称差运算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-intersection-set2"><span class="nav-number">16.</span> <span class="nav-text">print(set1.intersection(set2))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-union-set2"><span class="nav-number">17.</span> <span class="nav-text">print(set1.union(set2))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-difference-set2"><span class="nav-number">18.</span> <span class="nav-text">print(set1.difference(set2))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-symmetric-difference-set2"><span class="nav-number">19.</span> <span class="nav-text">print(set1.symmetric_difference(set2))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E5%AD%90%E9%9B%86%E5%92%8C%E8%B6%85%E9%9B%86"><span class="nav-number">20.</span> <span class="nav-text">判断子集和超集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set2-issubset-set1"><span class="nav-number">21.</span> <span class="nav-text">print(set2.issubset(set1))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set3-issubset-set1"><span class="nav-number">22.</span> <span class="nav-text">print(set3.issubset(set1))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-issuperset-set2"><span class="nav-number">23.</span> <span class="nav-text">print(set1.issuperset(set2))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#print-set1-issuperset-set3"><span class="nav-number">24.</span> <span class="nav-text">print(set1.issuperset(set3))</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%97%E5%85%B8%E7%9A%84%E5%AD%97%E9%9D%A2%E9%87%8F%E8%AF%AD%E6%B3%95"><span class="nav-number">25.</span> <span class="nav-text">创建字典的字面量语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%97%E5%85%B8%E7%9A%84%E6%9E%84%E9%80%A0%E5%99%A8%E8%AF%AD%E6%B3%95"><span class="nav-number">26.</span> <span class="nav-text">创建字典的构造器语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%BF%87zip%E5%87%BD%E6%95%B0%E5%B0%86%E4%B8%A4%E4%B8%AA%E5%BA%8F%E5%88%97%E5%8E%8B%E6%88%90%E5%AD%97%E5%85%B8"><span class="nav-number">27.</span> <span class="nav-text">通过zip函数将两个序列压成字典</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%97%E5%85%B8%E7%9A%84%E6%8E%A8%E5%AF%BC%E5%BC%8F%E8%AF%AD%E6%B3%95"><span class="nav-number">28.</span> <span class="nav-text">创建字典的推导式语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E9%94%AE%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E5%AD%97%E5%85%B8%E4%B8%AD%E5%AF%B9%E5%BA%94%E7%9A%84%E5%80%BC"><span class="nav-number">29.</span> <span class="nav-text">通过键可以获取字典中对应的值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E5%AD%97%E5%85%B8%E4%B8%AD%E6%89%80%E6%9C%89%E9%94%AE%E5%80%BC%E5%AF%B9%E8%BF%9B%E8%A1%8C%E9%81%8D%E5%8E%86"><span class="nav-number">30.</span> <span class="nav-text">对字典中所有键值对进行遍历</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E5%AD%97%E5%85%B8%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="nav-number">31.</span> <span class="nav-text">更新字典中的元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#get%E6%96%B9%E6%B3%95%E4%B9%9F%E6%98%AF%E9%80%9A%E8%BF%87%E9%94%AE%E8%8E%B7%E5%8F%96%E5%AF%B9%E5%BA%94%E7%9A%84%E5%80%BC%E4%BD%86%E6%98%AF%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-number">32.</span> <span class="nav-text">get方法也是通过键获取对应的值但是可以设置默认值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%AD%97%E5%85%B8%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="nav-number">33.</span> <span class="nav-text">删除字典中的元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E5%AD%97%E5%85%B8"><span class="nav-number">34.</span> <span class="nav-text">清空字典</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

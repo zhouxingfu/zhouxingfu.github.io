@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。   首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Diagnostics_Library(Error-Handling)">
+<meta property="og:url" content="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="前言我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。   首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-02T05:24:02.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.869Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Diagnostics_Library(Error-Handling) | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Diagnostics_Library(Error-Handling)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-02 13:24:02" itemprop="dateCreated datePublished" datetime="2020-09-02T13:24:02+08:00">2020-09-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<a id="more"></a>
+<p><strong>video time 1.05 EH is for Synchronous Program Errors</strong></p>
+<p>“异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。</p>
+<p>通俗一点的将就是：中断异步就是我可以不用立即处理，而是等执行完一条指令时候才可能处理，异常同步是指出了异常必须立马处理。”</p>
+<p><strong>video time 3:11 Returning Error Indicators</strong></p>
+<p>C语言中没有异常处理，所有的错误都是通过返回值的方式来告知调用者。</p>
+<p>但是通过返回值的方式通知 变得越来越臃肿  在很多情况下，接收返回值的函数不能处理错误，只能一步步往上传。这确实把错误检测和错误处理解耦了，但代价是高昂的，通过call chain传递错误码增加了分支处理，源代码增加，程序变大，可读性也变差。 </p>
+<p>而且，很多情况下我们会忘记检查错误码（这本身就不鲁棒）。</p>
+<p>但什么时候用返回码，什么时候用异常呢？  </p>
+<p><strong>video time 8:11 Exception Handling throw catch try</strong>  </p>
+<p>throw exception, the exception can be primitive values, but perferable to throw objects of class types.  </p>
+<p>base <exception><br>derived <stdexcept>  : invalid_argument out_of_range overflow_error<br>other derived exception defined in <new> <typeinfo></p>
+<p><strong>video time 10:56 throw by value, catch by reference</strong>  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">int</span>&amp; a)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">const</span> <span class="keyword">char</span>* msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(...)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;catch errors&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>video time 14:59 “Unwinding” the Stack</strong>  </p>
+<p>没看懂，很尴尬<br><strong>video time 19:58 nocept</strong>  </p>
+<p>void f() noexcept;</p>
+<p>noexcept不会在编译时起作用；如果一个noexcept实际上throw exception，那么std::terminate会被调用。  </p>
+<p>所以，确保声明为noexcept的函数不会throw exception。  </p>
+<p>这里有一个疑问，如果确信不会throw了，那么声明noexcept的意义在哪里？有利于编译器优化。</p>
+<p>noexcept还可以作有条件选择，比如 void swap(Type&amp; x, Type&amp; y) noexcept(noexcept(x.swap(y)))，如果x.swap(y)不发生异常，那么swap(Type&amp; x, Type&amp; y)一定不发生异常。  </p>
+<p>鼓励使用noexcept的情形：</p>
+<ul>
+<li>move constructor</li>
+<li>move assignment</li>
+<li>destructor</li>
+<li>Leaf Function 叶子函数是指在函数内部不分配栈空间，也不调用其它函数，也不存储非易失性寄存器，也不处理异常。  </li>
+</ul>
+<p><strong>video time 23:58 Exception Safety</strong>  </p>
+<ul>
+<li>the basic guarantee</li>
+<li>the strong guarantee</li>
+<li>the noexcept guarantee  </li>
+</ul>
+<p><strong>video time 31:05 RAII</strong></p>
+<p>还有Herb Sutter 2019 ACCU Conference上的演讲<br> KEYNOTE: De-fragmenting C++: Making exceptions more affordable and usable - Herb Sutter [ACCU 2019]</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/os7cqJ5qlzo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part I”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W7fIy_54y-w&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=84" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+
+<p>Jon Kalb “Exception-Safe Code, Part II”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/b9xMIKb1jMk&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=83" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part III”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/MiKxfdkMJW8&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=82" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>在Jon Kalb的演讲里也提到了 the basic guarantee the strong guarantee the nothrow guarantee 这三个概念，无论哪种概念都要首先满足两点  </p>
+<ul>
+<li>异常发生后，不能有内存泄漏</li>
+<li>异常发生后，不允许数据结构恶化，比如 Object* p = new Object(“test”) 此时因为new异常，那么我们不知道此时到底分配了多少内存（对象构造到什么程度了），或者说p指向的是一块销毁的区域。</li>
+</ul>
+<p>保证没有内存泄漏很简单，靠RAII的锁机制。  std::unique_lock m(&amp;mtx)<br>保证第二点有一个，可以通过<br>std::shared_ptr<Object> ptr_obj_;<br>ptr_obj_.reset(new Object(“test”))<br>此时当new Object产生异常的时候，根本不会走到reset中，也就不会对shared_ptr产生影响。<br>美中不足的是，如果是通过拷贝构造或者复制构造的方式来reset<br>ptr_obj_.reset(new Object(old_object))<br>如果new Object抛出异常，那么old_object到底会发生什么变化呢？此时，就不会满足strong guarantee了（要么成功，即使失败，也要像完全没调用过那样）。</p>
+<p>那么该怎么解决这个问题呢？ <em><font color=blue>copy and swap</font></em><br>“copy and swap”类似于buffer的概念，在某篇博文中是这么讲述的</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 <span class="string">&quot;copy and swap&quot;</span>。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 <span class="string">&quot;pimpl idiom&quot;</span>，Item <span class="number">31</span> 描述了它的一些细节。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">PMImpl</span> &#123;</span> <span class="comment">// PMImpl = &quot;PrettyMenu</span></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;Image&gt; bgImage; <span class="comment">// Impl.&quot;; see below for</span></span><br><span class="line">　<span class="keyword">int</span> imageChanges; <span class="comment">// why it’s a struct</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrettyMenu</span> &#123;</span></span><br><span class="line">　...</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">　Mutex mutex;</span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; pImpl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrettyMenu::changeBackground</span><span class="params">(<span class="built_in">std</span>::istream&amp; imgSrc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">　<span class="keyword">using</span> <span class="built_in">std</span>::swap; <span class="comment">// see Item 25</span></span><br><span class="line"></span><br><span class="line">　<span class="function">Lock <span class="title">ml</span><span class="params">(&amp;mutex)</span></span>; <span class="comment">// acquire the mutex</span></span><br><span class="line"></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; <span class="comment">// copy obj. data</span></span><br><span class="line">　pNew(<span class="keyword">new</span> PMImpl(*pImpl));</span><br><span class="line"></span><br><span class="line">　pNew-&gt;bgImage.reset(<span class="keyword">new</span> Image(imgSrc)); <span class="comment">// modify the copy</span></span><br><span class="line">　++pNew-&gt;imageChanges;</span><br><span class="line"></span><br><span class="line">　swap(pImpl, pNew); <span class="comment">// swap the new</span></span><br><span class="line">　<span class="comment">// data into place</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// release the mutex</span></span><br></pre></td></tr></table></figure>
+
+<p> 　在这个例子中，我选择将 PMImpl 做成一个结构体，而不是类，因为通过让 pImpl 是 private 就可以确保 PrettyMenu 数据的封装。将 PMImpl 做成一个类虽然有些不那么方便，却没有增加什么好处。（这也会使有面向对象洁癖者走投无路。）如果你愿意，PMImpl 可以嵌套在 PrettyMenu 内部，像这样的打包问题与我们这里所关心的写异常安全的代码的问题没有什么关系。</p>
+<p>　　 copy-and-swap 策略是一种全面改变或丝毫不变一个对象的状态的极好的方法，但是，在通常情况下，它不能保证全部函数都是强力异常安全的。因为如果在changeBackground中我们调用了其他函数比如func()，如果func()不能保证strong guarantee，那么changeBackground即使我们写的再好，也不能保证strong guarantee，俗称“一颗老鼠屎，坏了一锅粥”，就是这样的道理。</p>
+<p>有一篇讲述copy-and-swap的很好的文章 <a target="_blank" rel="noopener" href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36553031/article/details/89057433">C++ 拷贝构造函数和赋值构造函数</a></p>
+<p>其实copy-and-swap的思想确实很好，但也有一个疑问，就是这样会不会造成性能的损失？</p>
+<p><strong>疑问：但是basic guarantee跟strong guarantee相比，缺了什么呢？</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/error">Error handling</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_37817539/article/details/102421184">中断是异步的，异常是同步的</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/31/Debug-and-Assembly/" rel="prev" title="调试与汇编">
+      <i class="fa fa-chevron-left"></i> 调试与汇编
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/02/Language-support-library/" rel="next" title="Language support library">
+      Language support library <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

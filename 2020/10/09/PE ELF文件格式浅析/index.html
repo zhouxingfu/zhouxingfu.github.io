@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1 前言在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86&#x2F;arm等）。   那种格式可以被OS识别甚至加载、启动都与OS息息相关。   我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32&#x2F;64上？这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PE ELF文件格式浅析">
+<meta property="og:url" content="zhouxingfu.github.io/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="1 前言在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86&#x2F;arm等）。   那种格式可以被OS识别甚至加载、启动都与OS息息相关。   我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32&#x2F;64上？这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg">
+<meta property="og:image" content="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg">
+<meta property="article:published_time" content="2020-10-09T09:25:15.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.869Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PE ELF文件格式浅析 | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PE ELF文件格式浅析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-09 17:25:15" itemprop="dateCreated datePublished" datetime="2020-10-09T17:25:15+08:00">2020-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86/arm等）。  </p>
+<p>那种格式可以被OS识别甚至加载、启动都与OS息息相关。  </p>
+<p>我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32/64上？<br>这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么导致这些结果的原因是什么呢？</p>
+<p>首先说Apple，使用的是一种叫做Fat Binary的技术，也就是我在编译程序的时候里面其实有包含了两套代码，同时支持x86/64，苹果现在宣布今后将把macos从x86迁移到arm平台，那么是要还是用Fat Binary技术吗？Fat Binary的优点和缺点都显而易见，那么还有其它方式吗？  </p>
+<p>我们知道，Windows系统，32位应用可以在64位系统上运行，64位程序不能在32位系统上运行，这是为什么？  </p>
+<p><strong><font color=0xFF>ToDoList</font></strong>  </p>
+<a id="more"></a>
+
+<ol>
+<li><p>Windows下 32位应用在64位系统上运行的原理，编译好的x86应用可以在Windows arm平台运行吗？是需要在编译的时候指定平台呢，还是可以直接通过OS内部的翻译器解决这个问题？x86_64 应用能运行在arm64平台上吗，实现的原理又是什么呢？ x86应用在64位系统上只能运行在user mode，所以驱动或者依赖于驱动的x86应用是没办法运行在64位系统上的，还有就是32位应用无法调用64位DLL，反之亦然，这是为什么呢？</p>
+</li>
+<li><p>Windows arm是如何实现的？现在指定了CPU和GPU，也就是说如果要换其他家arm芯片，就要重新适配是么？类似于苹果Mac arm也只能用自己的arm芯片？为什么x86 32位程序可以跑在Windows arm上？微软说这10.1之后就可以推送新的surface proc x II(arm平台)，支持64位x86应用跑在上面了，这又是怎么实现的呢？</p>
+</li>
+<li><p>Windows arm系统如何实现驱动开发？打个比方，比如杀毒软件该如何适配呢？是需要重新写一遍驱动呢，还是可以直接在上面跑，跟x86 x64应用的待遇一样？ </p>
+</li>
+<li><p>我们知道在Windows x86/x64平台，需要的驱动不同，也就是32位系统需要32位driver，64位系统需要64位driver，当然，我们也知道，32位软件可以在64位系统上跑（通过WOW机制），但驱动不可以，但我们看安全卫士 这类软件只有一个版本，没有根据操作系统选择，那么应该是32位程序，那就是说32位程序可以与64位driver sys通信，但32位程序无法调用64位DLL，这样的理解对吗？ </p>
+</li>
+<li><p>64位程序不能调用32位DLL，32位driver sys，但可以调用32位COM（通过进程间COM的方式）</p>
+</li>
+<li><p>从2011年微软发布支持arm平台的Windows RT开始，已经接近十年了，Apple也将在11月发布第一款Mac arm。“第一次发生在上世纪九十年代中叶，Macintosh从Motorola的68k指令集迁移到了IBM的PowerPC指令集上，那段时间乔布斯并不在苹果。用乔布斯在WWDC 2005上面的话来说，这次切换为苹果奠定了未来十年的基础（指90年代中叶到2005年左右）。第二次是软件层面上的大换血，从Mac OS 9迁移到了具有BSD血统的Mac OS X上，这也是乔布斯一手主导的一次切换，让Mac的操作系统变得现代化，并打好了在未来二十年内发展的基础。第三次则是我们所熟知的从PowerPC架构的处理器迁移到Intel处理器上面，乔布斯在2005年的WWDC大会上面宣告了这次迁移。到今天为止，所有的Mac都已经换上了Intel的CPU，在系统层面上，macOS也早已完全抛弃掉了对PowerPC指令集、甚至于32位x86指令集（IA-32）的支持，在macOS 11之前，它只支持使用x86-64指令集的处理器。”那么桌面PC的未来甚至服务器的未来就是arm了吗？  arm server实现了云端同架构，但有没有这么一个问题，就是同样的应用在这个arm芯片上可以，在另外一个arm芯片上不可以？如果是android这样系统的话，应该没问题，因为大家的app在上面开发都是可以用的，就算底层的程序，应该问题也不大。至于为什么微软和Apple迁移那么难，是因为OS跟指令集绑定的太深了，而Linux因为开源的问题，所以很早就有人着手解决这个问题了。  </p>
+</li>
+</ol>
+<p>上面有6个问题，是我昨天想起来记下的，其实里面的问题里已经有了一些答案，现在结合我知道的，先讲一些实现原理，最后回答上面的问题。  </p>
+<h1 id="2-操作系统与指令集配合以及一些实例"><a href="#2-操作系统与指令集配合以及一些实例" class="headerlink" title="2 操作系统与指令集配合以及一些实例"></a><strong>2 操作系统与指令集配合以及一些实例</strong></h1><p>指令集和程序通过操作系统交流，一般情况下，编译好的可执行程序里面是固定的指令集，比如我们在VS中指定了平台(x86/x64)，那么就会生成32/64位程序，虽然目前AMD的x64和x86是兼容的，但最开始Intel IA64和x86并不兼容，选择了某个平台，我们也就选择了将程序中的代码编译成某个指令集。操作系统根据自己定义好的格式，解析可执行文件，把指令发送给CPU执行。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhongjin616/article/details/18765301">单片机 指令集 和 操作系统的关系</a>  </p>
+<p>操作系统可以支持多个指令集平台吗？我觉得从技术上是可以实现的。    </p>
+<ol>
+<li>比如从引导程序开始就做成Fat Binary这种形式，先判断当前是什么CPU架构，然后我的OS安装盘里就选择哪种平台版本的安装程序，但最终安装的操作系统里，是包含多个CPU平台支持的</li>
+<li>在运行可执行程序的时候，如果可执行程序本身是Fat Binary，那么就选择支持的指令集直接运行；如果不是，那么通过操作系统自带的翻译器翻译指令。  </li>
+</ol>
+<p>但是这样有一个问题啊，就是操作系统和可执行程序都会非常臃肿。<br>所以，上面提到的操作系统做成Fat Binary是不现实的，不同的架构，同一个系统安装文件，这得包含多少冗余啊。至于第二点，Apple的实现方式是Fat Binary，但Mac OS本身也没有Fat Binary。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">NeXT</span>的Mach内核所支持的Mach-O二进制文件格式引入了一种叫fat binary的特性，说白了就是在一个平台架构上分别交叉编译所有平台的二进制格式文件，然后把每个文件都打包成一个文件。Universal Binary就是指同时打包Intel平台和PowerPC平台的二进制文件。Mac OS X <span class="number">10</span>.<span class="number">4</span>最终支持四个平台的BSD系统调用——<span class="number">32</span>位Power PC、<span class="number">64</span>位PowerPC、<span class="number">32</span>位 x<span class="number">86</span>和<span class="number">64</span>位x<span class="number">86</span>_<span class="number">64</span>。作为最终用户，无须搞清这些区别，因为使用Universal Binary技术，买回来的软件直接会解出相应平台程序的二进制文件并执行。这是苹果很成功的一步——不像Windows系统中要用不同的路径（\Windows\System、\Windows\System<span class="number">32</span>、\Windows\System<span class="number">64</span>）分别存放不同架构的二进制库，并且用户还需在<span class="number">32</span>位版和<span class="number">64</span>位版之间犹豫不决。</span><br></pre></td></tr></table></figure>
+
+<p>苹果这么做的好处是，操作系统内部不需要实现类似于Windows emulator的机制，但坏处是应用体积会变得大，毕竟里面包含了很多平台的二进制程序。  </p>
+<h2 id="2-1-微软的实现思路"><a href="#2-1-微软的实现思路" class="headerlink" title="2.1 微软的实现思路"></a><strong>2.1 微软的实现思路</strong></h2><h3 id="2-1-1-如何实现64位系统上加载32位程序"><a href="#2-1-1-如何实现64位系统上加载32位程序" class="headerlink" title="2.1.1 如何实现64位系统上加载32位程序"></a><strong>2.1.1 如何实现64位系统上加载32位程序</strong></h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">intel</span> X<span class="number">86</span>架构CPU可能实现了多个指令集x<span class="number">86</span>，x<span class="number">86</span>-<span class="number">64</span>，MMX，SSE，SSE<span class="number">2</span>，SSE<span class="number">3</span>，SSSE<span class="number">3</span> ，而这些指令集中的指令让cpu完成的动作都比较复杂，所以也称为CISC</span><br><span class="line"></span><br><span class="line"><span class="attribute">AMD</span> amd<span class="number">64</span>架构的cpu 兼容了x<span class="number">86</span>指令集还拓增了<span class="number">3</span>D-Now!指令集，用于加强对<span class="number">3</span>D显示的支持。</span><br><span class="line"></span><br><span class="line"><span class="attribute">ARM</span> ARMv<span class="number">1</span>~ARMv<span class="number">7</span>架构的cpu实现了Thumb指令集和ARM指令集。这些指令集中的一条指令让cpu完成的动作都比较简单，所以也称为RISC指令集</span><br></pre></td></tr></table></figure>
+<p>但32/64指令长度也不一样啊，一个是32位，一个是64位，这些该怎么办？  </p>
+<p><a target="_blank" rel="noopener" href="https://www.techsupportalert.com/content/how-windows7-vista64-support-32bit-applications.htm">How Windows 64-bit Supports 32-bit Applications</a><br><a target="_blank" rel="noopener" href="http://baijiahao.baidu.com/s?id=1567917475253638&wfr=spider&for=pc">Win10 ARM版如何运行x86程序？IT之家带你一文读懂</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/334122973">为什么同一个exe文件能在不同指令集CPU上运行？</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/52873651">如何看待微软的CHPE（arm运行x86）？</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winprog64/running-32-bit-applications">Running 32-bit Applications</a>   </p>
+<p>上面的链接详细介绍了  </p>
+<ol>
+<li>Windows 64位系统如何跑32位应用？ 通过一个中间层 32位指令 &lt;–&gt; 转换器 &lt;–&gt; 64位指令。</li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg" class="">
+
+
+<ol start="2">
+<li>Windows arm如何支持运行x86应用。通过emulator，比如  </li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg" class="">
+
+<p>下面这些就是Windows提供的包含emulator的库</p>
+<ul>
+<li>Wow64.dll provides the core emulation infrastructure and the thunks for the Ntoskrnl.exe entry-point functions.</li>
+<li>Wow64Win.dll provides thunks for the Win32k.sys entry-point functions.</li>
+<li>(x64 only) Wow64Cpu.dll provides support for running x86 programs on x64.</li>
+<li>(Intel Itanium only) IA32Exec.bin contains the x86 software emulator.</li>
+<li>(Intel Itanium only) Wowia32x.dll provides the interface between IA32Exec.bin and WOW64.</li>
+<li>(ARM64 only) xtajit.dll contains the x86 software emulator.</li>
+<li>(ARM64 only) wowarmw.dll provides support for running ARM32 programs on ARM64.</li>
+</ul>
+<p>10月底微软是释放出支持x64应用的Windows ARM系统。  </p>
+<p>现在的制约因素是效率不行，因为要通过中间转码的方式，但为什么Mac ARM 就能这么厉害呢？ 有一个想法是Windows的前向兼容太多，导致系统做的比较臃肿，而Mac OS历来就是喜新厌旧，隔个几年就不支持之前的设备或者某些接口是常规操作。  </p>
+<p>现在回答上面的问题  </p>
+<ol>
+<li><p>32位无法调用64位DLL，但可以使用64位driver sys。<br>通过上面的原理，我们知道64位系统跑32位程序是通过指令集32/64转换实现的，32位调用64位DLL该怎么办，难道我们要标记一下哪些需要进行指令集转换，哪些不需要吗？可是在实际使用过程中，exe调用DLL导出的function，本身就是一套流水线下来的，我们没办法在执行指令的过程中区分哪些指令要转64，哪些不用转64。<br>至于driver sys，可以理解为进程间通信，相当于一个32位进程，一个64位进程，通过某些手段进行通信，这样也能解释64位程序如何调用32位DLL，那就是通过进程间COM，既然是不同的进程，那么要不要进行指令转，就是进程相关的了，相互独立的进程间不影响。</p>
+</li>
+<li><p>emulator是运行在用户态的，即user mode。</p>
+</li>
+<li><p>驱动程序如果想适配Windows ARM，需要指定平台，重新编译，不能通过emulator。也就是说x86驱动不能直接在Windows ARM上跑，需要重新编译。这里有一个问题，就是x86驱动也只能编译为arm32 driver，arm32 driver可以在arm64平台上跑吗？当然不可以了，参见Windows 64系统不支持32位驱动。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows-hardware/drivers/develop/building-arm64-drivers">使用 WDK 生成 ARM64 驱动程序</a>   </p>
+</li>
+</ol>
+<p>好，上面的6个问题基本上回答完了。在这里，有一个共识，就是arm平台将继续发扬光大，继续无往不利，而WinTel组合也将慢慢成为历史。以后芯片的种类、平台、定制化都将越来越丰富。  </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/" rel="prev" title="utf8 格式源代码跨平台编译">
+      <i class="fa fa-chevron-left"></i> utf8 格式源代码跨平台编译
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/" rel="next" title="ubuntu搜狗输入法乱码需切换两次shift才恢复">
+      ubuntu搜狗输入法乱码需切换两次shift才恢复 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%8C%87%E4%BB%A4%E9%9B%86%E9%85%8D%E5%90%88%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">2 操作系统与指令集配合以及一些实例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%BE%AE%E8%BD%AF%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 微软的实现思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B064%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%8A%E5%8A%A0%E8%BD%BD32%E4%BD%8D%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1 如何实现64位系统上加载32位程序</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

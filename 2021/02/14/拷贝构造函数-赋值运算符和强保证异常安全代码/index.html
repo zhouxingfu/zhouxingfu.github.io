@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="123456789101112class Test&amp;#123;    public:    Test()&amp;#123;cout &lt;&lt; &quot;explicit constructor with no argument&quot; &lt;&lt; endl;&amp;#125;    &#x2F;&#x2F;Test(Test t)&amp;#123;cout &lt;&lt; &quot;copy construct">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拷贝构造函数 赋值运算符和强保证异常安全代码">
+<meta property="og:url" content="zhouxingfu.github.io/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="123456789101112class Test&amp;#123;    public:    Test()&amp;#123;cout &lt;&lt; &quot;explicit constructor with no argument&quot; &lt;&lt; endl;&amp;#125;    &#x2F;&#x2F;Test(Test t)&amp;#123;cout &lt;&lt; &quot;copy construct">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-13T18:09:15.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>拷贝构造函数 赋值运算符和强保证异常安全代码 | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          拷贝构造函数 赋值运算符和强保证异常安全代码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-02-14 02:09:15" itemprop="dateCreated datePublished" datetime="2021-02-14T02:09:15+08:00">2021-02-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Test()&#123;<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;explicit constructor with no argument&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125;</span><br><span class="line">    <span class="comment">//Test(Test t)&#123;cout &lt;&lt; &quot;copy constructor&quot; &lt;&lt;endl;&#125;  //1</span></span><br><span class="line">    Test(<span class="keyword">const</span> Test&amp; t)&#123;<span class="built_in">cout</span> &lt;&lt;<span class="string">&quot;copy constructor&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125; <span class="comment">//2</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Test&amp; t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(const Test&amp; t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125; <span class="comment">//3</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(Test t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(Test t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="comment">//4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么拷贝构造函数不能写成1的形式，必须写成2 的形式？  </p>
+<a id="more"></a>
+
+<p>之前的回答是 减少一次拷贝，因为传值的时候会调用拷贝构造函数，传引用可以避免掉，至于传const引用，主要是避免实参被修改。<br>但现在深入的再思考就会发现，传值的时候调用拷贝构造函数，但实际上这是一个无限套娃，调用拷贝构造函数的时候，传入参数也是传值，这又要调用拷贝构造函数。<br>循环往复，没有尽头了。  </p>
+<p>至于3和4的区别在哪里呢？<br>3和4是两种写法。  </p>
+<p>用写法3的时候，就是operator=的实现就是拷贝构造函数的另一种实现，唯一的区别是要多一步检查（检查= 两边的对象是否相同，如果相同的话不做任何操作，否则，就要释放掉当前的内存，申请新内存，并拷贝内容过来）。  </p>
+<p>写法4的时候，就是我的申请内存的操作都是放在拷贝构造函数里的，这样我们的operator=的实现就很简单了，因为构造的临时变量已经分配了内存，那么代码中只需要进行swap就好了。 而且在swap的时候，我们交换的是临时变量和this的内容，离开当前堆栈销毁临时变量的时候，释放的也是我们原先this指向的this的内容，还减少了我们释放旧内存的操作。  </p>
+<p>4相比于3的写法，个人认为最大的好处是确保了 the strong guarantee。因为operator=如果不调用拷贝构造函数的话，也要自己在内部申请内存，拷贝内容，而且内部申请内存 抛出异常的话，还要确保代码满足the strong gurantee。而在拷贝构造函数中申请内存的话，其实也要处理异常，不过这就保证operator=是nothrow的。<br>既然拷贝构造函数本身就有异常处理，那我们何苦在operator=中也要再加上抛出exception的风险呢。  而且swap本身也是nothrow的。  </p>
+<p>至于3和4的返回值都是 引用类型。如果我们返回的是普通值类型，那么返回值这里要调用拷贝构造函数，这里就会造成内存泄漏，就拿4来说，我们本身就调用拷贝构造生成了一个临时变量（虽然是临时变量，但内存不会被销毁）</p>
+<p>下面是我们的一个例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestArray</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TestArray(): len_(<span class="number">0</span>), data_(<span class="literal">nullptr</span>)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;TestArray()&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    TestArray(<span class="keyword">const</span> TestArray&amp; ta):len_(ta.len_), data_(len_? <span class="keyword">new</span> <span class="keyword">char</span>[len_] : <span class="literal">nullptr</span>)&#123;</span><br><span class="line">        <span class="built_in">std</span>::copy(ta.data_, ta.data_ + len_, data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TestArray&amp; <span class="keyword">operator</span>=(TestArray other)&#123;</span><br><span class="line">        swap(*<span class="keyword">this</span>, other);</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~TestArray()&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;destructor&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">size_t</span> len_;</span><br><span class="line">    <span class="keyword">char</span>* data_;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(TestArray&amp; one, TestArray&amp; another)</span><span class="keyword">noexcept</span></span>&#123;</span><br><span class="line">        <span class="keyword">using</span> <span class="built_in">std</span>::swap;</span><br><span class="line">        swap(one.len_, another.len_);</span><br><span class="line">        swap(one.data_, another.data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TestArray a; <span class="comment">//1</span></span><br><span class="line">    <span class="function">TestArray <span class="title">b</span><span class="params">(a)</span></span>; <span class="comment">//2</span></span><br><span class="line">    TestArray c = a;<span class="comment">//3</span></span><br><span class="line">    TestArray d;<span class="comment">//4</span></span><br><span class="line">    d = a;<span class="comment">//5</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;<span class="comment">//6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1 的输出 应该是 TestArray这没有疑问<br>2 的输出是 Copy Constructor 也没问题<br>3 的输出，照着我最初的理解，是TestArray c; c = a; 那么输出应该是TestArray Copy Constructor 26 destructor，但最终的输出是 Copy Constructor。<br>这是什么原因呢？ 在编译器看来，不会做这么麻烦的操作，因为c没有被构造，所以这里TestArray c = a 是初始化而不是赋值，可以被看作TestArray c(a)。这样理解的话，就能理解为什么3的输出只有一个copy constructor了。<br>4 的输出 是TestArray<br>5 =左边d是已经被初始化的值，所以，此时才适用于 赋值运算符，此时在调用=的时候，传值会导致调用copy constructor。所以输出是copy constructor 26。此时，swap之后，临时变量要被释放，此时会调用destructor。  </p>
+<p>接着在离开main函数的时候，依次调用d c b a的析构函数。 </p>
+<p>那么最终的输出是 </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TestArray</span><br><span class="line"><span class="keyword">Copy</span> <span class="function"><span class="keyword">Constructor</span></span></span><br><span class="line"><span class="function"><span class="title">Copy</span> <span class="title">Constructor</span></span></span><br><span class="line"><span class="function"><span class="title">TestArray</span></span></span><br><span class="line"><span class="function"><span class="title">Copy</span> <span class="title">Constructor</span></span></span><br><span class="line"><span class="function">26</span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/" rel="prev" title="gtest学习">
+      <i class="fa fa-chevron-left"></i> gtest学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B/" rel="next" title="并行编程">
+      并行编程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

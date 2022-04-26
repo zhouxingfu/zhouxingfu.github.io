@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言现代语言都有抽象出来的IO操作库。在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen&#x2F;fread&#x2F;fwrite&#x2F;fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Input&#x2F;Output library">
+<meta property="og:url" content="zhouxingfu.github.io/2020/08/30/input-output-library/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="前言现代语言都有抽象出来的IO操作库。在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen&#x2F;fread&#x2F;fwrite&#x2F;fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="/2020/08/30/input-output-library/input_output_hierarchy.png">
+<meta property="og:image" content="/2020/08/30/input-output-library/posix_and_c.png">
+<meta property="article:published_time" content="2020-08-30T05:27:34.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/2020/08/30/input-output-library/input_output_hierarchy.png">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/08/30/input-output-library/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Input/Output library | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/30/input-output-library/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Input/Output library
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-30 13:27:34" itemprop="dateCreated datePublished" datetime="2020-08-30T13:27:34+08:00">2020-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STL/" itemprop="url" rel="index"><span itemprop="name">STL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
+<img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
+
+
+<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
+
+<p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
+<a id="more"></a>
+
+<font color=green>
+NOTE:
+这里有两个需要注意的点  
+1. 文件IO也是有缓存的，只不过标准IO是用户态缓存，文件IO是内核态缓存，标准IO的好处是可以减少访问CPU的次数。  
+2. 文件IO也叫低级别IO，所以不要以为fread fwrite就是文件IO，这里其实有混淆，感觉起名字不严谨。  
+</font>
+
+<table>
+<thead>
+<tr>
+<th align="left">操作</th>
+<th align="left">标准ＩＯ</th>
+<th align="left">文件ＩＯ(低级IO)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">打开</td>
+<td align="left">fopen,freopen,fdopen</td>
+<td align="left">open</td>
+</tr>
+<tr>
+<td align="left">关闭</td>
+<td align="left">fclose</td>
+<td align="left">close</td>
+</tr>
+<tr>
+<td align="left">读</td>
+<td align="left">getc,fgetc,getchar fgets,gets,fread</td>
+<td align="left">read</td>
+</tr>
+<tr>
+<td align="left">写</td>
+<td align="left">putc,fputc,putchar fputs,puts,fwrite</td>
+<td align="left">write</td>
+</tr>
+</tbody></table>
+<h2 id="状态标志符"><a href="#状态标志符" class="headerlink" title="状态标志符"></a><strong>状态标志符</strong></h2><p>以VC中实现为例</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Dummy</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> _<span class="title">Iosb</span> &#123;</span> <span class="comment">// define templatized bitmask/enumerated types, instantiate on demand</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> _Dummy_enum &#123; _Dummy_enum_val = <span class="number">1</span> &#125;; <span class="comment">// don&#x27;t ask, TRANSITION, ABI</span></span><br><span class="line">    <span class="keyword">enum</span> _Fmtflags &#123; <span class="comment">// constants for formatting options</span></span><br><span class="line">        _Fmtmask = <span class="number">0xffff</span>,</span><br><span class="line">        _Fmtzero = <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags skipws     = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0001</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags unitbuf    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0002</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags uppercase  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0004</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showbase   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0008</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpoint  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0010</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpos    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0020</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags left       = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0040</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags right      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0080</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags internal   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0100</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags dec        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0200</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags oct        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0400</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hex        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0800</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags scientific = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x1000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags fixed      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x2000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hexfloat = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// added with TR1 (not in C++11)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags boolalpha   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x4000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags _Stdio      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x8000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags adjustfield = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x01C0</span>); <span class="comment">// left | right | internal</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags basefield   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0E00</span>); <span class="comment">// dec | oct | hex</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags floatfield  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// scientific | fixed</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Iostate &#123; <span class="comment">// constants for stream states</span></span><br><span class="line">        _Statmask = <span class="number">0x17</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate goodbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x0</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate eofbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x1</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate failbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x2</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate badbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x4</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Openmode &#123; <span class="comment">// constants for file opening options</span></span><br><span class="line">        _Openmask = <span class="number">0xff</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode in         = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x01</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode out        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x02</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode ate        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x04</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode app        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x08</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode trunc      = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x10</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Nocreate  = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x40</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Noreplace = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x80</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode binary     = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Seekdir &#123; <span class="comment">// constants for file positioning options</span></span><br><span class="line">        _Seekbeg,</span><br><span class="line">        _Seekcur,</span><br><span class="line">        _Seekend</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir beg = _Seekbeg;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir cur = _Seekcur;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir <span class="built_in">end</span> = _Seekend;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> &#123; <span class="comment">// TRANSITION, ABI</span></span><br><span class="line">        _Openprot = _SH_DENYNO</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> _Default_open_prot = _SH_DENYNO; <span class="comment">// constant for default file opening protection</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在_Iosb中的实现为例，里面有四个关于文件的状态定义</p>
+<ul>
+<li>_Fmtflags = format flags</li>
+<li>_Iostate = io state   当前iosbase的状态位（通过调用iosbase::rdstate()随时可以与这些预定义好的常量对比）</li>
+<li>_Openmode = open mode  以什么样的方式打开文件（读取或写入，包括文件本身的性质，以及我们会如何使用它）</li>
+<li>_Seekdir = seek dir 从哪个地方开始访问（更加智能便捷，不用每次都把position 0当作start index）</li>
+</ul>
+<p><em><font color=red>注意</font>:为什么_Fmtflags enum只有一个成员，而_Seekdir enum就定义完全了呢？</em>  </p>
+<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a><strong>文件操作</strong></h2><h3 id="文件读"><a href="#文件读" class="headerlink" title="文件读"></a><strong>文件读</strong></h3><p>我所理解的读取一个文件的正常思路</p>
+<ul>
+<li>确定要访问的初始位置</li>
+<li>确定当前距离文件结尾的数据长度</li>
+<li>read读取（按照需要读取，只要是&lt;= left_length就可以）</li>
+</ul>
+<p>如果我们想要读取文本一行呢？<br>我们可以调用basic_istream::getline()，当然也有全局性的函数getline(std::basic_istream&amp;, , )，效果是一致的（其实我一直认为这种实现本质上是一样的，为什么要有两个接口？还一个global，一个类接口）</p>
+<h3 id="文件写"><a href="#文件写" class="headerlink" title="文件写"></a><strong>文件写</strong></h3><p>文件写的思路</p>
+<ul>
+<li>确定写的方式（追加，清空，还是截断truncate）</li>
+<li>确定要访问的初始位置</li>
+<li>write写入  </li>
+</ul>
+<p>写入文本一行没有writeline，因为没有必要，直接write之后，再写入一个endl就可以了。<br>其实读取的道理也是一样，也是一个个字符读取，然后遇到endl就把buffer中的数据作为一行输出。  </p>
+<h2 id="stringstream"><a href="#stringstream" class="headerlink" title="stringstream"></a><strong>stringstream</strong></h2><p>stringstream有什么用途呢？如果是内存操作，我们直接用string是不是就可以了呢？ </p>
+<p>stringstream不仅仅是string，更重要的是stream的特性。  </p>
+<p>比如ss &gt;&gt; 100; stringstream重载的&lt;&lt; &gt;&gt;。</p>
+<p>比如 str=  “ hello world “; string word;如果要想按照单词来读，那么可以通过ss &gt;&gt; word 来操作。</p>
+<p>在我看来，stringstream就是在内存中操作io（这是与文件IO的本质区别），本质上还是io 流，只不过在内存中是以string来作为对外沟通的数据结构。  </p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/29/How-to-download-IEEE-Xplore/" rel="prev" title="如何从IEEE Xplore免费下载">
+      <i class="fa fa-chevron-left"></i> 如何从IEEE Xplore免费下载
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/30/How-To-Display-Image-With-hexo/" rel="next" title="在hexo中显示图片">
+      在hexo中显示图片 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E4%BB%B6IO%E4%B8%8E%E6%A0%87%E5%87%86IO"><span class="nav-number">2.</span> <span class="nav-text">关于文件IO与标准IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A0%87%E5%BF%97%E7%AC%A6"><span class="nav-number">3.</span> <span class="nav-text">状态标志符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">文件操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB"><span class="nav-number">4.1.</span> <span class="nav-text">文件读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%86%99"><span class="nav-number">4.2.</span> <span class="nav-text">文件写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stringstream"><span class="nav-number">5.</span> <span class="nav-text">stringstream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

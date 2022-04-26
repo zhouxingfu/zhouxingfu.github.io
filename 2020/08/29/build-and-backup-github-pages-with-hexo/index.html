@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。   原理hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。注意：发布的东西和备份的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用hexo搭建github blog">
+<meta property="og:url" content="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。   原理hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。注意：发布的东西和备份的">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-29T08:46:06.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>用hexo搭建github blog | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用hexo搭建github blog
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-29 16:46:06" itemprop="dateCreated datePublished" datetime="2020-08-29T16:46:06+08:00">2020-08-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<p>我们的操作步骤是</p>
+<ol>
+<li>在github.io　hexo分支备份源文件</li>
+<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
+</ol>
+<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
+<a id="more"></a>
+
+<p>下面我们梳理一下具体的流程。  </p>
+<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color=0xFFFFFF>node及hexo环境</font></strong></h2><pre><code>mkdir blog
+npm i hexo-cli -g
+hexo -v 
+hexo init  
+npm install  </code></pre>
+<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color=0xFFFFFF>github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
+<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color=0xFFFFFF>发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
+<p>修改_config.yml文件</p>
+<pre><code>deploy:
+type: &#39;git&#39;
+repository: git@github.com:username/username.github.io.git
+branch: master</code></pre>
+<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color=0xFFFFFF>hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
+<p>所以，我们有两种处理方法</p>
+<ol>
+<li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
+<li>把github.io　切换到hexo branch，把blog folder中需要的文件<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">scaffolds/  </span><br><span class="line">source/  </span><br><span class="line">themes/  </span><br><span class="line"><span class="selector-class">.gitignore</span>  </span><br><span class="line">_config<span class="selector-class">.yml</span>  </span><br><span class="line">package<span class="selector-class">.json</span>  </span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>拷贝到github.io所在的目录，然后  </p>
+<pre><code>git add --all  
+git commit 
+git push --set--upstream origin hexo　
+　</code></pre>
+<p>然后把.git目录拷贝到blog folder</p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color=0xFFFFFF>发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
+<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color=0xFFFFFF>环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;</a>/username/username.github.io</del></p>
+<p>The instrutions above is not right, you should do as follows</p>
+<pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
+npm install</code></pre>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color=0xFFFFFF>小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color=0xFF>添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
+<pre><code>npm install hexo-generator-searchdb  </code></pre>
+<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color=0xFF>首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
+<p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
+<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color=0xFF>文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span> <span class="comment">#从-date改成-updated</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color=0xFF>git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a target="_blank" rel="noopener" href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
+<p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/29/How-to-download-IEEE-Xplore/" rel="next" title="如何从IEEE Xplore免费下载">
+      如何从IEEE Xplore免费下载 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node%E5%8F%8Ahexo%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">node及hexo环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github-io"><span class="nav-number">3.</span> <span class="nav-text">github io</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E5%88%B0github-io"><span class="nav-number">4.</span> <span class="nav-text">发布到github.io</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo-branch"><span class="nav-number">5.</span> <span class="nav-text">hexo branch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0"><span class="nav-number">6.</span> <span class="nav-text">发布文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%A7%BB%E6%A4%8D"><span class="nav-number">7.</span> <span class="nav-text">环境移植</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="nav-number">8.</span> <span class="nav-text">小技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2"><span class="nav-number">8.1.</span> <span class="nav-text">添加本地搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E9%A1%B5%E6%96%87%E7%AB%A0%E5%8F%AA%E6%98%BE%E7%A4%BA%E9%83%A8%E5%88%86%E6%91%98%E8%A6%81"><span class="nav-number">8.2.</span> <span class="nav-text">首页文章只显示部分摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%8C%89%E7%85%A7%E6%9B%B4%E6%96%B0%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F"><span class="nav-number">8.3.</span> <span class="nav-text">文章按照更新时间排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84themes"><span class="nav-number">8.4.</span> <span class="nav-text">git如何添加修改后的themes</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

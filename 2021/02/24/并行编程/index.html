@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="参考资料《C++ Concurrency In Action》《Concurrency With Modern CPP》 并发和并行的概念在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。   在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行编程">
+<meta property="og:url" content="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="参考资料《C++ Concurrency In Action》《Concurrency With Modern CPP》 并发和并行的概念在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。   在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-24T07:02:16.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>并行编程 | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          并行编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-02-24 15:02:16" itemprop="dateCreated datePublished" datetime="2021-02-24T15:02:16+08:00">2021-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><p>《C++ Concurrency In Action》<br>《Concurrency With Modern CPP》</p>
+<h2 id="并发和并行的概念"><a href="#并发和并行的概念" class="headerlink" title="并发和并行的概念"></a><strong>并发和并行的概念</strong></h2><p>在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。  </p>
+<p>在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，并不意味着线程间完全没有交互或者耦合，实际工作中我遇到的基本上线程间还是要访问共享内存的，很少遇到那种[0,10e8]相加这种可以完全没有耦合的情况。</p>
+<p>并行可以分成两种：</p>
+<ol>
+<li>数据并行<br>数据并行是指 可以将数据切分，然后每个部分同时执行相同的逻辑，最终合并结果就可以了。  这是非常完美符合并行概念的。</li>
+<li>业务并行<br>业务并行，就是将业务切分，每个线程执行其中一个业务，但每个业务中数据是全程参与的，比如业务分为A B C D，raw_data 进入A， 出来data1 进入B，出来data2 进入C, 出来data3 进入D。 当然这里的raw_data必须是流式的，否则不如单线程 顺序处理所有业务。</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
+<h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>分析一段业务逻辑是否可以采用多线程，至于能否充分利用硬件并行的概念再说（我的理解是，将简单的任务切分成子任务 增加的负担 远远超过了带来的益处，负担有可能是代码复杂度的提升，减少的时间远远不能弥补，子任务切分的太多，远远超过了硬件所支持的最优线程数，导致context切换负担太重）。 </p>
+<p><strong><font color=red>总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
+<h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><p>Todo</p>
+<h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3><p>Todo</p>
+<h2 id="C-线程库概述"><a href="#C-线程库概述" class="headerlink" title="C++线程库概述"></a><strong>C++线程库概述</strong></h2><p>C++11开始提供thread库，一直以来大家都有顾虑，就是抽象的代价高不高？  </p>
+<p>从网上的资料看，标准委员会在设计线程库时，就力求实现相同功能的情况下，高级API和底层API的性能收益相当。而且很多情况下，使用底层API带来的一点点便利，也会带来更高的代码复杂度和出错率，这样是不划算的。即便是瓶颈出现在C++标准库的工具中，也可能由低劣的程序设计造成。例如，如果过多的线程竞争一个互斥单元，将会很明显的影响性能。与其在互斥操作上耗费时间，不如重新设计，减少互斥单元上的竞争。</p>
+<p>如果系统API提供了一些线程库没有的功能，那么还可以通过native_handle获取句柄 来调用系统 API。</p>
+<h2 id="线程的创建启动和执行"><a href="#线程的创建启动和执行" class="headerlink" title="线程的创建启动和执行"></a><strong>线程的创建启动和执行</strong></h2><p>1 thread只支持move constructor &amp;&amp; move assignment operator， 不支持拷贝构造和左值引用的operator= 重载。<br>2 thread需要在程序结束前调用join or detach，调用前要先判断joinable<br>3 如果发生异常，如何保证一定会调用join or detach呢？ C++20有jthread来解决这个问题，[C++11, C++17] 的 版本需要自己控制，比如thread_guard这种。<br>4 thread构造时 传递的参数是 传值方式，参数被被拷贝到新线程的内存空间（如同临时变量），即使函数中的参数是引用的形式，拷贝操作也会执行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i, <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f, <span class="number">3</span>, <span class="string">&quot;hello&quot;</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>另外，传递参数 有可能会在线程 detach之前 __失去意义__， 导致未定义的行为。  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//wrong</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i,<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">oops</span><span class="params">(<span class="keyword">int</span> some_param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>]; <span class="comment">// 1</span></span><br><span class="line">  <span class="built_in">sprintf</span>(<span class="built_in">buffer</span>, <span class="string">&quot;%i&quot;</span>,some_param);</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f,<span class="number">3</span>,<span class="built_in">buffer</span>)</span></span>; <span class="comment">// 只复制了buffer指针</span></span><br><span class="line">  t.<span class="built_in">detach</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//right</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i,<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">not_oops</span><span class="params">(<span class="keyword">int</span> some_param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>];</span><br><span class="line">  <span class="built_in">sprintf</span>(<span class="built_in">buffer</span>,<span class="string">&quot;%i&quot;</span>,some_param);</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f,<span class="number">3</span>,<span class="built_in">std</span>::<span class="built_in">string</span>(<span class="built_in">buffer</span>))</span></span>;  <span class="comment">// 使用std::string，避免悬空指针，</span></span><br><span class="line">  t.<span class="built_in">detach</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果thread proc要求的参数是非常量引用呢 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update_data_for_widget</span><span class="params">(widget_id w,widget_data&amp; data)</span></span>; <span class="comment">// 1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">oops_again</span><span class="params">(widget_id w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  widget_data data;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(update_data_for_widget,w,data)</span></span>; <span class="comment">//wrong</span></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(update_data_for_widget,w,<span class="built_in">std</span>::ref(data))</span></span>; <span class="comment">//right</span></span><br><span class="line">  display_status();</span><br><span class="line">  t.join();</span><br><span class="line">  process_widget_data(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>类似于unique_ptr， 线程的所有权 可以在std::thread实例中转移，这依赖于std::thread的 moveable &amp;&amp; uncopyable。 不可复制的含义是—— 在某一个时间点，一个thread<br>实例只能关联一个执行线程。  </p>
+<h2 id="所有权转移"><a href="#所有权转移" class="headerlink" title="所有权转移"></a><strong>所有权转移</strong></h2><p>C++ 标准库中有很多资源占有(resource owning)类型，比如ifstream unique_ptr还有std::thread， 都是可移动，不可复制。  </p>
+<p>所有权转移之后，thread实例就不能调用join 或者 detach。 </p>
+<p>这里有scoped_thread和jthread，可以参考，也就是说 我们在谈转移权的时候，原先的线程 必须满足joinable()。 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">thread <span class="title">t</span><span class="params">(f)</span></span>;</span><br><span class="line">t.<span class="built_in">detach</span>();</span><br><span class="line">thread x = <span class="built_in">std</span>::<span class="built_in">move</span>(t)；</span><br></pre></td></tr></table></figure>
+
+<p>对x来讲， 此时joinable必然是false，好像也没有什么影响，那就是析构的时候，也判断joinable，来决定是否detach或者join。 </p>
+<p>从代码上看，scoped_thread 和 jthread 在这一块的判断不同， jthread是在几乎在所有成员函数中 都判断了joinable，但区别是，jthread在构造的时候 没有判断t是否joinable，而scoped_thread在构造中判断如果joinable为false，<br>那么直接抛出异常，这就比较奇怪了。</p>
+<h2 id="确定线程数量以及简单的计算一个范围内结果的小例子"><a href="#确定线程数量以及简单的计算一个范围内结果的小例子" class="headerlink" title="确定线程数量以及简单的计算一个范围内结果的小例子"></a><strong>确定线程数量以及简单的计算一个范围内结果的小例子</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator,<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">accumulate_block</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(Iterator first,Iterator last,T&amp; result)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    result=<span class="built_in">std</span>::accumulate(first,last,result);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator,<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">parallel_accumulate</span><span class="params">(Iterator first,Iterator last,T init)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> length=<span class="built_in">std</span>::distance(first,last);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!length) <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">return</span> init;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> min_per_thread=<span class="number">25</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> max_threads=</span><br><span class="line">      (length+min_per_thread<span class="number">-1</span>)/min_per_thread; <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> hardware_threads=</span><br><span class="line">      <span class="built_in">std</span>::thread::hardware_concurrency();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> num_threads=  <span class="comment">// 3</span></span><br><span class="line">      <span class="built_in">std</span>::<span class="built_in">min</span>(hardware_threads != <span class="number">0</span> ? hardware_threads : <span class="number">2</span>, max_threads);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> block_size=length/num_threads; <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt; <span class="title">results</span><span class="params">(num_threads)</span></span>;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::thread&gt; <span class="title">threads</span><span class="params">(num_threads<span class="number">-1</span>)</span></span>;  <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">  Iterator block_start=first;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span> i=<span class="number">0</span>; i &lt; (num_threads<span class="number">-1</span>); ++i)</span><br><span class="line">  &#123;</span><br><span class="line">    Iterator block_end=block_start;</span><br><span class="line">    <span class="built_in">std</span>::advance(block_end,block_size);  <span class="comment">// 6</span></span><br><span class="line">    threads[i]=<span class="built_in">std</span>::thread(     <span class="comment">// 7</span></span><br><span class="line">        accumulate_block&lt;Iterator,T&gt;(),</span><br><span class="line">        block_start,block_end,<span class="built_in">std</span>::ref(results[i]));</span><br><span class="line">    block_start=block_end;  <span class="comment">// 8</span></span><br><span class="line">  &#125;</span><br><span class="line">  accumulate_block&lt;Iterator,T&gt;()(</span><br><span class="line">      block_start,last,results[num_threads<span class="number">-1</span>]); <span class="comment">// 9</span></span><br><span class="line">      </span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; entry : threads)</span><br><span class="line">    entry.join();  <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">std</span>::accumulate(results.<span class="built_in">begin</span>(),results.<span class="built_in">end</span>(),init); <span class="comment">// 11</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这就是纯粹的数据并行化概念，把数据分成几份，每份数据都执行相同的计算过程。<br>当然，为了得到最终结果，必须等待所有线程执行完毕。  </p>
+<p>在我们通过GL刷新图像的时候，经常会遇到一个现象，有时候刷新率特别低，就会出现 屏幕的不同部分 的刷新频率不同，导致画面的不同部分 不同步。 </p>
+<h3 id="线程标识"><a href="#线程标识" class="headerlink" title="线程标识"></a><strong>线程标识</strong></h3><p>std::thread::get_id() 可以获取获取 线程ID，当然native_handle() 也能获取 handle，这里的handlle 是系统层级的handle，可以传入系统API使用。<br>而ID是纯标识，不同线程的ID不会相同， 但理论上handle应该也不会相同，那直接比较handle也可以？ 如果也可以的话，好像ID 有点多余。  </p>
+<h2 id="共享数据"><a href="#共享数据" class="headerlink" title="共享数据"></a><strong>共享数据</strong></h2><p>共享数据也是没有办法的事情， 线程间如果有业务逻辑的耦合，就要有数据交换，除了socket，我能想到的方式 都涉及到 共享数据（全局变量 ）。  </p>
+<p>共享数据的难点 在于 read-write，当有至少一个线程在修改共享数据的时候， 就要解决同步问题。读的时候要锁定数据不被修改（但是可以允许其他线程读，不知道读写锁 是不是为了解决这个问题）， 写的时候更要锁定。 </p>
+<h3 id="如何避免恶性数据竞争-race-condition"><a href="#如何避免恶性数据竞争-race-condition" class="headerlink" title="如何避免恶性数据竞争(race condition)"></a><strong>如何避免恶性数据竞争(race condition)</strong></h3><ul>
+<li>某种保护机制  </li>
+<li>无锁编程  </li>
+<li>software transactional memory(STL， 软件事物内存)</li>
+</ul>
+<p>在《C++ Concurrency in Action》 中提到 无锁编程 “无论是内存模型上的细微差异，还是线程访问数据的能力，都会让工作量变的很大，而且这种方式也很难得到正确的结果”。STM类似于数据库里的事物操作，但C++中没有对STM直接支持，<br>而且这也是一个很热门的理论研究领域，暂时就不做讨论。 </p>
+<h2 id="使用互斥量"><a href="#使用互斥量" class="headerlink" title="使用互斥量"></a><strong>使用互斥量</strong></h2><p>mutex是经常会用到的一种保护机制，直接锁上就可以了，但存在两个问题</p>
+<ul>
+<li>多个锁，有可能导致死锁(dead lock)</li>
+<li>锁定过多，导致效率低下，耗时增加；锁定过少，没有保护好数据  </li>
+</ul>
+<p>std::mutext有lock unlock接口，不建议直接调用成员函数，而是利用RAII机制，使用标准库提供的lock_guard。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注：C++<span class="number">17</span> 添加了新特性 模板类参数推导 lock_guard可以省略参数 lock_guard guard(some_mutex), C++<span class="number">17</span>还提供了一种加强版数据保护机制scoped_lock</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么对代码加锁就可以了吗？如果函数返回的是 被保护数据的指针或者引用，就会破坏数据，所以要对接口谨慎设计，要确保mutex能锁住数据访问，不留后门。  </p>
+<h3 id="接口中的条件竞争"><a href="#接口中的条件竞争" class="headerlink" title="接口中的条件竞争"></a><strong>接口中的条件竞争</strong></h3><p>以std::stack的实现举例。  </p>
+<p>stack需要支持的操作 构造、swap、push、pop、top、empty、size </p>
+<p>empty size top是读操作，push pop swap是写操作。  </p>
+<p>如果不加锁，empty size top返回的结果可能在返回时是正确的，但并不可靠。如果同时有多个线程push pop swap也会出现问题。  </p>
+<p>前面我们提到了 返回数据 导致 接口内部加锁 失效的问题， 那么我们将接口返回值 都改成 返回 数据的拷贝 这样能解决问题吗？ 不能。对size empty来说，返回值当时是正确的，但接下来进行pop push top 并不能依靠上面size emtpy返回的结果，除非对这一整段代码都加锁。<br>类似</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stack</span> s;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">do_something</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="function">lock_guard <span class="title">lck</span><span class="params">(some_mutex)</span></span>;</span><br><span class="line">   <span class="keyword">if</span>(!s.empty())&#123;</span><br><span class="line">      <span class="keyword">if</span>(s.<span class="built_in">size</span>() &gt;= <span class="number">10</span>)&#123;</span><br><span class="line">         <span class="comment">//do some work</span></span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">         <span class="comment">//do some work</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="comment">//do some work</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>所以不仅仅是接口内部的问题，是接口本身所实现功能的问题。  </p>
+<p>下面我们以pop为例解释下接口竞争以及相应的解决方案。  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">s::empty();</span><br><span class="line">s::pop();</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，先调用empty判断是否为空，不为空的话，就pop栈顶元素。很明显，如果不在整段代码加锁的话，在我们执行pop的时候，很可能其它线程操作导致stack为空了，此时pop该怎么操作呢？抛出异常是一个选项，但这样empty本身就没有意义了，反正为空pop就抛出异常，那么我们也不需要再check empty了。  </p>
+<p>于是设计者想出了top，top为空就抛出异常，这样empty为空的情况下也要抛出异常，这让empty变成了一个无用的函数。</p>
+<p>比如stack&lt; vector<int> &gt;，我们在返回的时候会调用构造函数，但如果构造函数崩溃（系统资源不足或者其它原因），抛出异常，这时候返回失败了，不确定stack上的元素是否已经被移除了。（因为我不确定，如果抛出bad_alloc异常，s.pop()是否还会返回？返回的话，stack已经确实将数据移除了，这时候的情况是：stack 元素确实被移除了，但数据没有正常返回，因为构造失败）。  </p>
+<p>top确实能解决上面的问题，但引入了新的接口竞争。  </p>
+<p>当然，问题也有解决方案，但都有相应的代价。  </p>
+<h4 id="选项1：传引用"><a href="#选项1：传引用" class="headerlink" title="选项1：传引用"></a>选项1：传引用</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; result;</span><br><span class="line">some_stack.pop(result);</span><br></pre></td></tr></table></figure>
+
+<p>传引用的问题是，在哪里分配空间，有人说引用肯定是在函数调用外部了。对，基本类型是这样的没错，但如果是指针呢？ 如果是自定义类型呢？ 看下面的例子。  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f1</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    result.push_back(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f2</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp;  result)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; temp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i) &#123;</span><br><span class="line">        temp.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">    result.push_back(temp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f3</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;*&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; temp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; ++i) &#123;</span><br><span class="line">        temp.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">    result.push_back(&amp;temp);<span class="comment">//离开作用域的时候，temp会析构，这样虽然temp里添加了一个元素，但这个元素size为0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; r1;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; r2;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;*&gt; r3;</span><br><span class="line">    f1(r1);</span><br><span class="line">    f2(r2);</span><br><span class="line">    f3(r3);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然传引用的时候肯定都会遇到这样的问题，如果引用本身是复杂类型，那么还要关注引用内部是否有分配到子函数call stack上的变量，这样离开作用域就会析构。而r3在离开作用域的时候又要析构子函数。 </p>
+<p>书上说</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这种方式还不错，缺点也很明显：需要构造出一个栈中类型的实例，用于接收目标值。对于一些类型，这样做是不现实的，因为临时构造一个实例，从时间和资源的角度上来看都不划算。对于其他的类型，这样也不总行得通，因为构造函数需要的参数，在这个阶段不一定可用。最后，需要可赋值的存储类型，这是一个重大限制：即使支持移动构造，甚至是拷贝构造<span class="comment">(从而允许返回一个值)</span>，很多用户自定义类型可能都不支持赋值操作。</span><br></pre></td></tr></table></figure>
+
+<p>最开始这里没理解，为什么要构造一个栈中类型的实例，以为是在子函数中构造。实际上是这样的，一般情况下，我们认为弹出元素最好是move，这样就不需要再构造。 </p>
+<h4 id="选项2：无异常抛出的拷贝构造函数或者移动构造函数"><a href="#选项2：无异常抛出的拷贝构造函数或者移动构造函数" class="headerlink" title="选项2：无异常抛出的拷贝构造函数或者移动构造函数"></a><strong>选项2：无异常抛出的拷贝构造函数或者移动构造函数</strong></h4><p>移动构造不会抛出异常，所以对pop来讲，如果确实要返回值的版本，那么直接返回右值或者右值引用肯定是最合适的，移动构造也不会抛出异常。</p>
+<p>这一点没办法确保。移动构造函数当然好，还是有一些类（无论是历史遗留还是其它原因），没有移动构造函数，而拷贝构造函数此时如果涉及到某些操作，确实是需要抛出 异常的。  </p>
+<h4 id="选项3：返回指向弹出值的指针"><a href="#选项3：返回指向弹出值的指针" class="headerlink" title="选项3：返回指向弹出值的指针"></a><strong>选项3：返回指向弹出值的指针</strong></h4><p>这时候要进行内存管理，最好返回shared_ptr。</p>
+<h4 id="选项4：“选项1-选项2”-或-“选项1-选项3”"><a href="#选项4：“选项1-选项2”-或-“选项1-选项3”" class="headerlink" title="选项4：“选项1 + 选项2” 或 “选项1 + 选项3”"></a><strong>选项4：“选项1 + 选项2” 或 “选项1 + 选项3”</strong></h4><p>例子： 定义线程安全的堆栈  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stack&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">empty_stack</span>:</span> <span class="built_in">std</span>::exception</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">what</span><span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;empty stack!&quot;</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">threadsafe_stack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;T&gt; data;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="built_in">std</span>::mutex m;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  threadsafe_stack()</span><br><span class="line">	: data(<span class="built_in">std</span>::<span class="built_in">stack</span>&lt;T&gt;())&#123;&#125;</span><br><span class="line">  </span><br><span class="line">  threadsafe_stack(<span class="keyword">const</span> threadsafe_stack&amp; other)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(other.m)</span></span>;</span><br><span class="line">    data = other.data; <span class="comment">// 1 在构造函数体中的执行拷贝</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  threadsafe_stack&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> threadsafe_stack&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(T new_value)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    data.push(new_value);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.empty()) <span class="keyword">throw</span> empty_stack(); <span class="comment">// 在调用pop前，检查栈是否为空</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="keyword">const</span> <span class="title">res</span><span class="params">(<span class="built_in">std</span>::make_shared&lt;T&gt;(data.top()))</span></span>; <span class="comment">// 在修改堆栈前，分配出返回值</span></span><br><span class="line">    data.pop();</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">pop</span><span class="params">(T&amp; value)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.empty()) <span class="keyword">throw</span> empty_stack();</span><br><span class="line">	</span><br><span class="line">    value=data.top();</span><br><span class="line">    data.pop();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> data.empty();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="deal-lock问题"><a href="#deal-lock问题" class="headerlink" title="deal-lock问题"></a><strong>deal-lock问题</strong></h4><p>两个或以上mutex因为互相等待而导致的 永远也没有一方能完整获得 所有mutex的 现象，我称为deal lock。 </p>
+<p>C++11开始提供了std::lock来一次性锁定两个或以上的mutex（避免死锁算法是STL内部实现的）。</p>
+<p>在谈论std::lock之前，先谈论以下几个概念</p>
+<ul>
+<li>BasicLockable : 支持lock unlock</li>
+<li>Lockable      : 支持lock unlock try_lock</li>
+<li>TimedLockable : 支持lock unlock try_lock try_lock_for try_lock_until</li>
+</ul>
+<p>目前，BasicLockable有四个 mutex recursive_mutex timed_mutex recursive_timed_mutex</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt; <span class="class"><span class="keyword">class</span> <span class="title">Lockable1</span>, <span class="title">class</span> <span class="title">Lockable2</span>, <span class="title">class</span>... <span class="title">LockableN</span> &gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">lock</span>( <span class="title">Lockable1</span>&amp; <span class="title">lock1</span>, <span class="title">Lockable2</span>&amp; <span class="title">lock2</span>, <span class="title">LockableN</span>&amp;... <span class="title">lockn</span> );</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> &#123;</span></span><br><span class="line">    Employee(<span class="built_in">std</span>::<span class="built_in">string</span> id) : id(id) &#123;&#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> id;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; lunch_partners;</span><br><span class="line">    <span class="built_in">std</span>::mutex m;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">string</span> <span class="title">output</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">string</span> ret = <span class="string">&quot;Employee &quot;</span> + id + <span class="string">&quot; has lunch partners: &quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">const</span> <span class="keyword">auto</span>&amp; partner : lunch_partners )</span><br><span class="line">            ret += partner + <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">send_mail</span><span class="params">(Employee &amp;, Employee &amp;)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 模拟耗时的发信操作</span></span><br><span class="line">    <span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">assign_lunch_partner</span><span class="params">(Employee &amp;e1, Employee &amp;e2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::mutex io_mutex;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk</span><span class="params">(io_mutex)</span></span>;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e1.id &lt;&lt; <span class="string">&quot; and &quot;</span> &lt;&lt; e2.id &lt;&lt; <span class="string">&quot; are waiting for locks&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 用 std::lock 获得二个锁，而不担心对 assign_lunch_partner 的其他调用会死锁我们</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::lock(e1.m, e2.m);</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::adopt_lock)</span></span>;<span class="comment">//</span></span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::adopt_lock)</span></span>;</span><br><span class="line"><span class="comment">// 等价代码（若需要 unique_locks ，例如对于条件变量）</span></span><br><span class="line"><span class="comment">//        std::unique_lock&lt;std::mutex&gt; lk1(e1.m, std::defer_lock);</span></span><br><span class="line"><span class="comment">//        std::unique_lock&lt;std::mutex&gt; lk2(e2.m, std::defer_lock);</span></span><br><span class="line"><span class="comment">//        std::lock(lk1, lk2);</span></span><br><span class="line"><span class="comment">// C++17 中可用的较优解法</span></span><br><span class="line"><span class="comment">//        std::scoped_lock lk(e1.m, e2.m);</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk</span><span class="params">(io_mutex)</span></span>;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e1.id &lt;&lt; <span class="string">&quot; and &quot;</span> &lt;&lt; e2.id &lt;&lt; <span class="string">&quot; got locks&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        e1.lunch_partners.push_back(e2.id);</span><br><span class="line">        e2.lunch_partners.push_back(e1.id);</span><br><span class="line">    &#125;</span><br><span class="line">    send_mail(e1, e2);</span><br><span class="line">    send_mail(e2, e1);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Employee alice(&quot;alice&quot;), bob(&quot;bob&quot;), christina(&quot;christina&quot;), dave(&quot;dave&quot;);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 在平行线程指派，因为发邮件给用户告知午餐指派，会消耗长时间</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::thread&gt; threads;</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(alice), <span class="built_in">std</span>::ref(bob));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(christina), <span class="built_in">std</span>::ref(bob));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(christina), <span class="built_in">std</span>::ref(alice));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(dave), <span class="built_in">std</span>::ref(bob));</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;thread : threads) thread.join();</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; alice.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>  &lt;&lt; bob.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span></span><br><span class="line">              &lt;&lt; christina.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span> &lt;&lt; dave.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意三种写法</p>
+<p>写法1</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::lock(e1.m, e2.m); <span class="comment">//已经把e1.m e2.m都lock住了</span></span><br><span class="line"><span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::adopt_lock)</span></span>;<span class="comment">//所以adopt_lock就意味着不用再lock了</span></span><br><span class="line"><span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::adopt_lock)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>之前有个疑问是，如果std::lock都已经lock了，为什么还需要lock_guard？因为std::lock，没有std::unlock，所以这里用一个RAII的lock_guard来保证释放mutex。  </p>
+<p>写法2</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::defer_lock)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::defer_lock)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::lock(lk1, lk2);</span><br></pre></td></tr></table></figure>
+
+<p>首先unique_lock满足BasicLocable要求，如果模板参数mutex满足Lockable，那么unique_lock满足Lockable，如果mutex满足TimedLockable，那么unique_lock满足TimedLockable。 </p>
+<p>也就是说，unique_lock取决于模板参数。</p>
+<p>既然有了unique_lock，那么shared_lock自然也不会缺席，模板参数必须满足SharedMutex要求。 </p>
+<p>写法3</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">std</span>::scoped_lock <span class="title">lk</span><span class="params">(e1.m, e2.m)</span></span>; <span class="comment">//C++17开始支持</span></span><br></pre></td></tr></table></figure>
+<p>这里scoped_lock代替了lock_guard和unique_lock的RAII特性。</p>
+<p>那么scoped_lock除了RAII特性，减少代码量，相比于std::lock还有哪些优势？  <em>ToDo</em></p>
+<p><strong><font color=red>std::lock的出现将程序员从dead-lock的困扰中解脱出来，让代码变得更加简洁</font></strong>  </p>
+<h4 id="避免死锁的建议"><a href="#避免死锁的建议" class="headerlink" title="避免死锁的建议"></a><strong>避免死锁的建议</strong></h4><ul>
+<li>避免嵌套锁</li>
+<li>避免在持有锁时调用外部代码，因为外部代码有可能做任何事情，包括获取锁。</li>
+<li>使用固定顺序获取锁（一个思路是 定义 遍历的顺序，一个线程必须先锁住A 才能获取B的锁，在锁住B之后才能获取C的锁，依次类推）</li>
+<li>使用层次锁结构</li>
+</ul>
+<p>层次锁，实际上就是 使用固定顺序获取锁的一种实现方式。<br>有mutex A, B thread t1, t2<br>假如 t1要 A.lock B.lock这样的顺序 获取锁的控制权， t2如果 B.lock A.lock，这种情况下t1 t2就有可能死锁，所以我们可以规定好 必须按照 A B的顺序来获取mutex控制权。<br>但如果锁多了，那该怎么办呢？  层次锁就是这种思想的一个抽象概念，把锁分成不同的level，如果目前获取的是low level，那么就不可以再获取high level，当然如果你的业务代码中 先获取了B，但是也不需要获取A，那么也是满足这个原则的。  </p>
+<p>层次锁 代码实例 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">hierarchical_mutex</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="built_in">std</span>::mutex internal_mutex;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> hierarchy_value;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> previous_hierarchy_value;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">thread_local</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> this_thread_hierarchy_value;  <span class="comment">// 1</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">check_for_hierarchy_violation</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(this_thread_hierarchy_value &lt;= hierarchy_value)  <span class="comment">// 2</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="built_in">std</span>::logic_error(“mutex hierarchy violated”);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">update_hierarchy_value</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    previous_hierarchy_value=this_thread_hierarchy_value;  <span class="comment">// 3</span></span><br><span class="line">    this_thread_hierarchy_value=hierarchy_value;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">hierarchical_mutex</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> value)</span>:</span></span><br><span class="line">      hierarchy_value(value),</span><br><span class="line">      previous_hierarchy_value(<span class="number">0</span>)</span><br><span class="line">  &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    check_for_hierarchy_violation();</span><br><span class="line">    internal_mutex.lock();  <span class="comment">// 4</span></span><br><span class="line">    update_hierarchy_value();  <span class="comment">// 5</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(this_thread_hierarchy_value!=hierarchy_value)</span><br><span class="line">      <span class="keyword">throw</span> <span class="built_in">std</span>::logic_error(“mutex hierarchy violated”);  <span class="comment">// 9</span></span><br><span class="line">    this_thread_hierarchy_value=previous_hierarchy_value;  <span class="comment">// 6</span></span><br><span class="line">    internal_mutex.unlock();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">try_lock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    check_for_hierarchy_violation();</span><br><span class="line">    <span class="keyword">if</span>(!internal_mutex.try_lock())  <span class="comment">// 7</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    update_hierarchy_value();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">thread_local</span> <span class="keyword">unsigned</span> <span class="keyword">long</span></span><br><span class="line">     hierarchical_mutex::this_thread_hierarchy_value(ULONG_MAX);  <span class="comment">// 8</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/" rel="prev" title="拷贝构造函数 赋值运算符和强保证异常安全代码">
+      <i class="fa fa-chevron-left"></i> 拷贝构造函数 赋值运算符和强保证异常安全代码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/" rel="next" title="enable_if_t分析">
+      enable_if_t分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%B9%B6%E8%A1%8C%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">并发和并行的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8%E5%B9%B6%E5%8F%91%EF%BC%88%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">是否使用并发（并发的优缺点）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">业务分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">并发的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">并发的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%BA%BF%E7%A8%8B%E5%BA%93%E6%A6%82%E8%BF%B0"><span class="nav-number">4.</span> <span class="nav-text">C++线程库概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E5%90%AF%E5%8A%A8%E5%92%8C%E6%89%A7%E8%A1%8C"><span class="nav-number">5.</span> <span class="nav-text">线程的创建启动和执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E6%9D%83%E8%BD%AC%E7%A7%BB"><span class="nav-number">6.</span> <span class="nav-text">所有权转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E7%BA%BF%E7%A8%8B%E6%95%B0%E9%87%8F%E4%BB%A5%E5%8F%8A%E7%AE%80%E5%8D%95%E7%9A%84%E8%AE%A1%E7%AE%97%E4%B8%80%E4%B8%AA%E8%8C%83%E5%9B%B4%E5%86%85%E7%BB%93%E6%9E%9C%E7%9A%84%E5%B0%8F%E4%BE%8B%E5%AD%90"><span class="nav-number">7.</span> <span class="nav-text">确定线程数量以及简单的计算一个范围内结果的小例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%A0%87%E8%AF%86"><span class="nav-number">7.1.</span> <span class="nav-text">线程标识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE"><span class="nav-number">8.</span> <span class="nav-text">共享数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%81%B6%E6%80%A7%E6%95%B0%E6%8D%AE%E7%AB%9E%E4%BA%89-race-condition"><span class="nav-number">8.1.</span> <span class="nav-text">如何避免恶性数据竞争(race condition)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%92%E6%96%A5%E9%87%8F"><span class="nav-number">9.</span> <span class="nav-text">使用互斥量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89"><span class="nav-number">9.1.</span> <span class="nav-text">接口中的条件竞争</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E9%A1%B91%EF%BC%9A%E4%BC%A0%E5%BC%95%E7%94%A8"><span class="nav-number">9.1.1.</span> <span class="nav-text">选项1：传引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E9%A1%B92%EF%BC%9A%E6%97%A0%E5%BC%82%E5%B8%B8%E6%8A%9B%E5%87%BA%E7%9A%84%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%88%96%E8%80%85%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">9.1.2.</span> <span class="nav-text">选项2：无异常抛出的拷贝构造函数或者移动构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E9%A1%B93%EF%BC%9A%E8%BF%94%E5%9B%9E%E6%8C%87%E5%90%91%E5%BC%B9%E5%87%BA%E5%80%BC%E7%9A%84%E6%8C%87%E9%92%88"><span class="nav-number">9.1.3.</span> <span class="nav-text">选项3：返回指向弹出值的指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E9%A1%B94%EF%BC%9A%E2%80%9C%E9%80%89%E9%A1%B91-%E9%80%89%E9%A1%B92%E2%80%9D-%E6%88%96-%E2%80%9C%E9%80%89%E9%A1%B91-%E9%80%89%E9%A1%B93%E2%80%9D"><span class="nav-number">9.1.4.</span> <span class="nav-text">选项4：“选项1 + 选项2” 或 “选项1 + 选项3”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deal-lock%E9%97%AE%E9%A2%98"><span class="nav-number">9.1.5.</span> <span class="nav-text">deal-lock问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">9.1.6.</span> <span class="nav-text">避免死锁的建议</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

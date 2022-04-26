@@ -1,0 +1,1484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>100个困扰我的问题(一)反码与补码</title>
+    <url>/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/</url>
+    <content><![CDATA[<p>参考资料 <a href="https://www.jianshu.com/p/a1b385b24189">我们为什么需要反码和补码？</a>  </p>
+<p>大学在C语言课上，第一次接触原码、反码、补码，觉得很奇怪，我们用二进制表示，然后直接加减乘除就好了。要搞明白这些码，要从二进制开始。  </p>
+<p>人类钟意于十进制的历史，有人说是因为10个手指头（也可能是10个脚趾头，手动狗头），阿拉伯人改进了印度的十进制，后来传到了欧洲，后面变成世界标准。  </p>
+<p>人类习惯了十进制，但电子设备有自己的角度，就像那些动物如果没有10根手指，大概率也不会产生10进制，而是会产生比如20进制，12进制。  </p>
+<p>二极管是人类最开始发明的比较简单的电子元器件，这里面只有开 关两种状态，这也是我们采用二进制的原因，当然现在电子元器件可以有三种状态，但标准已经制定完了，再换成三进制的代价太大了。  </p>
+<p>二进制也可以进行加减运算啊，为什么要设计这么多码，这一切都是因为我们CPU中只有加法器。加法器可以实现加减乘除的运算，同时用电路实现减法器 乘法器 除法器都非常复杂，既然可以用加法来实现所有的加减乘除操作，那么从成本考虑只保留了加法器。  </p>
+<p>既然我们选择了省钱，那么就要做好在另一个方面复杂度提高的心理准备，“好快省”是不可能同时存在的，我们要尊重科学规律、自然规律。  </p>
+<a id="more"></a>
+
+<p>就一般的整数计算来说，包括正数和负数。对加法来说，包括以下几个可能的情况  </p>
+<ul>
+<li>正数 + 正数</li>
+<li>正数 + 负数</li>
+<li>负数 + 负数</li>
+</ul>
+<p>首先，我们该怎么表示负数呢？</p>
+<p>为了表示负数，我们要牺牲一个存储位，用它来表示符号，1个8 bit的数据，最高位为符号位，其中1代表负数，0代表正数，表示范围为[-128, 127]。   </p>
+<p>其中<br>0000 0000 = 0<br>1000 0000 = -128  </p>
+<p>这里我有一个疑问，为什么表示范围不是[-127, 127]，1000 0000不应该也是 0 吗，1000 0000 1000 0000 也可以用来-128啊，干嘛要弄的这么复杂。  </p>
+<p>首先8 bit的空间，在电路上来说肯定是2^8 = 256种状态，那我们没有必要用两种电路状态表示同一个数字。另外，用16位来表示-128也浪费空间了。最后，第1位毕竟是1，用来表示-128更好，而不是表示128。  </p>
+<p>回到加法。</p>
+<p>正数 + 正数 没什么需要讨论，主要是讨论 后面两种情况。  </p>
+<p>正数 +  负数 </p>
+<p>1 - 2 = 1 + (-2) = 0000 0001 + 1000 0010 = 1000 0011 = -3<br>结果与预期不符合。</p>
+<p>二进制计算溢出有一个特点，就是它类似于模运算。<br>127 + 1 = 1111 1111 + 0000 0001 = 1000 0000 = -128</p>
+<img src="/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg" class="">
+
+
+<p>如上述所示，就是看作去模数/余数 的操作，也就是一个数，无论正负，加上模，得到的仍然是它自身。  </p>
+<p>也就是说 i - j = i + (-j) = i + (-j) + 2^n -1 + 1 = i + (2^n - j - 1) + 1</p>
+<p>这里我们在计算2^n - 1和 j 的时候，没有符号位</p>
+<p>所以 2^n - 1 - j = 1111 1111 - 0000 0010 = 1111 1101<br>看起来就是-j = 1000 0010保持符号位不变，其它位置取反，这里我们称 1111 1101 为-2的反码，那么 反码 +1 就是我们想要的结果了，最终得到1111 1111，这是反码的计算结果，最终我们要把反码转变成原码，那就是先减去1，然后保持符号位不变，其它位取反，最终得到 1000 0001。与预期结果相符合。</p>
+<h4 id="CSAPP-Chapter2-信息的表示和处理"><a href="#CSAPP-Chapter2-信息的表示和处理" class="headerlink" title="CSAPP Chapter2 信息的表示和处理"></a><strong>CSAPP Chapter2 信息的表示和处理</strong></h4><p><strong>练习题 2.13</strong><br><em>用bis bic实现bool_or bool_xor</em><br>    <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bis</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bic</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> m)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bool_or</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = bis(x, y);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bool_xor</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = bic(bis(x, y), bis(bic(<span class="number">0xFF</span>, x), bic(<span class="number">0xFF</span>, y)));</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>    关于bool_xor = (x | y) &amp; (~x | ~y)，这个跟模拟电路的与非门概念很接近，很多的功能都是通过简单的与非门实现的。<br>    我们知道1 xor 1 = 0 xor 0 = 0, 1 ^ 0 = 0 ^ 1 = 1<br>    输入是x y, 输出是1个z，这时候中间肯定还有一层（类似于神经网络），只是这一层的我们不知道有几个系数，最后输出z的公式是什么。有可能是非常简单的&amp;，|，也有可能是非常复杂的一个公式，比如用到了好几个与非，打个比方，中间这一层有N个系数，然后通过一个非常复杂的与非门设计。  </p>
+<pre><code>幸好，异或门没有那么复杂。 我们先做一个假设，中间一层也是两个输入，最后通过 &amp; 操作输出。好吧，我写不出来我的思考过程，或者说很难用简练的语言说出来。  
+
+回到bool_xor，我们要首先实现bit_not 和 bit_and
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bit_not</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bic(<span class="number">0xFF</span>, x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bit_add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bic(x, bit_not(y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></code></pre>
+<p><strong>练习题 2.15</strong><br>只使用位级和逻辑运算，编写一个C表达式，它等价于 x==y。换句话说，当x和y相等时它将返回1，否则就返回0。  </p>
+<pre><code>! (x ^ y)</code></pre>
+<h4 id="CSAPP-Data-Lab"><a href="#CSAPP-Data-Lab" class="headerlink" title="CSAPP Data Lab"></a><strong>CSAPP Data Lab</strong></h4><p><a href="http://csapp.cs.cmu.edu/3e/labs.html">CSAPP Labs</a>  </p>
+]]></content>
+      <categories>
+        <category>cs</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>All Elements in Two Binary Search Trees</title>
+    <url>/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong>  </p>
+<p><strong>Given two binary search trees root1 and root2.</strong></p>
+<p><strong>Return a list containing all the integers from both trees sorted in ascending order.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e1.png" class="">  
+
+<pre><code>Input: root1 = [2,1,4], root2 = [1,0,3]
+Output: [0,1,1,2,3,4]</code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: root1 = [0,-10,10], root2 = [5,1,7,0,2]
+Output: [-10,0,0,1,2,5,7,10]  </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: root1 = [], root2 = [5,1,7,0,2]
+Output: [0,1,2,5,7]  </code></pre>
+<p><strong>Example 4:</strong>  </p>
+<pre><code>Input: root1 = [0,-10,10], root2 = []
+Output: [-10,0,10]  </code></pre>
+<p><strong>Example 5:</strong>  </p>
+<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e5.png" class="">  
+
+<pre><code>Input: root1 = [1,null,8], root2 = [8,1]
+Output: [1,1,8,8]  </code></pre>
+<a id="more"></a>  
+
+<p>最直观的想法是先做遍历，然后得到两个有序的array，然后进行插入排序。  </p>
+<p>这样的话整体的复杂度就是O(M+N)，比如要做两次，有办法优化吗？</p>
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>CMake入门</title>
+    <url>/2021/03/20/CMake%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p>现在的构建工具有很多，CMake是其中的佼佼者，虽然很多人说CMake编译速度太慢，但架不住兼容性好。  </p>
+<p>我了解的构建工具有bazel、ninja等，但暂时都没用过，先掌握CMake吧。  </p>
+<h2 id="从一个简单的项目开始"><a href="#从一个简单的项目开始" class="headerlink" title="从一个简单的项目开始"></a><strong>从一个简单的项目开始</strong></h2><p><strong><font color=orange>一个最简单的例子</font></strong>  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>只有3行，但也构建了CMakeLists.txt的骨架。  </p>
+<ul>
+<li>指定cmake支持的最小版本</li>
+<li>指定项目名称</li>
+<li>指定目标名称及其依赖  </li>
+</ul>
+<p><strong><font size = 4 color=red>注意事项</font></strong>  </p>
+<ol>
+<li><em>关于targetname和projectname</em><br>targetname和projectname不要相同，projectname直接在CMakeLists.txt中指定，</li>
+</ol>
+<h2 id="那么如果我们要依赖库呢"><a href="#那么如果我们要依赖库呢" class="headerlink" title="那么如果我们要依赖库呢"></a><strong>那么如果我们要依赖库呢</strong></h2><p>我们先添加一个预先生成好的库，CMakeLists.txt更新为 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br><span class="line">target_link_libraries(myTarget PUBLIC ui PRIVATE algorithm INTERNAL framework)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>调试与汇编</title>
+    <url>/2020/08/31/Debug-and-Assembly/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
+<p>C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。  </p>
+<p>对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从这个角度看，C++语言的代码耦合度太高了。至少以下几个方面并不适合C++  </p>
+<pre><code>1. 界面开发: 很多大厂的PC端用的是directUI架构，要想写好需要对C++熟练，而且要自己做各种精细控制。  
+2. 小工具开发：胶水语言不香吗？  
+3. 科学试验性质项目：比如机器学习模型训练  </code></pre>
+<p>其他：比如一般的程序开发，除非其它语言没有对应的库，否则都应该选用JAVA/C#/PYTHON这类语言开发，或者golang/rust。总之，C++的学习曲线太陡峭，但跟rust相比，历史包袱又很重。<br>既然这样，为什么我们还要学习C++呢？就是因为目前来说没有特别好能替代的，或许再过两年，rust和go成长起来之后，C++的市场份额会进一步萎缩，慢慢地被淘汰掉吧，淘汰也不是仅仅靠喊就行的，新语言还是得加油努力喔。  </p>
+<p>在Linux下我们用gdb进行代码调试和crash分析。在Windows平台我们有很多工具，一般是用IDA进行静态反汇编，用OD或者WinDbg进行动态分析，WinDbg也可以反汇编。<br>现在写blog的平台是Linux，所以先写linux的。我们的重点放在分析crashdump上。  </p>
+<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color=0xFFFFFF>gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
+<p>一般发布版本，要从几个方面考虑</p>
+<ol>
+<li>可追溯</li>
+<li>自动化  </li>
+<li>防破解  </li>
+</ol>
+<p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
+<h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3><a id="more"></a>
+
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-call.png" class="" title="stack frame call">
+
+
+<p>从上面我们可知<br>入栈时具体操作是</p>
+<pre><code>1)调用参数从右往左压栈  
+2)返回地址入栈  
+3)跳转到子函数起始地址 EIP 
+4)子函数将父函数栈帧起始地址%rbp入栈  
+5)将%rbp的值设置为当前%rsp的值，开辟栈帧空间  </code></pre>
+<p>出栈的时候，我们要清理堆栈  </p>
+<pre><code>1)movq %rbp, %rsp ; 使 %rsp 和 %rbp 指向同一位置，即子栈帧的起始处, 收回子栈帧空间
+2)popq %rbp ; 将栈中保存的父栈帧的 %rbp 的值赋值给 %rbp，并且 %rsp 上移一个位置指向父栈帧的结尾处</code></pre>
+<p>为了便于栈帧恢复，x86_64 架构中提供了 leave 指令来实现上述两条命令的功能。执行 leave 后，前面图中函数调用的栈帧结构如下　　</p>
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png" class="" title="stack frame leave">
+
+<p>调用 leave 后，%rsp 指向返回地址；ret 指令，从栈顶弹出数据，并跳转到此数据指向的地址处。在leave 执行后，%rsp 指向返回地址，因而 ret 的作用就是把 %rsp 上移一个位置，并跳转到返回地址执行。</p>
+<p>所以，leave 指令用于恢复父函数的栈帧，ret 用于跳转到返回地址处，leave 和ret 配合共同完成了子函数的返回。当执行完成 ret 后，%rsp 指向的是父栈帧的结尾处，父栈帧尾部存储的调用参数由编译器自动释放。</p>
+<h2 id="恢复被破坏的堆栈"><a href="#恢复被破坏的堆栈" class="headerlink" title="恢复被破坏的堆栈"></a><strong><font color=0xFFFFFF>恢复被破坏的堆栈</font></strong></h2><p>看知乎上回答问题的人，经常会开头来一句“先问有没有，再问是不是，再问为什么”。  </p>
+<p>怎么判断一个堆栈被破坏了？<br>很明显的，EIP EBP RETADDR这些都不是正常的内存值，比如?????或者0x00000000这类的。  </p>
+<p>至于该怎么恢复堆栈，我觉得总体上建立在一个基础上，也就是<a href="https://devblogs.microsoft.com/oldnewthing/20110309-00/?p=11263">How to rescue a broken stack trace: Recovering the EBP</a>  这里面所说的，堆栈其实就是EBP组成的linked-list，虽然因为各种原因（比如数组越界等）会破坏堆栈，但终归不会把所有层的堆栈给破坏了。  </p>
+<p>比如在上面的例子中，ESP看上去还算正常，那么我们就看一下ESP周围数据，根据linked-list的特性，如果有一个EBP，那么EBP本身是一个地址，同时，在它的底层函数，EBP也会是一个value（call 子函数的时候，会先push EBP）。</p>
+<p>在这里，我们回顾一下EBP附近的堆栈结构  </p>
+<p>The structure of each stack frame is therefore  </p>
+<table>
+<thead>
+<tr>
+<th>addr</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[ebp+n]</td>
+<td>Offsets greater than 4 access parameters</td>
+</tr>
+<tr>
+<td>[ebp+4]</td>
+<td>Offset 4 is the return address</td>
+</tr>
+<tr>
+<td>[ebp+0]</td>
+<td>Zero offset accesses caller’s EBP</td>
+</tr>
+<tr>
+<td>[ebp-n]</td>
+<td>Negative offsets access locals</td>
+</tr>
+</tbody></table>
+<p>在这里，如果我们找到EBP，那么附近的就是RetAddr，在gdb下用info symbol 内存地址 可以看到具体的函数。  </p>
+<p><a href="https://bbs.pediy.com/thread-254771.htm">[翻译]手把手教你修复被破坏的堆栈</a><br>上述链接对应的资源在 <a href="/2020/08/31/Debug-and-Assembly/corrupted-stack-example-resource.zip" title="这里下载">这里下载</a></p>
+<h2 id="FPO产生的影响"><a href="#FPO产生的影响" class="headerlink" title="FPO产生的影响"></a><strong><font color=0xFFFFFF>FPO产生的影响</font></strong></h2><p>FPO = Frame Pointer Omission<br>FPO优化是intel处理器单独必备的，它的主要原理是不再为调用的子函数进行push EBP , mov ebp esp的操作。  </p>
+<p><a href="http://www.nynaeve.net/?p=91">Frame pointer omission (FPO) optimization and consequences when debugging, part 1</a><br><a href="http://www.nynaeve.net/?p=97">Frame pointer omission (FPO) optimization and consequences when debugging, part 2</a></p>
+<p><a href="https://docs.microsoft.com/en-us/archive/blogs/larryosterman/fpo">FPO</a>  </p>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a><strong><font color=0xFFFFFF>通用命令</font></strong></h2><table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bt</td>
+<td>查看堆栈</td>
+</tr>
+<tr>
+<td>frame n</td>
+<td>查看堆栈中第n帧信息</td>
+</tr>
+<tr>
+<td>list</td>
+<td>查看function周围的代码</td>
+</tr>
+<tr>
+<td>info locals</td>
+<td>查看本地变量</td>
+</tr>
+<tr>
+<td>print variable_name</td>
+<td>查看具体变量value</td>
+</tr>
+</tbody></table>
+<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color=0xFFFFFF> 寄存器建议使用规则</font></strong></h2><img src="/2020/08/31/Debug-and-Assembly/registers.jpg" class="">
+
+
+
+
+<h3 id="GDB查看指定内存地址处的内容"><a href="#GDB查看指定内存地址处的内容" class="headerlink" title="GDB查看指定内存地址处的内容"></a><strong><font color=0xFF>GDB查看指定内存地址处的内容</font></strong></h3><p>命令格式：x/nfu <addr></p>
+<p>如：</p>
+<p>（gdb）x/1xb 0x7fffffffd708</p>
+<p>x : examine 的缩写</p>
+<p>n : 表示要显示的内存单元个数</p>
+<p>f : 表示显示方式, 可取如下值<br>x 按十六进制格式显示变量。<br>d 按十进制格式显示变量。<br>u 按十进制格式显示无符号整型。<br>o 按八进制格式显示变量。<br>t 按二进制格式显示变量。<br>a 按十六进制格式显示变量。<br>i 指令地址格式<br>c 按字符格式显示变量。<br>f 按浮点数格式显示变量。</p>
+<p>u表示一个地址单元的长度，与n一起表示显示的地址长度<br>b表示单字节，<br>h表示双字节，<br>w表示四字节，<br>g表示八字节</p>
+<h3 id="查看正常函数名称"><a href="#查看正常函数名称" class="headerlink" title="查看正常函数名称"></a><strong><font color=0xFF>查看正常函数名称</font></strong></h3><p>_ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这类名字，该怎么知道它之前正常的名字呢？<br>这涉及到name mangling技术。最开始没记起这个名词，连搜索都不好搜索。  </p>
+<p><a href="https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode">How to make gdb show the original non-mangling function name on disassembly model?</a>  </p>
+<p>c++filt是一个经常用的技术，<del>但好像不是所有情况下都可以</del>。昨天c++file _ZNSaIcEC1Ev@plt，命令执行完还是这个字符串，当时认为是这个命令可能不适用于所有字符串，或者哪个环节出了问题。  </p>
+<p>c++filt _ZNSaIcEC1Ev  </p>
+<p><strong>后面那个@plt到底是干嘛的？</strong></p>
+<h3 id="objdump查看反汇编代码，如何从AT-amp-T风格改为intel"><a href="#objdump查看反汇编代码，如何从AT-amp-T风格改为intel" class="headerlink" title="objdump查看反汇编代码，如何从AT&amp;T风格改为intel"></a><strong><font color=0xFF>objdump查看反汇编代码，如何从AT&amp;T风格改为intel</font></strong></h3><p>gcc默认的汇编器是GAS，语法是AT&amp;T</p>
+<p>objdump -d -mi386:x86-64:intel exe or lib file name</p>
+<h3 id="FS寄存器分析"><a href="#FS寄存器分析" class="headerlink" title="FS寄存器分析"></a><strong><font color=0xFF>FS寄存器分析</font></strong></h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://zhuanlan.zhihu.com/p/27339191">x86-64 下函数调用及栈帧原理 - 冷风寒雨宿天涯的文章 - 知乎</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/107455887">x86_64架构下的函数调用及栈帧原理 - 看雪学院的文章 - 知乎</a>  </p>
+<p><a href="https://blog.csdn.net/zrf2112/article/details/95661316">函数调用过程&amp;栈帧&amp;调用约定</a>  </p>
+<p><a href="https://www.jianshu.com/p/088fb171cd40">使用 gdb 恢复堆栈信息</a></p>
+<p><a href="https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode">How to make gdb show the original non-mangling function name on disassembly model?</a></p>
+]]></content>
+      <categories>
+        <category>assembly</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Diagnostics_Library(Error-Handling)</title>
+    <url>/2020/09/02/Diagnostics-Library-Error-Handling/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<a id="more"></a>
+<p><strong>video time 1.05 EH is for Synchronous Program Errors</strong></p>
+<p>“异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。</p>
+<p>通俗一点的将就是：中断异步就是我可以不用立即处理，而是等执行完一条指令时候才可能处理，异常同步是指出了异常必须立马处理。”</p>
+<p><strong>video time 3:11 Returning Error Indicators</strong></p>
+<p>C语言中没有异常处理，所有的错误都是通过返回值的方式来告知调用者。</p>
+<p>但是通过返回值的方式通知 变得越来越臃肿  在很多情况下，接收返回值的函数不能处理错误，只能一步步往上传。这确实把错误检测和错误处理解耦了，但代价是高昂的，通过call chain传递错误码增加了分支处理，源代码增加，程序变大，可读性也变差。 </p>
+<p>而且，很多情况下我们会忘记检查错误码（这本身就不鲁棒）。</p>
+<p>但什么时候用返回码，什么时候用异常呢？  </p>
+<p><strong>video time 8:11 Exception Handling throw catch try</strong>  </p>
+<p>throw exception, the exception can be primitive values, but perferable to throw objects of class types.  </p>
+<p>base <exception><br>derived <stdexcept>  : invalid_argument out_of_range overflow_error<br>other derived exception defined in <new> <typeinfo></p>
+<p><strong>video time 10:56 throw by value, catch by reference</strong>  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">int</span>&amp; a)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">const</span> <span class="keyword">char</span>* msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(...)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;catch errors&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>video time 14:59 “Unwinding” the Stack</strong>  </p>
+<p>没看懂，很尴尬<br><strong>video time 19:58 nocept</strong>  </p>
+<p>void f() noexcept;</p>
+<p>noexcept不会在编译时起作用；如果一个noexcept实际上throw exception，那么std::terminate会被调用。  </p>
+<p>所以，确保声明为noexcept的函数不会throw exception。  </p>
+<p>这里有一个疑问，如果确信不会throw了，那么声明noexcept的意义在哪里？有利于编译器优化。</p>
+<p>noexcept还可以作有条件选择，比如 void swap(Type&amp; x, Type&amp; y) noexcept(noexcept(x.swap(y)))，如果x.swap(y)不发生异常，那么swap(Type&amp; x, Type&amp; y)一定不发生异常。  </p>
+<p>鼓励使用noexcept的情形：</p>
+<ul>
+<li>move constructor</li>
+<li>move assignment</li>
+<li>destructor</li>
+<li>Leaf Function 叶子函数是指在函数内部不分配栈空间，也不调用其它函数，也不存储非易失性寄存器，也不处理异常。  </li>
+</ul>
+<p><strong>video time 23:58 Exception Safety</strong>  </p>
+<ul>
+<li>the basic guarantee</li>
+<li>the strong guarantee</li>
+<li>the noexcept guarantee  </li>
+</ul>
+<p><strong>video time 31:05 RAII</strong></p>
+<p>还有Herb Sutter 2019 ACCU Conference上的演讲<br> KEYNOTE: De-fragmenting C++: Making exceptions more affordable and usable - Herb Sutter [ACCU 2019]</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/os7cqJ5qlzo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part I”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W7fIy_54y-w&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=84" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+
+<p>Jon Kalb “Exception-Safe Code, Part II”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/b9xMIKb1jMk&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=83" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part III”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/MiKxfdkMJW8&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=82" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>在Jon Kalb的演讲里也提到了 the basic guarantee the strong guarantee the nothrow guarantee 这三个概念，无论哪种概念都要首先满足两点  </p>
+<ul>
+<li>异常发生后，不能有内存泄漏</li>
+<li>异常发生后，不允许数据结构恶化，比如 Object* p = new Object(“test”) 此时因为new异常，那么我们不知道此时到底分配了多少内存（对象构造到什么程度了），或者说p指向的是一块销毁的区域。</li>
+</ul>
+<p>保证没有内存泄漏很简单，靠RAII的锁机制。  std::unique_lock m(&amp;mtx)<br>保证第二点有一个，可以通过<br>std::shared_ptr<Object> ptr_obj_;<br>ptr_obj_.reset(new Object(“test”))<br>此时当new Object产生异常的时候，根本不会走到reset中，也就不会对shared_ptr产生影响。<br>美中不足的是，如果是通过拷贝构造或者复制构造的方式来reset<br>ptr_obj_.reset(new Object(old_object))<br>如果new Object抛出异常，那么old_object到底会发生什么变化呢？此时，就不会满足strong guarantee了（要么成功，即使失败，也要像完全没调用过那样）。</p>
+<p>那么该怎么解决这个问题呢？ <em><font color=blue>copy and swap</font></em><br>“copy and swap”类似于buffer的概念，在某篇博文中是这么讲述的</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 <span class="string">&quot;copy and swap&quot;</span>。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 <span class="string">&quot;pimpl idiom&quot;</span>，Item <span class="number">31</span> 描述了它的一些细节。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">PMImpl</span> &#123;</span> <span class="comment">// PMImpl = &quot;PrettyMenu</span></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;Image&gt; bgImage; <span class="comment">// Impl.&quot;; see below for</span></span><br><span class="line">　<span class="keyword">int</span> imageChanges; <span class="comment">// why it’s a struct</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrettyMenu</span> &#123;</span></span><br><span class="line">　...</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">　Mutex mutex;</span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; pImpl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrettyMenu::changeBackground</span><span class="params">(<span class="built_in">std</span>::istream&amp; imgSrc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">　<span class="keyword">using</span> <span class="built_in">std</span>::swap; <span class="comment">// see Item 25</span></span><br><span class="line"></span><br><span class="line">　<span class="function">Lock <span class="title">ml</span><span class="params">(&amp;mutex)</span></span>; <span class="comment">// acquire the mutex</span></span><br><span class="line"></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; <span class="comment">// copy obj. data</span></span><br><span class="line">　pNew(<span class="keyword">new</span> PMImpl(*pImpl));</span><br><span class="line"></span><br><span class="line">　pNew-&gt;bgImage.reset(<span class="keyword">new</span> Image(imgSrc)); <span class="comment">// modify the copy</span></span><br><span class="line">　++pNew-&gt;imageChanges;</span><br><span class="line"></span><br><span class="line">　swap(pImpl, pNew); <span class="comment">// swap the new</span></span><br><span class="line">　<span class="comment">// data into place</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// release the mutex</span></span><br></pre></td></tr></table></figure>
+
+<p> 　在这个例子中，我选择将 PMImpl 做成一个结构体，而不是类，因为通过让 pImpl 是 private 就可以确保 PrettyMenu 数据的封装。将 PMImpl 做成一个类虽然有些不那么方便，却没有增加什么好处。（这也会使有面向对象洁癖者走投无路。）如果你愿意，PMImpl 可以嵌套在 PrettyMenu 内部，像这样的打包问题与我们这里所关心的写异常安全的代码的问题没有什么关系。</p>
+<p>　　 copy-and-swap 策略是一种全面改变或丝毫不变一个对象的状态的极好的方法，但是，在通常情况下，它不能保证全部函数都是强力异常安全的。因为如果在changeBackground中我们调用了其他函数比如func()，如果func()不能保证strong guarantee，那么changeBackground即使我们写的再好，也不能保证strong guarantee，俗称“一颗老鼠屎，坏了一锅粥”，就是这样的道理。</p>
+<p>有一篇讲述copy-and-swap的很好的文章 <a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a></p>
+<p><a href="https://blog.csdn.net/qq_36553031/article/details/89057433">C++ 拷贝构造函数和赋值构造函数</a></p>
+<p>其实copy-and-swap的思想确实很好，但也有一个疑问，就是这样会不会造成性能的损失？</p>
+<p><strong>疑问：但是basic guarantee跟strong guarantee相比，缺了什么呢？</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/error">Error handling</a><br><a href="https://blog.csdn.net/weixin_37817539/article/details/102421184">中断是异步的，异常是同步的</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a><br><a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a></p>
+]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>在hexo中显示图片</title>
+    <url>/2020/08/30/How-To-Display-Image-With-hexo/</url>
+    <content><![CDATA[<p><font color=0xFFFFFF>本文所有方式均通过亲自验证</font></p>
+<p>刻舟求剑是什么意思，今天算是认识到了。<br>为什么信息越来越多，我们却越来越累了呢，是因为有其他的东西吸引了我们本来的注意力吗？有这种原因，但还有更重要的是，有效信息太少。<br>今天我在网上找hexo显示本地图片的方式，尝试了很多都有问题，搜索出来的结果绝大部分都是无效信息。<br>下面我们说一说这些无效信息。  </p>
+<p><strong>npm install hexo-asset-image</strong><br>安装这个插件之后，显示图片不对。通过查看public目录下生成的index，发现是生成的图片link不对。<br>我们用上面这个命令安装的是hexo-asset-image 1.0.0版本，这个版本跟hexo3兼容上有问题，无法正确生成图片link。  </p>
+<p><strong>npm install <a href="https://github.com/CodeFalling/hexo-asset-image">https://github.com/CodeFalling/hexo-asset-image</a> –save</strong><br>有的blog发现了这个问题，提示要用这个版本的插件0.0.5。<br>但这个插件也有问题，我们需要修改hexo-asset-image的index.js文件，可以参考<a href="https://segmentfault.com/q/1010000020310187/a-1020000020311907">hexo 图片路径错误/.com//</a><br>也就是说，用很老的版本是可以的，但同样的，这个老版本的插件跟hexo3及以上版本也存在兼容问题。  </p>
+<p>上面是网络搜索的两个主要结果，其实主要结果是第1个，第2个我也是在segmentfault上找到的。  </p>
+<p>还好，搜索引擎给了我一个更好的答案。  </p>
+<p><strong>hexo原生支持image</strong>  </p>
+<p><a href="https://www.jianshu.com/p/7f06d10f2e3e">关于hexo博客图片插件问题</a>  </p>
+<p><a href="https://hexo.io/zh-cn/docs/asset-folders">hexo文档：资源文件夹</a>  </p>
+<p>根据官方文档的说明，目前版本的hexo可以直接显示图片，主要有两种方式</p>
+<ol>
+<li>source/images文件夹下面放置图片，通过![](/images/sample.jpg)直接显示</li>
+<li>通过文章资源文件夹   <ol>
+<li>_config.yml中　post_asset_folder : true</li>
+<li>hexo n title “name” 会生成同名的md和文件夹  </li>
+<li>把图片资源放置到对应的文件夹，这时候有两种方式来显示图片<br>markdown方式： ![](1.png) 这种方式会导致的结果是，在首页中看不到图片，但如果点开具体文章，图片是可以正常显示的。<br>正确方式：hexo3支持的标签用法   </li>
+</ol>
+</li>
+</ol>
+<p>所以，原来的很多具体的处理措施，现在并不可用了，但方法该是我们掌握的，比如这里遇到无法显示的问题，首先要排查生成的html里image link是否正确，然后最好的方式是寻找官方文档的支持，说实话，现在搜索引擎的权重设计的并不好，很多已经无法用的方案，还在置顶，不知道因为作者是做了SEO优化，还是说搜索引擎本身并不智能到判断这些信息已经是不合适的了。  </p>
+<p>缘木求鱼，刻舟求剑。从古至今，大的道理还是那么多，关键是如何变成自己的模型。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何从IEEE Xplore免费下载</title>
+    <url>/2020/08/29/How-to-download-IEEE-Xplore/</url>
+    <content><![CDATA[<p>最近在学习memory order，越学习越深，网上有介绍一本资料《A Primer on Memory Consistency and Cache Coherence》，本来想直接下载，发现csdn就是恶心，明明是盗版，结果还要自己花钱下载。结果，发现这书2020年2月出了第二版，找到了出版社的网站，但是下载不了。柳岸花明，在IEEE Xplore里找到了，但没办法下载，需要学校帐号。<br>在网上又找到了一个下载IEEE Xplore的方法，保存一下  </p>
+<ol>
+<li><p>找到某篇文章:<br><a href="https://ieeexplore.ieee.org/document/7965747">https://ieeexplore.ieee.org/document/7965747</a></p>
+</li>
+<li><p>查询到DOI是:</p>
+</li>
+<li><p>1109/SERA.2017.7965747  </p>
+</li>
+<li><p><a href="http://sci-hub.tw/">http://sci-hub.tw</a><br>输入10.1109/SERA.2017.7965747即可下载pdf</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Language support library</title>
+    <url>/2020/09/02/Language-support-library/</url>
+    <content><![CDATA[<h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a><strong>参考内容</strong></h2><p><a href="">Item 47: Use traits classes for information about types</a><br><a href="https://en.cppreference.com/w/cpp/types">Type support (basic types, RTTI, type traits)</a><br><a href="https://www.youtube.com/watch?v=VvbTP_k_Df4">CppCon 2015:Marshall Clow “Type Traits - what are they and why should I use them?”</a><br><a href="https://www.youtube.com/watch?v=tiAVWcjIF6o">Template Metaprogramming: Type Traits (part 1 of 2) - Jody Hagins - CppCon 2020</a><br><a href="https://www.youtube.com/watch?v=dLZcocFOb5Q">Template Metaprogramming: Type Traits (part 2 of 2) - Jody Hagins - CppCon 2020</a></p>
+]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Linux构建程序时如何判断库能否被找到</title>
+    <url>/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/</url>
+    <content><![CDATA[<p>在用CMake构建程序的时候，经常要用到find_package来查找库，那么什么样的库可以被find_package找到呢？  </p>
+<ul>
+<li><p>ldconfig -p | grep libjpeg  </p>
+</li>
+<li><p>locate libGL.so</p>
+</li>
+<li><p>pkg-config </p>
+<p>  pkg-config –cflags jpeg<br>  pkg-config –libs jpeg<br>  pkg-config –cflags “jpeg &gt;= 1.0.0” # for version check<br>  pkg-config  –modversion jpeg | awk -F. ‘{ printf “0x%02X%02X%02X\n”,$1,$2,$3 }’ #version check  </p>
+</li>
+<li><p>dpkg -s packagename (deb-based distribution)</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>PE ELF文件格式浅析</title>
+    <url>/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86/arm等）。  </p>
+<p>那种格式可以被OS识别甚至加载、启动都与OS息息相关。  </p>
+<p>我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32/64上？<br>这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么导致这些结果的原因是什么呢？</p>
+<p>首先说Apple，使用的是一种叫做Fat Binary的技术，也就是我在编译程序的时候里面其实有包含了两套代码，同时支持x86/64，苹果现在宣布今后将把macos从x86迁移到arm平台，那么是要还是用Fat Binary技术吗？Fat Binary的优点和缺点都显而易见，那么还有其它方式吗？  </p>
+<p>我们知道，Windows系统，32位应用可以在64位系统上运行，64位程序不能在32位系统上运行，这是为什么？  </p>
+<p><strong><font color=0xFF>ToDoList</font></strong>  </p>
+<a id="more"></a>
+
+<ol>
+<li><p>Windows下 32位应用在64位系统上运行的原理，编译好的x86应用可以在Windows arm平台运行吗？是需要在编译的时候指定平台呢，还是可以直接通过OS内部的翻译器解决这个问题？x86_64 应用能运行在arm64平台上吗，实现的原理又是什么呢？ x86应用在64位系统上只能运行在user mode，所以驱动或者依赖于驱动的x86应用是没办法运行在64位系统上的，还有就是32位应用无法调用64位DLL，反之亦然，这是为什么呢？</p>
+</li>
+<li><p>Windows arm是如何实现的？现在指定了CPU和GPU，也就是说如果要换其他家arm芯片，就要重新适配是么？类似于苹果Mac arm也只能用自己的arm芯片？为什么x86 32位程序可以跑在Windows arm上？微软说这10.1之后就可以推送新的surface proc x II(arm平台)，支持64位x86应用跑在上面了，这又是怎么实现的呢？</p>
+</li>
+<li><p>Windows arm系统如何实现驱动开发？打个比方，比如杀毒软件该如何适配呢？是需要重新写一遍驱动呢，还是可以直接在上面跑，跟x86 x64应用的待遇一样？ </p>
+</li>
+<li><p>我们知道在Windows x86/x64平台，需要的驱动不同，也就是32位系统需要32位driver，64位系统需要64位driver，当然，我们也知道，32位软件可以在64位系统上跑（通过WOW机制），但驱动不可以，但我们看安全卫士 这类软件只有一个版本，没有根据操作系统选择，那么应该是32位程序，那就是说32位程序可以与64位driver sys通信，但32位程序无法调用64位DLL，这样的理解对吗？ </p>
+</li>
+<li><p>64位程序不能调用32位DLL，32位driver sys，但可以调用32位COM（通过进程间COM的方式）</p>
+</li>
+<li><p>从2011年微软发布支持arm平台的Windows RT开始，已经接近十年了，Apple也将在11月发布第一款Mac arm。“第一次发生在上世纪九十年代中叶，Macintosh从Motorola的68k指令集迁移到了IBM的PowerPC指令集上，那段时间乔布斯并不在苹果。用乔布斯在WWDC 2005上面的话来说，这次切换为苹果奠定了未来十年的基础（指90年代中叶到2005年左右）。第二次是软件层面上的大换血，从Mac OS 9迁移到了具有BSD血统的Mac OS X上，这也是乔布斯一手主导的一次切换，让Mac的操作系统变得现代化，并打好了在未来二十年内发展的基础。第三次则是我们所熟知的从PowerPC架构的处理器迁移到Intel处理器上面，乔布斯在2005年的WWDC大会上面宣告了这次迁移。到今天为止，所有的Mac都已经换上了Intel的CPU，在系统层面上，macOS也早已完全抛弃掉了对PowerPC指令集、甚至于32位x86指令集（IA-32）的支持，在macOS 11之前，它只支持使用x86-64指令集的处理器。”那么桌面PC的未来甚至服务器的未来就是arm了吗？  arm server实现了云端同架构，但有没有这么一个问题，就是同样的应用在这个arm芯片上可以，在另外一个arm芯片上不可以？如果是android这样系统的话，应该没问题，因为大家的app在上面开发都是可以用的，就算底层的程序，应该问题也不大。至于为什么微软和Apple迁移那么难，是因为OS跟指令集绑定的太深了，而Linux因为开源的问题，所以很早就有人着手解决这个问题了。  </p>
+</li>
+</ol>
+<p>上面有6个问题，是我昨天想起来记下的，其实里面的问题里已经有了一些答案，现在结合我知道的，先讲一些实现原理，最后回答上面的问题。  </p>
+<h1 id="2-操作系统与指令集配合以及一些实例"><a href="#2-操作系统与指令集配合以及一些实例" class="headerlink" title="2 操作系统与指令集配合以及一些实例"></a><strong>2 操作系统与指令集配合以及一些实例</strong></h1><p>指令集和程序通过操作系统交流，一般情况下，编译好的可执行程序里面是固定的指令集，比如我们在VS中指定了平台(x86/x64)，那么就会生成32/64位程序，虽然目前AMD的x64和x86是兼容的，但最开始Intel IA64和x86并不兼容，选择了某个平台，我们也就选择了将程序中的代码编译成某个指令集。操作系统根据自己定义好的格式，解析可执行文件，把指令发送给CPU执行。<br><a href="https://blog.csdn.net/zhongjin616/article/details/18765301">单片机 指令集 和 操作系统的关系</a>  </p>
+<p>操作系统可以支持多个指令集平台吗？我觉得从技术上是可以实现的。    </p>
+<ol>
+<li>比如从引导程序开始就做成Fat Binary这种形式，先判断当前是什么CPU架构，然后我的OS安装盘里就选择哪种平台版本的安装程序，但最终安装的操作系统里，是包含多个CPU平台支持的</li>
+<li>在运行可执行程序的时候，如果可执行程序本身是Fat Binary，那么就选择支持的指令集直接运行；如果不是，那么通过操作系统自带的翻译器翻译指令。  </li>
+</ol>
+<p>但是这样有一个问题啊，就是操作系统和可执行程序都会非常臃肿。<br>所以，上面提到的操作系统做成Fat Binary是不现实的，不同的架构，同一个系统安装文件，这得包含多少冗余啊。至于第二点，Apple的实现方式是Fat Binary，但Mac OS本身也没有Fat Binary。</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">NeXT</span>的Mach内核所支持的Mach-O二进制文件格式引入了一种叫fat binary的特性，说白了就是在一个平台架构上分别交叉编译所有平台的二进制格式文件，然后把每个文件都打包成一个文件。Universal Binary就是指同时打包Intel平台和PowerPC平台的二进制文件。Mac OS X <span class="number">10</span>.<span class="number">4</span>最终支持四个平台的BSD系统调用——<span class="number">32</span>位Power PC、<span class="number">64</span>位PowerPC、<span class="number">32</span>位 x<span class="number">86</span>和<span class="number">64</span>位x<span class="number">86</span>_<span class="number">64</span>。作为最终用户，无须搞清这些区别，因为使用Universal Binary技术，买回来的软件直接会解出相应平台程序的二进制文件并执行。这是苹果很成功的一步——不像Windows系统中要用不同的路径（\Windows\System、\Windows\System<span class="number">32</span>、\Windows\System<span class="number">64</span>）分别存放不同架构的二进制库，并且用户还需在<span class="number">32</span>位版和<span class="number">64</span>位版之间犹豫不决。</span><br></pre></td></tr></table></figure>
+
+<p>苹果这么做的好处是，操作系统内部不需要实现类似于Windows emulator的机制，但坏处是应用体积会变得大，毕竟里面包含了很多平台的二进制程序。  </p>
+<h2 id="2-1-微软的实现思路"><a href="#2-1-微软的实现思路" class="headerlink" title="2.1 微软的实现思路"></a><strong>2.1 微软的实现思路</strong></h2><h3 id="2-1-1-如何实现64位系统上加载32位程序"><a href="#2-1-1-如何实现64位系统上加载32位程序" class="headerlink" title="2.1.1 如何实现64位系统上加载32位程序"></a><strong>2.1.1 如何实现64位系统上加载32位程序</strong></h3><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">intel</span> X<span class="number">86</span>架构CPU可能实现了多个指令集x<span class="number">86</span>，x<span class="number">86</span>-<span class="number">64</span>，MMX，SSE，SSE<span class="number">2</span>，SSE<span class="number">3</span>，SSSE<span class="number">3</span> ，而这些指令集中的指令让cpu完成的动作都比较复杂，所以也称为CISC</span><br><span class="line"></span><br><span class="line"><span class="attribute">AMD</span> amd<span class="number">64</span>架构的cpu 兼容了x<span class="number">86</span>指令集还拓增了<span class="number">3</span>D-Now!指令集，用于加强对<span class="number">3</span>D显示的支持。</span><br><span class="line"></span><br><span class="line"><span class="attribute">ARM</span> ARMv<span class="number">1</span>~ARMv<span class="number">7</span>架构的cpu实现了Thumb指令集和ARM指令集。这些指令集中的一条指令让cpu完成的动作都比较简单，所以也称为RISC指令集</span><br></pre></td></tr></table></figure>
+<p>但32/64指令长度也不一样啊，一个是32位，一个是64位，这些该怎么办？  </p>
+<p><a href="https://www.techsupportalert.com/content/how-windows7-vista64-support-32bit-applications.htm">How Windows 64-bit Supports 32-bit Applications</a><br><a href="http://baijiahao.baidu.com/s?id=1567917475253638&wfr=spider&for=pc">Win10 ARM版如何运行x86程序？IT之家带你一文读懂</a><br><a href="https://www.zhihu.com/question/334122973">为什么同一个exe文件能在不同指令集CPU上运行？</a><br><a href="https://www.zhihu.com/question/52873651">如何看待微软的CHPE（arm运行x86）？</a><br><a href="https://docs.microsoft.com/en-us/windows/win32/winprog64/running-32-bit-applications">Running 32-bit Applications</a>   </p>
+<p>上面的链接详细介绍了  </p>
+<ol>
+<li>Windows 64位系统如何跑32位应用？ 通过一个中间层 32位指令 &lt;–&gt; 转换器 &lt;–&gt; 64位指令。</li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg" class="">
+
+
+<ol start="2">
+<li>Windows arm如何支持运行x86应用。通过emulator，比如  </li>
+</ol>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg" class="">
+
+<p>下面这些就是Windows提供的包含emulator的库</p>
+<ul>
+<li>Wow64.dll provides the core emulation infrastructure and the thunks for the Ntoskrnl.exe entry-point functions.</li>
+<li>Wow64Win.dll provides thunks for the Win32k.sys entry-point functions.</li>
+<li>(x64 only) Wow64Cpu.dll provides support for running x86 programs on x64.</li>
+<li>(Intel Itanium only) IA32Exec.bin contains the x86 software emulator.</li>
+<li>(Intel Itanium only) Wowia32x.dll provides the interface between IA32Exec.bin and WOW64.</li>
+<li>(ARM64 only) xtajit.dll contains the x86 software emulator.</li>
+<li>(ARM64 only) wowarmw.dll provides support for running ARM32 programs on ARM64.</li>
+</ul>
+<p>10月底微软是释放出支持x64应用的Windows ARM系统。  </p>
+<p>现在的制约因素是效率不行，因为要通过中间转码的方式，但为什么Mac ARM 就能这么厉害呢？ 有一个想法是Windows的前向兼容太多，导致系统做的比较臃肿，而Mac OS历来就是喜新厌旧，隔个几年就不支持之前的设备或者某些接口是常规操作。  </p>
+<p>现在回答上面的问题  </p>
+<ol>
+<li><p>32位无法调用64位DLL，但可以使用64位driver sys。<br>通过上面的原理，我们知道64位系统跑32位程序是通过指令集32/64转换实现的，32位调用64位DLL该怎么办，难道我们要标记一下哪些需要进行指令集转换，哪些不需要吗？可是在实际使用过程中，exe调用DLL导出的function，本身就是一套流水线下来的，我们没办法在执行指令的过程中区分哪些指令要转64，哪些不用转64。<br>至于driver sys，可以理解为进程间通信，相当于一个32位进程，一个64位进程，通过某些手段进行通信，这样也能解释64位程序如何调用32位DLL，那就是通过进程间COM，既然是不同的进程，那么要不要进行指令转，就是进程相关的了，相互独立的进程间不影响。</p>
+</li>
+<li><p>emulator是运行在用户态的，即user mode。</p>
+</li>
+<li><p>驱动程序如果想适配Windows ARM，需要指定平台，重新编译，不能通过emulator。也就是说x86驱动不能直接在Windows ARM上跑，需要重新编译。这里有一个问题，就是x86驱动也只能编译为arm32 driver，arm32 driver可以在arm64平台上跑吗？当然不可以了，参见Windows 64系统不支持32位驱动。<a href="https://docs.microsoft.com/zh-cn/windows-hardware/drivers/develop/building-arm64-drivers">使用 WDK 生成 ARM64 驱动程序</a>   </p>
+</li>
+</ol>
+<p>好，上面的6个问题基本上回答完了。在这里，有一个共识，就是arm平台将继续发扬光大，继续无往不利，而WinTel组合也将慢慢成为历史。以后芯片的种类、平台、定制化都将越来越丰富。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Partition Labels</title>
+    <url>/2020/09/23/Partition-Labels/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong>  </p>
+<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>S will have length in range [1, 500].</li>
+<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
+</ul>
+<a id="more"></a>
+
+<p><strong>思路</strong>  </p>
+<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
+<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
+<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color=blue>__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
+<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">partitionLabels</span><span class="params">(<span class="built_in">string</span> S)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; map_assemble;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; vec_result;</span><br><span class="line">        <span class="keyword">int</span> length = S.length();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(map_assemble.<span class="built_in">find</span>(S[i]) != map_assemble.<span class="built_in">end</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//update</span></span><br><span class="line">                map_assemble[S[i]].second = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//add</span></span><br><span class="line">                map_assemble[S[i]] = <span class="built_in">make_pair</span>(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt; map_assemble_reverse;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= map_assemble.<span class="built_in">begin</span>(); it!=map_assemble.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(<span class="built_in">make_pair</span>(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//求相交集合的并集</span></span><br><span class="line">         <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(it = map_assemble_reverse.<span class="built_in">begin</span>(); it!=map_assemble_reverse.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> bProcessed = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> it1=vec_result.<span class="built_in">begin</span>(); it1!=vec_result.<span class="built_in">end</span>(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> a1 = it-&gt;first.first, b1 = it-&gt;first.second;</span><br><span class="line">                <span class="keyword">int</span> a2 = it1-&gt;first, b2 = it1-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>((a1 &gt; b2) <span class="keyword">or</span> (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    it1 = vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(<span class="built_in">make_pair</span>(<span class="built_in">min</span>(a1, a2), <span class="built_in">max</span>(b1, b2)));</span><br><span class="line">                    bProcessed = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bProcessed)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vec_result.push_back(<span class="built_in">make_pair</span>(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; final_result;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= vec_result.<span class="built_in">begin</span>(); it!=vec_result.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python中mutable与immutable</title>
+    <url>/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/</url>
+    <content><![CDATA[<p>在Python的数据类型中，根据是否可改变，分为mutable与immutable。   </p>
+<p>那么跟C/C++相比，所谓的不可修改是什么意思？  </p>
+<ul>
+<li>不能进行单个元素的赋值操作</li>
+<li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
+</ul>
+<p>下面我们针对tuple来写几个例子。  </p>
+<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
+<pre><code>a = (1, 2)  
+a[0] = 2 #error</code></pre>
+<p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
+<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = (<span class="number">1</span>, <span class="number">2</span>)  </span><br><span class="line">id(a) <span class="comment">#140036094436208</span></span><br><span class="line">a = <span class="number">-2</span>, <span class="number">-1</span> <span class="comment"># right (-2, -1)</span></span><br><span class="line">id(a) <span class="comment">#140036072923616</span></span><br><span class="line">a += (<span class="number">-1</span>, <span class="number">4</span>) <span class="comment"># right (-2, -1, -1, 4)</span></span><br><span class="line">id(a) <span class="comment"># 140036094653072</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
+<p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
+<p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
+<p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
+<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
+<p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
+<p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python科学计算笔记</title>
+    <url>/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="1-numpy"><a href="#1-numpy" class="headerlink" title="1 numpy"></a><strong>1 numpy</strong></h2><h3 id="1-1-如何创建array"><a href="#1-1-如何创建array" class="headerlink" title="1.1 如何创建array"></a><strong>1.1 如何创建array</strong></h3><p>创建array的几种方式</p>
+<ul>
+<li><p>numpy.array() </p>
+<p>  An array, any object exposing the array interface, an object whose</p>
+<pre><code>      __array__ method returns an array, or any (nested) sequence</code></pre>
+</li>
+<li><p>numpy.asarray()  </p>
+<p>  array_like</p>
+<pre><code>      Input data, in any form that can be converted to an array.  This
+      includes lists, lists of tuples, tuples, tuples of tuples, tuples
+      of lists and ndarrays.</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>自动生成数组 numpy.arange  numpy.logspace numpy.linspace 用于创建等差 等比 array（arange和linspace创建等差array的方式有区别）  </p>
+</li>
+<li><p>numpy.full numpy.zeros numpy.ones</p>
+</li>
+<li><p>numpy.fromstring numpy.frombuffer numpy.from function </p>
+</li>
+</ul>
+<h3 id="1-3-存取元素"><a href="#1-3-存取元素" class="headerlink" title="1.3 存取元素"></a><strong>1.3 存取元素</strong></h3><a id="more"></a>
+
+<p>有了创造，就要有访问，那么该怎么访问元素呢？  </p>
+<ul>
+<li>切片<br>  正常的切片方式，比如连续切片 a[3:5] 非连续切片a[[1,3,5]]</li>
+</ul>
+<p><strong><font color=red>一维数组和多维数组的存取</font></strong><br>我们可以用数组作为索引，来构造新数组  </p>
+<p>这里有一个公式 output = method(input)  </p>
+<p>首先我们要明确input和output是什么，然后才能找到适合的公式来套用。  </p>
+<p>下面是一个简单的总结，其中多维我们先用二维来替代。  </p>
+<table>
+<thead>
+<tr>
+<th align="left">input</th>
+<th align="left">output</th>
+<th align="left">note</th>
+<th align="left">sample</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">一维</td>
+<td align="left">一维</td>
+<td align="left">从一维中取数，组成一维array</td>
+<td align="left"><del>a[np.array([x1, x2, x3, x4])]</del></td>
+</tr>
+<tr>
+<td align="left">一维</td>
+<td align="left">多维</td>
+<td align="left">从一维中取数，组成N维array</td>
+<td align="left"><del>错误的方式 a[[[x1,x2,x3,x4],[x5,x6,x7,x8]]]</del> <br><del>正确的方式 a[np.array([[1, 2, 3], [4, 5, 6]])]</del></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">一维</td>
+<td align="left">从N维中取数，组成一维array</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">多维</td>
+<td align="left">从N维中取数，组成N维array</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>本来想着列个表就能简单的说清楚，但现在看，还是有些复杂的，下面就展开来说吧。  </p>
+<p>下面有几种写法，让我们看一看 </p>
+<p><font color=red>input : 一维数组    output : 一维数组和二维数组</font></p>
+<pre><code>a = np.array(1, 10, 1)
+print(a[1, 3, 5]) # 错误，因为a是一维数组，但提供了3维索引
+print(a[[1, 3, 5], [2, 4, 6]]) # 错误，跟上面一样，提供了两个index
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x]) # 错误，IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
+# 上述语句还有warning  FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+y = np.array([[1, 3, 5], [2, 4, 6]])
+print(numpy.array(y)) # 正确</code></pre>
+<p>从上面的例子中，我们可以得到以下几个简单的结论 </p>
+<ul>
+<li>input为一维数组，索引必须也是一维的，不管输出是怎么样，要确保能访问到input中的元素，下标必须为一维，所以a[[1, 3, 5]]是正确的，a[1, 3, 5]是错误的</li>
+</ul>
+<p>但这里有一个问题，就是a[x]和a[np.array(x)]有什么区别？<br>通过help(x)可以得知一个是numpy.ndarray，一个是list。个人猜测，list是不确定大小的，也就是我们拿到一个list，里面的元素大小也不一定相同，所以需要转成ndarray，明确是一个正常的数组。否则，就会报上面的IndexError和Warning。  </p>
+<p><font color=red>input : 二维数组    output : 一维数组和二维数组</font> </p>
+<pre><code>a = np.arange(1, 10, 1).reshape(-1,1) + np.arange(10, 60, 5)
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x])  # 正确，但会报warning，输出一个1*3的数组array
+m = ([1,2,3], [4,5,6])
+print(a[m])  # 正确，无warning，下标是有两个元素的元组，输出结果是1*3的数组array
+print(a(np.array(x))) # 正确，但输出是一个三维数组
+y = [[1,2], [3,4]]
+z = [[5,6], [7,8]]
+print(a[y,z]) #正确</code></pre>
+<p>上面我们看到，print(a[x])会报warning， _<font color=red>FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use <code>arr[tuple(seq)]</code> instead of <code>arr[seq]</code>. In the future this will be interpreted as an array index, <code>arr[np.array(seq)]</code>, which will result either in an error or a different result.</font>_。<br>也就是说，对于多维数组的index操作，我们需要传入一个tuple sequence，传入non-tuple sequence的方法已经被废弃了。  </p>
+<p>至于print(a(np.array(x)))输出一个三维数组，可以这样理解，首先np.array(x)得到的是一个array，但只有一个元素，在书中有这么一句话 <em><font color=red>当所有轴都用形状仙童的整数数组作为下标时，得到的数组和下标数组的形状相同。</font></em> 但当我们传入的是只有一个元素的tuple的时候（不管这个元素内部是多么复杂）， 当我们没有指定第一轴的下标的时候，我们用:来代替。此时，我们要重新明确一下a[m,n]中代表的涵义，m是0轴坐标，n是1轴坐标，既然n为:，那么所有的列数据都被占用。  </p>
+<p><strong><font color=green size=5>总结</font></strong><br>说实话，这块理解还是挺难的，而且实际使用中有些内容已经有差别了，比如被废弃的方法，还是要时常温故，多加体会。  </p>
+<p><strong>关于存取元素时是否与原数据共用</strong>  </p>
+<p>中心思想，是抓住问题的核心，如果我们可以仅仅通过修改stride shape就能得到一份新数据，这时候肯定是不用拷贝最合算，如果没办法通过修改stride shape得到数据，那么就只能拷贝了。  两个简单的例子， a[::2, :]是无需拷贝的，只需要把元素的stride*2就可以“得到”我们想要的数据；a[[1,4,7,9]]是需要拷贝的，此时我们不能通过简单修改stride就得到我们想要的数据。  </p>
+<h3 id="1-4-frompyfunc"><a href="#1-4-frompyfunc" class="headerlink" title="1.4 frompyfunc"></a><strong>1.4 frompyfunc</strong></h3><p>感觉类似于函数指针typedef，不过问题是看上去它只有一个可以遍历的arg.  </p>
+<pre><code>def calc_test(a, b, c, d):
+    print(a + c + b + d)
+
+
+def create():
+    a = np.arange(1, 10, 1) # 正确
+    a = 10 # 正确
+    b = np.arange(10, 100, 10)
+    c = np.arange(100, 1000, 100)
+    d = np.arange(1000, 10000, 1000)
+    calc_test_func = np.frompyfunc(calc_test, 4, 1)
+    print(calc_test_func(a, b, c, d))</code></pre>
+<p>上面这段代码，经过几次测试，得出的规律是，frompyfunc的几个特点</p>
+<pre><code>m = np.arange(1, 10, 5) + np.arange(10, 100, 10) # 错误 ValueError: operands could not be broadcast together with shapes (2,) (9,) </code></pre>
+<p>如果两个或者多个数组size不一致，那么这时候就出发挥 广播机制  </p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python线程操作</title>
+    <url>/2020/11/20/Python%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="1-多线程操作的基本原理"><a href="#1-多线程操作的基本原理" class="headerlink" title="1 多线程操作的基本原理"></a><strong>1 多线程操作的基本原理</strong></h1><p>开发语言与系统架构无关，在学习使用C++的时候我们就接触过多线程编程，后面随着处理器多核的出现，有了并行编程，这两个还存在着很大的区别。  </p>
+<p>说一下我所理解的多线程编程  </p>
+<ol>
+<li>存在可以独立执行的Task</li>
+<li>Task之间的依赖关系是流式的（或者可以转变为流式）  </li>
+</ol>
+<p>举个人脸检测的例子</p>
+<pre class="mermaid">graph LR;
+　　视频流-->| 检测 |人脸信息;
+　　人脸信息-->| 后处理 |处理过的人脸信息;
+　　处理过的人脸信息-->| 显示 |上层回调;</pre>
+
+<p>在实际的操作中，我们可以把所有需要处理的视频流保存下来，然后传递给算法引擎，然后得到所有的人脸信息，然后对每一帧的人脸信息进行统一处理，然后再一帧帧返回结果。但这样做效率很低。<br>我们可以试着这么做，开一个线程A，用于获取视频帧；再开一个线程B，用于算法检测；再开一个线程C，用于回调显示。<br>这样做的好处是，我拿到一帧视频，放到buffer里（这里甚至可以设定双buffer）。 </p>
+<p><a href="https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics">Multiple buffering</a>  </p>
+<p>vsync</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Repeated Substring Pattern</title>
+    <url>/2020/09/23/Repeated-Substring-Pattern/</url>
+    <content><![CDATA[<p><strong><font color=red>题目</font></strong></p>
+<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: &quot;abab&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: &quot;aba&quot;
+Output: False </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: &quot;abcabcabcabc&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
+<p><strong>思路</strong>  </p>
+<p>start : 代表要比较的子串的开始索引  </p>
+<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
+<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
+<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
+<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">repeatedSubstringPattern</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">1</span>, start=<span class="number">0</span>, cmp_times=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= (<span class="built_in">floor</span>)(s.length() / <span class="number">2</span>); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length() % len != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            cmp_times = s.length() / len;</span><br><span class="line">            <span class="keyword">bool</span> bCurDup = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(s[j] != s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>用hexo搭建github blog</title>
+    <url>/2020/08/29/build-and-backup-github-pages-with-hexo/</url>
+    <content><![CDATA[<p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<p>我们的操作步骤是</p>
+<ol>
+<li>在github.io　hexo分支备份源文件</li>
+<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
+</ol>
+<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
+<a id="more"></a>
+
+<p>下面我们梳理一下具体的流程。  </p>
+<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color=0xFFFFFF>node及hexo环境</font></strong></h2><pre><code>mkdir blog
+npm i hexo-cli -g
+hexo -v 
+hexo init  
+npm install  </code></pre>
+<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color=0xFFFFFF>github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
+<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color=0xFFFFFF>发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
+<p>修改_config.yml文件</p>
+<pre><code>deploy:
+type: &#39;git&#39;
+repository: git@github.com:username/username.github.io.git
+branch: master</code></pre>
+<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color=0xFFFFFF>hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
+<p>所以，我们有两种处理方法</p>
+<ol>
+<li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
+<li>把github.io　切换到hexo branch，把blog folder中需要的文件<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">scaffolds/  </span><br><span class="line">source/  </span><br><span class="line">themes/  </span><br><span class="line"><span class="selector-class">.gitignore</span>  </span><br><span class="line">_config<span class="selector-class">.yml</span>  </span><br><span class="line">package<span class="selector-class">.json</span>  </span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>拷贝到github.io所在的目录，然后  </p>
+<pre><code>git add --all  
+git commit 
+git push --set--upstream origin hexo　
+　</code></pre>
+<p>然后把.git目录拷贝到blog folder</p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color=0xFFFFFF>发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
+<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color=0xFFFFFF>环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;</a>/username/username.github.io</del></p>
+<p>The instrutions above is not right, you should do as follows</p>
+<pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
+npm install</code></pre>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color=0xFFFFFF>小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color=0xFF>添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
+<pre><code>npm install hexo-generator-searchdb  </code></pre>
+<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color=0xFF>首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
+<p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
+<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color=0xFF>文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span> <span class="comment">#从-date改成-updated</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color=0xFF>git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
+<p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>delete之后发生了什么</title>
+    <url>/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">delete</span> p;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; p[<span class="number">0</span>] &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码会崩溃吗？  </p>
+<p>不一定，delete是释放堆空间，但实际上内存只是被回收了，p还是指向那块区域，所以我们还可以继续使用，但这块空间的value有可能已经不是我们原来的value了，因为如果这块空间被重新分配给其它变量的话，有可能就会读写这块空间，value就会被改变。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>enable_if_t分析</title>
+    <url>/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p><strong>To be continued</strong></p>
+<p>在看VS版本的thread库源码时，发现了这么一段</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color=red>enable_if_t</font>__。</p>
+<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
+<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
+<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
+<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
+<p>首先，我们要介绍一个概念 <a href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
+<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
+<p>此特性被用于模板元编程。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>git学习</title>
+    <url>/2020/10/22/git%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<p>今天找到一个非常直观的git学习网站 <a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
+<p>Let’s go!  </p>
+<a id="more"></a>
+
+
+
+
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a><strong>Appendix</strong></h2><h3 id="git-merge-3-way-merge-algorithm"><a href="#git-merge-3-way-merge-algorithm" class="headerlink" title="git merge : 3-way merge algorithm"></a><strong>git merge : 3-way merge algorithm</strong></h3><p><a href="https://stackoverflow.com/questions/14961255/how-does-git-merge-work-in-details">How does ‘git merge’ work in details?</a><br><a href="https://en.wikipedia.org/wiki/Merge_(version_control)">Merge (version control)</a><br><a href="https://www.savaslabs.com/blog/strategies-and-tools-resolving-git-merge-conflicts#:~:text=In%20a%20three%20way%20merge,before%20the%20two%20branches%20forked">Strategies and Tools for Resolving Git Merge Conflicts</a>  </p>
+<h3 id="git-rebase-变基的原理是什么"><a href="#git-rebase-变基的原理是什么" class="headerlink" title="git rebase: 变基的原理是什么"></a><strong>git rebase: 变基的原理是什么</strong></h3><h3 id="git-reset-reset之后某些丢掉的commit能被找回来吗"><a href="#git-reset-reset之后某些丢掉的commit能被找回来吗" class="headerlink" title="git reset: reset之后某些丢掉的commit能被找回来吗"></a><strong>git reset: reset之后某些丢掉的commit能被找回来吗</strong></h3><p><a href="https://stackoverflow.com/questions/10099258/how-can-i-recover-a-lost-commit-in-git">How can I recover a lost commit in Git?</a>  </p>
+<h3 id="git-reset-reset如何调整commit的顺序？"><a href="#git-reset-reset如何调整commit的顺序？" class="headerlink" title="git reset: reset如何调整commit的顺序？"></a><strong>git reset: reset如何调整commit的顺序？</strong></h3><p>rebase调整commit的原理是什么？</p>
+<h3 id="git-cherry-pick"><a href="#git-cherry-pick" class="headerlink" title="git cherry-pick"></a><strong>git cherry-pick</strong></h3><ol>
+<li>cherry-pick 多个不同branch的commit，可以直接像下面这么写吗 git cherry-pick commit1 commit4 commit9（这三个commit分属不同的branch）  </li>
+<li>cherry-pick的commit是由merge而来的，此时会出现什么问题？遇到这种情况，该怎么处理？  </li>
+</ol>
+<h3 id="如何定位哪个commit开始引入了某个bug"><a href="#如何定位哪个commit开始引入了某个bug" class="headerlink" title="如何定位哪个commit开始引入了某个bug"></a><strong>如何定位哪个commit开始引入了某个bug</strong></h3><h3 id="之前的某个commit存在bug，该如何修复"><a href="#之前的某个commit存在bug，该如何修复" class="headerlink" title="之前的某个commit存在bug，该如何修复"></a><strong>之前的某个commit存在bug，该如何修复</strong></h3><ul>
+<li>直接新加一个修复bug的commit，简单直接  </li>
+<li></li>
+</ul>
+]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>gtest学习</title>
+    <url>/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<p>如果让我设计一个测试框架，我会怎么弄？</p>
+<p>我有几个疑问：  </p>
+<ul>
+<li>是面向接口测试，还是面向功能测试？比如我要实现某个功能X，可能要调用接口A，接着B，最后C。当然可以采用test suite的概念，还是按照接口写test case，但一些test case可以组成test suite</li>
+<li>test case能否做到与input output无关？比如A-&gt;B A-&gt;C ， 这两个test suite，给A的输入不同，输出也不同，有人说那你test suite组合起来就好了，接口可以做到跟输入分离，可如果是单独测试A接口呢？有单独的input？ 这倒是也可以。</li>
+</ul>
+<p>这么一想，问题倒是都能解决，接口测试为基本的test case，接口与输入、输出分离，比如可以有config，不是写死的状态；根据功能性，某些test case可以组成test suite，这里面接口用到的input output也是不同的。  </p>
+<p>接下来我们看看Googletest的使用以及实现原理吧。  </p>
+<h2 id="1-大体思路"><a href="#1-大体思路" class="headerlink" title="1 大体思路"></a><strong>1 大体思路</strong></h2><p>gtest的github repository里有gtest和gmock，gmock可以认为是依托gtest实现了更高级的功能（现在还没看，后面写sample）。编译成功之后，会生成libgtest.a libgmock.a libgtest_main.a libgmock_main.a，这里libgtest_main.a 其实是包含了以下代码</p>
+<pre><code>int main(int argc, char* argv[])
+&#123;
+    testing::InitGoogleTest(&amp;argc, argv);
+    return RUN_ALL_TESTS();
+&#125;</code></pre>
+<p>这样我们写unit_test.cpp就可以了，然后直接编译进去，生成可执行，然后直接跑就会进入到libgtest_main.a的main函数里，跑所有的test。  </p>
+<h2 id="2-正式集成"><a href="#2-正式集成" class="headerlink" title="2 正式集成"></a><strong>2 正式集成</strong></h2><h3 id="2-1-现有工程的TestSuite"><a href="#2-1-现有工程的TestSuite" class="headerlink" title="2.1 现有工程的TestSuite"></a><strong>2.1 现有工程的TestSuite</strong></h3><p>今天看公司代码里的测试用例，全部是按照功能来写的，大概类似于</p>
+<pre><code>TEST(TestSuiteName, TestCaseName)
+&#123;
+    Init();
+    Start();
+    Stop();
+    Destroy();
+&#125;</code></pre>
+<p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
+]]></content>
+      <categories>
+        <category>tools</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Input/Output library</title>
+    <url>/2020/08/30/input-output-library/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
+<img src="/2020/08/30/input-output-library/input_output_hierarchy.png" class="" title="STL IO HIERARCHY">   
+
+
+<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2><img src="/2020/08/30/input-output-library/posix_and_c.png" class="" title="difference between posix and sys call">   
+
+<p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
+<a id="more"></a>
+
+<font color=green>
+NOTE:
+这里有两个需要注意的点  
+1. 文件IO也是有缓存的，只不过标准IO是用户态缓存，文件IO是内核态缓存，标准IO的好处是可以减少访问CPU的次数。  
+2. 文件IO也叫低级别IO，所以不要以为fread fwrite就是文件IO，这里其实有混淆，感觉起名字不严谨。  
+</font>
+
+<table>
+<thead>
+<tr>
+<th align="left">操作</th>
+<th align="left">标准ＩＯ</th>
+<th align="left">文件ＩＯ(低级IO)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">打开</td>
+<td align="left">fopen,freopen,fdopen</td>
+<td align="left">open</td>
+</tr>
+<tr>
+<td align="left">关闭</td>
+<td align="left">fclose</td>
+<td align="left">close</td>
+</tr>
+<tr>
+<td align="left">读</td>
+<td align="left">getc,fgetc,getchar fgets,gets,fread</td>
+<td align="left">read</td>
+</tr>
+<tr>
+<td align="left">写</td>
+<td align="left">putc,fputc,putchar fputs,puts,fwrite</td>
+<td align="left">write</td>
+</tr>
+</tbody></table>
+<h2 id="状态标志符"><a href="#状态标志符" class="headerlink" title="状态标志符"></a><strong>状态标志符</strong></h2><p>以VC中实现为例</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Dummy</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> _<span class="title">Iosb</span> &#123;</span> <span class="comment">// define templatized bitmask/enumerated types, instantiate on demand</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> _Dummy_enum &#123; _Dummy_enum_val = <span class="number">1</span> &#125;; <span class="comment">// don&#x27;t ask, TRANSITION, ABI</span></span><br><span class="line">    <span class="keyword">enum</span> _Fmtflags &#123; <span class="comment">// constants for formatting options</span></span><br><span class="line">        _Fmtmask = <span class="number">0xffff</span>,</span><br><span class="line">        _Fmtzero = <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags skipws     = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0001</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags unitbuf    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0002</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags uppercase  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0004</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showbase   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0008</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpoint  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0010</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpos    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0020</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags left       = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0040</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags right      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0080</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags internal   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0100</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags dec        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0200</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags oct        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0400</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hex        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0800</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags scientific = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x1000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags fixed      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x2000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hexfloat = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// added with TR1 (not in C++11)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags boolalpha   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x4000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags _Stdio      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x8000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags adjustfield = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x01C0</span>); <span class="comment">// left | right | internal</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags basefield   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0E00</span>); <span class="comment">// dec | oct | hex</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags floatfield  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// scientific | fixed</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Iostate &#123; <span class="comment">// constants for stream states</span></span><br><span class="line">        _Statmask = <span class="number">0x17</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate goodbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x0</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate eofbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x1</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate failbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x2</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate badbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x4</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Openmode &#123; <span class="comment">// constants for file opening options</span></span><br><span class="line">        _Openmask = <span class="number">0xff</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode in         = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x01</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode out        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x02</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode ate        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x04</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode app        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x08</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode trunc      = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x10</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Nocreate  = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x40</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Noreplace = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x80</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode binary     = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Seekdir &#123; <span class="comment">// constants for file positioning options</span></span><br><span class="line">        _Seekbeg,</span><br><span class="line">        _Seekcur,</span><br><span class="line">        _Seekend</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir beg = _Seekbeg;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir cur = _Seekcur;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir <span class="built_in">end</span> = _Seekend;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> &#123; <span class="comment">// TRANSITION, ABI</span></span><br><span class="line">        _Openprot = _SH_DENYNO</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> _Default_open_prot = _SH_DENYNO; <span class="comment">// constant for default file opening protection</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在_Iosb中的实现为例，里面有四个关于文件的状态定义</p>
+<ul>
+<li>_Fmtflags = format flags</li>
+<li>_Iostate = io state   当前iosbase的状态位（通过调用iosbase::rdstate()随时可以与这些预定义好的常量对比）</li>
+<li>_Openmode = open mode  以什么样的方式打开文件（读取或写入，包括文件本身的性质，以及我们会如何使用它）</li>
+<li>_Seekdir = seek dir 从哪个地方开始访问（更加智能便捷，不用每次都把position 0当作start index）</li>
+</ul>
+<p><em><font color=red>注意</font>:为什么_Fmtflags enum只有一个成员，而_Seekdir enum就定义完全了呢？</em>  </p>
+<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a><strong>文件操作</strong></h2><h3 id="文件读"><a href="#文件读" class="headerlink" title="文件读"></a><strong>文件读</strong></h3><p>我所理解的读取一个文件的正常思路</p>
+<ul>
+<li>确定要访问的初始位置</li>
+<li>确定当前距离文件结尾的数据长度</li>
+<li>read读取（按照需要读取，只要是&lt;= left_length就可以）</li>
+</ul>
+<p>如果我们想要读取文本一行呢？<br>我们可以调用basic_istream::getline()，当然也有全局性的函数getline(std::basic_istream&amp;, , )，效果是一致的（其实我一直认为这种实现本质上是一样的，为什么要有两个接口？还一个global，一个类接口）</p>
+<h3 id="文件写"><a href="#文件写" class="headerlink" title="文件写"></a><strong>文件写</strong></h3><p>文件写的思路</p>
+<ul>
+<li>确定写的方式（追加，清空，还是截断truncate）</li>
+<li>确定要访问的初始位置</li>
+<li>write写入  </li>
+</ul>
+<p>写入文本一行没有writeline，因为没有必要，直接write之后，再写入一个endl就可以了。<br>其实读取的道理也是一样，也是一个个字符读取，然后遇到endl就把buffer中的数据作为一行输出。  </p>
+<h2 id="stringstream"><a href="#stringstream" class="headerlink" title="stringstream"></a><strong>stringstream</strong></h2><p>stringstream有什么用途呢？如果是内存操作，我们直接用string是不是就可以了呢？ </p>
+<p>stringstream不仅仅是string，更重要的是stream的特性。  </p>
+<p>比如ss &gt;&gt; 100; stringstream重载的&lt;&lt; &gt;&gt;。</p>
+<p>比如 str=  “ hello world “; string word;如果要想按照单词来读，那么可以通过ss &gt;&gt; word 来操作。</p>
+<p>在我看来，stringstream就是在内存中操作io（这是与文件IO的本质区别），本质上还是io 流，只不过在内存中是以string来作为对外沟通的数据结构。  </p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
+]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python学习路线</title>
+    <url>/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
+    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+<a id="more"></a>
+
+
+<h1 id="2-我所理解的语言特性"><a href="#2-我所理解的语言特性" class="headerlink" title="2 我所理解的语言特性"></a><strong>2 我所理解的语言特性</strong></h1><p>语言是特性的集合。</p>
+<h2 id="2-1-运算符"><a href="#2-1-运算符" class="headerlink" title="2.1 运算符"></a><strong>2.1 运算符</strong></h2><p>标配。转自Python-100-Days<br>| 运算符                                                       | 描述                           |<br>| ———————————————————— | —————————— |<br>| <code>[]</code> <code>[:]</code>                                                   | 下标，切片                     |<br>| <code>**</code>                                                         | 指数                           |<br>| <code>~</code> <code>+</code> <code>-</code>                                                  | 按位取反, 正负号               |<br>| <code>*</code> <code>/</code> <code>%</code> <code>//</code>                                             | 乘，除，模，整除               |<br>| <code>+</code> <code>-</code>                                                      | 加，减                         |<br>| <code>&gt;&gt;</code> <code>&lt;&lt;</code>                                                    | 右移，左移                     |<br>| <code>&amp;</code>                                                          | 按位与                         |<br>| <code>^</code> <code>|</code>                                                      | 按位异或，按位或               |<br>| <code>&lt;=</code> <code>&lt;</code> <code>&gt;</code> <code>&gt;=</code>                                            | 小于等于，小于，大于，大于等于 |<br>| <code>==</code> <code>!=</code>                                                    | 等于，不等于                   |<br>| <code>is</code>  <code>is not</code>                                               | 身份运算符                     |<br>| <code>in</code> <code>not in</code>                                                | 成员运算符                     |<br>| <code>not</code> <code>or</code> <code>and</code>                                             | 逻辑运算符                     |<br>| <code>=</code> <code>+=</code> <code>-=</code> <code>*=</code> <code>/=</code> <code>%=</code> <code>//=</code> <code>**=</code> <code>&amp;=</code> <code>|=</code> <code>^=</code> <code>&gt;&gt;=</code> <code>&lt;&lt;=</code> | （复合）赋值运算符             |</p>
+<p>is、is not、in、not in </p>
+<p>在Python中is是用来表示内存地址（引用）的一致性；in是值判断，同时我们要注意嵌套内容是无法判断的，比如 4 in [1, [1,4]]就是False，[1,4] in [1, [1,4]] 是True。</p>
+<h2 id="2-2-分支及循环"><a href="#2-2-分支及循环" class="headerlink" title="2.2 分支及循环"></a><strong>2.2 分支及循环</strong></h2><p>if for while就是我们所说的分支和循环，在C++中，我们会用上面的运算符来作为分支的判断条件，在Python中稍有不同。  </p>
+<ul>
+<li>如果我们明确知道循环的次数，或者要对一个容器进行迭代，那么建议使用for-in结构</li>
+<li>如果要构造不知道具体循环次数的循环结构，我们推荐使用while循环。while循环通过一个能够产生或转换出bool值的表达式来控制循环，表达式的值为True则继续循环；表达式的值为False则结束循环。</li>
+</ul>
+<p>用jupyter写test case的时候，下意识用了 i++ i–结果发现Python中没有这个语法，后来想了下Python中并没有这样的语法，同时也不明白为什么C/C++中要有自增自减运算符，是为了提升效率吗？ 不得而知。  </p>
+<h2 id="2-3-函数-类"><a href="#2-3-函数-类" class="headerlink" title="2.3 函数 类"></a><strong>2.3 函数 类</strong></h2><h3 id="2-3-1-函数"><a href="#2-3-1-函数" class="headerlink" title="2.3.1 函数"></a><strong>2.3.1 函数</strong></h3><p>先说函数，函数包含函数名称，参数，以及返回值，在Python中不显式指明返回值类型，所以我们关注的重点是参数。</p>
+<figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line">关于函数返回值，Python最开始是不会直接声明返回值类型的，一般都要看API docstring，如果我们用到了一个文档很差的库，只能看源码了。当然，不直接声明返回值类型主要也是因为有些<span class="function"><span class="keyword">function</span></span>的返回值类型并不确定，比如我们可以返回<span class="built_in">int</span>，也可以返回list，tuple，但<span class="keyword">return</span> <span class="keyword">type</span>并不确定的时候，函数声明中也就没必要写了。后来Python也发现，有的时候还是需要<span class="keyword">return</span> <span class="keyword">type</span>的，或者说我们写的大部分函数的<span class="keyword">return</span> <span class="keyword">type</span>都是明确的，在声明的时候明确<span class="keyword">return</span> <span class="keyword">type</span>也能让使用者更加方便。</span><br><span class="line"></span><br><span class="line">下面这种写法就是明确了<span class="keyword">return</span> <span class="keyword">type</span>，不过这个是<span class="number">3.5</span>之后才支持的</span><br><span class="line"></span><br><span class="line">def greeting(<span class="keyword">name</span>: str) -&gt; str:</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;Hello, &#123;&#125;&#x27;</span><span class="number">.</span><span class="keyword">format</span>(<span class="keyword">name</span>)</span><br></pre></td></tr></table></figure>
+
+<p>接着谈参数，Python的参数大概有两种，一种叫position argument，一个类似于keyword argument，这两个都好理解，一个是根据位置，一个是根据参数名，那我们在传参的时候到底是根据position还是根据keyword呢？</p>
+<p>我这边有一个简单的想法就是，无论我们以何种方式传参，都不能让函数调用的时候产生歧义，最终要跟函数声明一致，另外Python还是支持动态参数，类似于C++中的argc和argv。</p>
+<h2 id="2-4-字符串和常用数据结构"><a href="#2-4-字符串和常用数据结构" class="headerlink" title="2.4 字符串和常用数据结构"></a><strong>2.4 字符串和常用数据结构</strong></h2><h3 id="2-4-1-字符串"><a href="#2-4-1-字符串" class="headerlink" title="2.4.1 字符串"></a><strong>2.4.1 字符串</strong></h3><p>要说起字符串，那真的是五味杂陈，使用频率特别高，操作特别多，而且还涉及到不同的编码格式，我能想到的  </p>
+<ul>
+<li>切片</li>
+<li></li>
+</ul>
+<p>切片的话，需要知道start和end，一般有find_first_of find_last_of</p>
+<p>还有什么呢？</p>
+<p>leetcode上那些字符串算法其实在char数组上也适用，所以所谓的字符串算法跟字符串关系不大。</p>
+<h3 id="2-4-2-列表"><a href="#2-4-2-列表" class="headerlink" title="2.4.2 列表"></a><strong>2.4.2 列表</strong></h3><p>列表也可以切片，跟string不同的是，string是immutable，list是mutable。  </p>
+<h3 id="2-4-3-生成式与生成器"><a href="#2-4-3-生成式与生成器" class="headerlink" title="2.4.3 生成式与生成器"></a><strong>2.4.3 <a href="https://docs.python.org/3/tutorial/classes.html#generators">生成式与生成器</a></strong></h3><p>[x for x in range(1, 10)] 是生成式<br>(x for x in range(1, 10)) 是生成器  </p>
+<p><strong><font color=green size=4>yield构造生成器</font></strong>  </p>
+<p>如何理解yield呢，我的理解 yield = return_pause </p>
+<p>这里的意思是，yield构成的是一个generator，next的时候开始执行程序，直到遇到yield就把yield后面的value返回，同时整个程序pause，如果再次调用next，那么从当前pause的地方开始继续执行，直到遇到下一个yield语句。  </p>
+<p>下面是一个例子  </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span>(<span class="params">n</span>):</span>  </span><br><span class="line">    a, b = <span class="number">0</span>, <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(n):  </span><br><span class="line">        a, b = b, a+b  </span><br><span class="line">        <span class="keyword">yield</span> a  </span><br><span class="line">        <span class="keyword">yield</span> <span class="string">&quot;hello &quot;</span>  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span>  </span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> fib(<span class="number">5</span>):  </span><br><span class="line">        print(x)  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:  </span><br><span class="line">    main()  </span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，generator的返回值甚至可以不是同一种类型，感觉这种写法有两个好处 </p>
+<ol>
+<li>能够写更复杂的generator，比(x for x in range(100))这种复杂多了。  </li>
+<li>不用非得保存成list或者tuple，然后for 遍历，像上面的fib例子，如果我们的正常写法，有可能是fib的结果保存成一个list，然后返回，最后我们for遍历这个list，但我们直接用yield就省略了中间环节，直接输出我们想要的结果。  </li>
+</ol>
+<h3 id="2-4-4-元组"><a href="#2-4-4-元组" class="headerlink" title="2.4.4 元组"></a><strong>2.4.4 元组</strong></h3><p>元组可以储存不同乐行的变量，不过元组是immutable。既然我们有了list，为什么还需要tuple？  </p>
+<p>下面转自Python-100-days </p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">这里有一个非常值得探讨的问题，我们已经有了列表这种数据结构，为什么还需要元组这样的类型呢？</span><br><span class="line"></span><br><span class="line">元组中的元素是无法修改的，事实上我们在项目中尤其是多线程环境（后面会讲到）中可能更喜欢使用的是那些不变对象（一方面因为对象状态不能修改，所以可以避免由此引起的不必要的程序错误，简单的说就是一个不变的对象要比可变的对象更加容易维护；另一方面因为没有任何一个线程能够修改不变对象的内部状态，一个不变对象自动就是线程安全的，这样就可以省掉处理同步化的开销。一个不变对象可以方便的被共享访问）。所以结论就是：如果不需要对元素进行添加、删除、修改的时候，可以考虑使用元组，当然如果一个方法要返回多个值，使用元组也是不错的选择。</span><br><span class="line">元组在创建时间和占用的空间上面都优于列表。我们可以使用sys模块的getsizeof函数来检查存储同样的元素的元组和列表各自占用了多少内存空间，这个很容易做到。我们也可以在ipython中使用魔法指令%timeit来分析创建同样内容的元组和列表所花费的时间，下图是我的macOS系统上测试的结果。</span><br><span class="line">```  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="定义元组"><a href="#定义元组" class="headerlink" title="定义元组"></a>定义元组</h1><p>t = (‘骆昊’, 38, True, ‘四川成都’)<br>print(t)</p>
+<h1 id="获取元组中的元素"><a href="#获取元组中的元素" class="headerlink" title="获取元组中的元素"></a>获取元组中的元素</h1><p>print(t[0])<br>print(t[3])</p>
+<h1 id="遍历元组中的值"><a href="#遍历元组中的值" class="headerlink" title="遍历元组中的值"></a>遍历元组中的值</h1><p>for member in t:<br>    print(member)</p>
+<h1 id="重新给元组赋值"><a href="#重新给元组赋值" class="headerlink" title="重新给元组赋值"></a>重新给元组赋值</h1><h1 id="t-0-‘王大锤’-TypeError"><a href="#t-0-‘王大锤’-TypeError" class="headerlink" title="t[0] = ‘王大锤’  # TypeError"></a>t[0] = ‘王大锤’  # TypeError</h1><h1 id="变量t重新引用了新的元组原来的元组将被垃圾回收"><a href="#变量t重新引用了新的元组原来的元组将被垃圾回收" class="headerlink" title="变量t重新引用了新的元组原来的元组将被垃圾回收"></a>变量t重新引用了新的元组原来的元组将被垃圾回收</h1><p>t = (‘王大锤’, 20, True, ‘云南昆明’)<br>print(t)</p>
+<h1 id="将元组转换成列表"><a href="#将元组转换成列表" class="headerlink" title="将元组转换成列表"></a>将元组转换成列表</h1><p>person = list(t)<br>print(person)</p>
+<h1 id="列表是可以修改它的元素的"><a href="#列表是可以修改它的元素的" class="headerlink" title="列表是可以修改它的元素的"></a>列表是可以修改它的元素的</h1><p>person[0] = ‘李小龙’<br>person[1] = 25<br>print(person)</p>
+<h1 id="将列表转换成元组"><a href="#将列表转换成元组" class="headerlink" title="将列表转换成元组"></a>将列表转换成元组</h1><p>fruits_list = [‘apple’, ‘banana’, ‘orange’]<br>fruits_tuple = tuple(fruits_list)<br>print(fruits_tuple)</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">### __2.4.5 set__  </span><br><span class="line"></span><br><span class="line">在这里没有multiset，不允许有重复元素。  </span><br></pre></td></tr></table></figure>
+<h1 id="创建集合的字面量语法"><a href="#创建集合的字面量语法" class="headerlink" title="创建集合的字面量语法"></a>创建集合的字面量语法</h1><p>set1 = {1, 2, 3, 3, 3, 2}<br>print(set1)<br>print(‘Length =’, len(set1))</p>
+<h1 id="创建集合的构造器语法-面向对象部分会进行详细讲解"><a href="#创建集合的构造器语法-面向对象部分会进行详细讲解" class="headerlink" title="创建集合的构造器语法(面向对象部分会进行详细讲解)"></a>创建集合的构造器语法(面向对象部分会进行详细讲解)</h1><p>set2 = set(range(1, 10))<br>set3 = set((1, 2, 3, 3, 2, 1))<br>print(set2, set3)</p>
+<h1 id="创建集合的推导式语法-推导式也可以用于推导集合"><a href="#创建集合的推导式语法-推导式也可以用于推导集合" class="headerlink" title="创建集合的推导式语法(推导式也可以用于推导集合)"></a>创建集合的推导式语法(推导式也可以用于推导集合)</h1><p>set4 = {num for num in range(1, 100) if num % 3 == 0 or num % 5 == 0}<br>print(set4)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">向集合添加元素和从集合删除元素。</span><br></pre></td></tr></table></figure>
+<p>set1.add(4)<br>set1.add(5)<br>set2.update([11, 12])<br>set2.discard(5)<br>if 4 in set2:<br>    set2.remove(4)<br>print(set1, set2)<br>print(set3.pop())<br>print(set3)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">集合的成员、交集、并集、差集等运算。</span><br></pre></td></tr></table></figure>
+<h1 id="集合的交集、并集、差集、对称差运算"><a href="#集合的交集、并集、差集、对称差运算" class="headerlink" title="集合的交集、并集、差集、对称差运算"></a>集合的交集、并集、差集、对称差运算</h1><p>print(set1 &amp; set2)</p>
+<h1 id="print-set1-intersection-set2"><a href="#print-set1-intersection-set2" class="headerlink" title="print(set1.intersection(set2))"></a>print(set1.intersection(set2))</h1><p>print(set1 | set2)</p>
+<h1 id="print-set1-union-set2"><a href="#print-set1-union-set2" class="headerlink" title="print(set1.union(set2))"></a>print(set1.union(set2))</h1><p>print(set1 - set2)</p>
+<h1 id="print-set1-difference-set2"><a href="#print-set1-difference-set2" class="headerlink" title="print(set1.difference(set2))"></a>print(set1.difference(set2))</h1><p>print(set1 ^ set2)</p>
+<h1 id="print-set1-symmetric-difference-set2"><a href="#print-set1-symmetric-difference-set2" class="headerlink" title="print(set1.symmetric_difference(set2))"></a>print(set1.symmetric_difference(set2))</h1><h1 id="判断子集和超集"><a href="#判断子集和超集" class="headerlink" title="判断子集和超集"></a>判断子集和超集</h1><p>print(set2 &lt;= set1)</p>
+<h1 id="print-set2-issubset-set1"><a href="#print-set2-issubset-set1" class="headerlink" title="print(set2.issubset(set1))"></a>print(set2.issubset(set1))</h1><p>print(set3 &lt;= set1)</p>
+<h1 id="print-set3-issubset-set1"><a href="#print-set3-issubset-set1" class="headerlink" title="print(set3.issubset(set1))"></a>print(set3.issubset(set1))</h1><p>print(set1 &gt;= set2)</p>
+<h1 id="print-set1-issuperset-set2"><a href="#print-set1-issuperset-set2" class="headerlink" title="print(set1.issuperset(set2))"></a>print(set1.issuperset(set2))</h1><p>print(set1 &gt;= set3)</p>
+<h1 id="print-set1-issuperset-set3"><a href="#print-set1-issuperset-set3" class="headerlink" title="print(set1.issuperset(set3))"></a>print(set1.issuperset(set3))</h1><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">    说明： Python中允许通过一些特殊的方法来为某种类型或数据结构自定义运算符（后面的章节中会讲到），上面的代码中我们对集合进行运算的时候可以调用集合对象的方法，也可以直接使用对应的运算符，例如&amp;运算符跟<span class="built_in">int</span>ersection方法的作用就是一样的，但是使用运算符让代码更加直观。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### __2<span class="number">.4</span><span class="number">.6</span> 字典__  </span><br><span class="line"></span><br><span class="line">字典类似于C++中的map。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="创建字典的字面量语法"><a href="#创建字典的字面量语法" class="headerlink" title="创建字典的字面量语法"></a>创建字典的字面量语法</h1><p>scores = {‘骆昊’: 95, ‘白元芳’: 78, ‘狄仁杰’: 82}<br>print(scores)</p>
+<h1 id="创建字典的构造器语法"><a href="#创建字典的构造器语法" class="headerlink" title="创建字典的构造器语法"></a>创建字典的构造器语法</h1><p>items1 = dict(one=1, two=2, three=3, four=4)</p>
+<h1 id="通过zip函数将两个序列压成字典"><a href="#通过zip函数将两个序列压成字典" class="headerlink" title="通过zip函数将两个序列压成字典"></a>通过zip函数将两个序列压成字典</h1><p>items2 = dict(zip([‘a’, ‘b’, ‘c’], ‘123’))</p>
+<h1 id="创建字典的推导式语法"><a href="#创建字典的推导式语法" class="headerlink" title="创建字典的推导式语法"></a>创建字典的推导式语法</h1><p>items3 = {num: num ** 2 for num in range(1, 10)}<br>print(items1, items2, items3)</p>
+<h1 id="通过键可以获取字典中对应的值"><a href="#通过键可以获取字典中对应的值" class="headerlink" title="通过键可以获取字典中对应的值"></a>通过键可以获取字典中对应的值</h1><p>print(scores[‘骆昊’])<br>print(scores[‘狄仁杰’])</p>
+<h1 id="对字典中所有键值对进行遍历"><a href="#对字典中所有键值对进行遍历" class="headerlink" title="对字典中所有键值对进行遍历"></a>对字典中所有键值对进行遍历</h1><p>for key in scores:<br>    print(f’{key}: {scores[key]}’)</p>
+<h1 id="更新字典中的元素"><a href="#更新字典中的元素" class="headerlink" title="更新字典中的元素"></a>更新字典中的元素</h1><p>scores[‘白元芳’] = 65<br>scores[‘诸葛王朗’] = 71<br>scores.update(冷面=67, 方启鹤=85)<br>print(scores)<br>if ‘武则天’ in scores:<br>    print(scores[‘武则天’])<br>print(scores.get(‘武则天’))</p>
+<h1 id="get方法也是通过键获取对应的值但是可以设置默认值"><a href="#get方法也是通过键获取对应的值但是可以设置默认值" class="headerlink" title="get方法也是通过键获取对应的值但是可以设置默认值"></a>get方法也是通过键获取对应的值但是可以设置默认值</h1><p>print(scores.get(‘武则天’, 60))</p>
+<h1 id="删除字典中的元素"><a href="#删除字典中的元素" class="headerlink" title="删除字典中的元素"></a>删除字典中的元素</h1><p>print(scores.popitem())<br>print(scores.popitem())<br>print(scores.pop(‘骆昊’, 100))</p>
+<h1 id="清空字典"><a href="#清空字典" class="headerlink" title="清空字典"></a>清空字典</h1><p>scores.clear()<br>print(scores)</p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">### __2<span class="number">.4</span><span class="number">.6</span> 数据结构总结__   </span><br><span class="line"></span><br><span class="line">按照是否可以被修改  </span><br></pre></td></tr></table></figure>
+<p>immutable: string tuple<br>mutable : list set dict</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">不同的创建方式 </span><br></pre></td></tr></table></figure>
+<p>list []<br>tuple ()<br>set{}<br>dict{:, :}</p>
+<p>当然这都是通过字面量来构造，每种类型也有自己的构造方式，比如set(), 比如dict()，创建方式并不固定，没有什么特殊的规律，都只是规则，规则不需要死记硬背，懂基本的构造方式，其他的方式，写代码熟练了也就知道了，长时间不用也会忘记。 还是要懂得输入输出，我们的大脑不是为了记住这些教条，而是为了形成模式，可以应对各种输入。  </p>
+<figure class="highlight ldif"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## __2.5 类__  </span></span><br><span class="line"></span><br><span class="line">跟C++类似，这里也有访问权限的问题，私有和公有，不过Python中对这块的限定没有那么严格，这也是我所认为的Python适合做对工程化要求没有那么严格的事情。  </span><br><span class="line"></span><br><span class="line"><span class="attribute">_name </span>: 表示私有变量  </span><br><span class="line"><span class="attribute">__name </span>: 表示私有成员  </span><br><span class="line"></span><br><span class="line">其实即使加上了前缀，也可以访问，Python在内部只是把前缀换了个名字。  </span><br><span class="line"></span><br><span class="line">如果确实要限制访问权限，那么就用修改器和访问器。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>class Person(object):</p>
+<pre><code>def __init__(self, name, age):
+    self._name = name
+    self._age = age
+
+# 访问器 - getter方法
+@property
+def name(self):
+    return self._name
+
+# 访问器 - getter方法
+@property
+def age(self):
+    return self._age
+
+# 修改器 - setter方法
+@age.setter
+def age(self, age):
+    self._age = age
+
+def play(self):
+    if self._age &lt;= 16:
+        print(&#39;%s正在玩飞行棋.&#39; % self._name)
+    else:
+        print(&#39;%s正在玩斗地主.&#39; % self._name)</code></pre>
+<p>def main():<br>    person = Person(‘王大锤’, 12)<br>    person.play()<br>    person.age = 22<br>    person.play()<br>    # person.name = ‘白元芳’  # AttributeError: can’t set attribute</p>
+<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    main()</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">### __2.<span class="number">5.1</span>\_\_slots\_\_魔法__   </span><br><span class="line"></span><br><span class="line">Python是动态语言，他们说动态语言可以动态绑定属性和方法，可以把属性和方法动态绑定到类或者实例。  </span><br><span class="line"></span><br><span class="line">绑定规则如下</span><br><span class="line">* 绑定属性 ： 可以直接绑定属性到类和类实例</span><br><span class="line">* 绑定方法 ：  <span class="number">1.</span> 绑定到实例 instance.<span class="keyword">function</span> = <span class="constructor">MethodType(<span class="params">function</span>, <span class="params">instance</span>)</span>  <span class="number">2.</span> <span class="keyword">class</span>.<span class="keyword">function</span> = <span class="constructor">MethodType(<span class="params">function</span>, <span class="params">class</span>)</span> 或者<span class="keyword">class</span>.<span class="keyword">function</span> = <span class="keyword">function</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">__&lt;font color=green&gt;绑定到实例&lt;/font&gt;__</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>stu1 = Student();<br>stu1.name = ‘Tom’<br>print(stu1.name)<br>Tom<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘name’]</p>
+<p>def set_age(self, age):<br>…     self.age = age<br>…<br>set_age(stu1, 20)<br>print(stu1.age)<br>20<br>print(dir(stu1))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’]<br>#并没有绑定方法到实例上<br>…<br>from types import MethodType<br>stu1.set_age = MethodType(set_age, stu1)<br>stu1.set_age(33)<br>print(stu1.age)<br>33<br>print(dir(stu1))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘age’, ‘name’, ‘set_age’]<br>#绑定的属性和方法只属于stu1的，对于其他实例不起作用<br>…<br>stu2 = Student()<br>print(dir(stu2))<br>[‘__class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight maxima"><table><tr><td class="code"><pre><span class="line"><span class="symbol">__</span>&lt;<span class="built_in">font</span> <span class="built_in">color</span>=green&gt;绑定到类&lt;/<span class="built_in">font</span>&gt;<span class="symbol">__</span>  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>from types import MethodType<br>Student.set_name = MethodType(set_name, Student)<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘<strong>reduce_e<br>x__’, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Jack<br>print(stu2.name)<br>Jack<br>########<br>class Student(object):<br>…     pass<br>…<br>def set_name(self, name):<br>…     self.name = name<br>…<br>Student.set_name = set_name<br>print(dir(Student))<br>[‘<strong>class</strong>‘, ‘<strong>delattr</strong>‘, ‘<strong>dict</strong>‘, ‘<strong>doc</strong>‘, ‘<strong>format</strong>‘, ‘<strong>getattribut<br>e</strong>‘, ‘<strong>hash</strong>‘, ‘<strong>init</strong>‘, ‘<strong>module</strong>‘, ‘<strong>new</strong>‘, ‘<strong>reduce</strong>‘, ‘__reduce_e<br>x</strong>‘, ‘<strong>repr</strong>‘, ‘<strong>setattr</strong>‘, ‘<strong>sizeof</strong>‘, ‘<strong>str</strong>‘, ‘<strong>subclasshook</strong>‘, ‘_<br>_weakref__’, ‘set_name’]<br>stu1 = Student()<br>stu1.set_name(‘Rose’)<br>stu2 = Student()<br>stu2.set_name(‘Jack’)<br>print(stu1.name)<br>Rose<br>print(stu2.name)<br>Jack</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">如果不想绑定那么多属性，那么可以通过<span class="strong">__slots__</span>来限定只允许添加某些属性，但这里有一个<span class="xml"><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">red</span>&gt;</span></span><span class="strong">__漏洞，我们可以通过动态添加方法，而方法中添加属性来迂回这个限制，所以我不明白这么操作的意义是什么__</span><span class="xml"><span class="tag">&lt;/<span class="name">font</span>&gt;</span></span>。  </span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.2 staticmethod classmethod__</span>   </span></span><br><span class="line"></span><br><span class="line">Python中也有静态方法，这个很好理解，就是跟实例没什么关系，classmethod则相当于C++中的拷贝构造函数。  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.3 类之间的关系__</span>   </span></span><br><span class="line"></span><br><span class="line">is-a : 继承  </span><br><span class="line">has-a : 属性</span><br><span class="line">use-a： 方法参数</span><br><span class="line"></span><br><span class="line">继承很好理解，就是重写overwrite，如果想明确基类为抽象类的话，可以通过ABCMeta和abstractclass来实现。</span><br><span class="line"></span><br><span class="line"><span class="section">### <span class="strong">__2.5.4 奇怪的lambda表达式__</span>  </span></span><br><span class="line"></span><br><span class="line">在C++中我们写lambda [<span class="string">=</span>](<span class="link">int x, int y</span>)  int &#123; return x + y;&#125;</span><br><span class="line"></span><br><span class="line">在python中竟然有这样的定义，看着也不是很正常啊，这里的return type是一个lambda。在C++中我们是不可以这么写的。  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>def make_incrementor(n):<br>    return lambda x: x + n</p>
+<p>f = make_incrementor(42)<br>print(f(0))<br>print(f(1))</p>
+<pre><code>
+# __3 界面开发__  
+
+有tkinter pygame，对我来说，最起码目前无意义，没有做界面开发的需求。  
+
+# __4 文件和异常__    
+
+任何一门编程语言，关于文件操作都会关注这几个方面
+
+_&lt;font color=red&gt;以何种方式打开&lt;/font&gt;_  
+这个的打开方式是指： 打开什么样的文件（文本还是二进制）、做什么样的操作（读、写、还是追加）  
+
+| 操作模式 | 具体含义                         |
+| -------- | -------------------------------- |
+| `&#39;r&#39;`    | 读取 （默认）                    |
+| `&#39;w&#39;`    | 写入（会先截断之前的内容）       |
+| `&#39;x&#39;`    | 写入，如果文件已经存在会产生异常 |
+| `&#39;a&#39;`    | 追加，将内容写入到已有文件的末尾 |
+| `&#39;b&#39;`    | 二进制模式                       |
+| `&#39;t&#39;`    | 文本模式（默认）                 |
+| `&#39;+&#39;`    | 更新（既可以读又可以写）         |
+
+
+_&lt;font color=red&gt;要调用的接口&lt;/font&gt;_  
+
+
+## __4.1 文本文件__  
+
+    f = open()  
+    f.read()  
+    f.close()  
+
+或者 
+
+    f = open()  
+    for line in f:  
+        print(line)
+
+
+又或者    
+
+    f = open()  
+    lines = f.readlines()  //此时lines是列表  
+
+写文本文件把read换成write就好。  
+
+## __4.2 二进制文件__  
+
+跟文本文件类型，只不过read和write的操作对象是byte  
+
+## __4.3 JSON文件__  
+
+JSON的数据类型和Python的数据类型是很容易找到对应关系的，如下面两张表所示。
+
+| JSON                | Python       |
+| ------------------- | ------------ |
+| object              | dict         |
+| array               | list         |
+| string              | str          |
+| number (int / real) | int / float  |
+| true / false        | True / False |
+| null                | None         |
+
+| Python                                 | JSON         |
+| -------------------------------------- | ------------ |
+| dict                                   | object       |
+| list, tuple                            | array        |
+| str                                    | string       |
+| int, float, int- &amp; float-derived Enums | number       |
+| True / False                           | true / false |
+| None                                   | null         |  
+
+* dump - 将Python对象按照JSON格式序列化到文件中
+* dumps - 将Python对象处理成JSON格式的字符串
+* load - 将文件中的JSON数据反序列化成对象
+* loads - 将字符串的内容反序列化成Python对象  
+
+
+
+# __5 正则表达式__    
+
+个人认为正则表达式分为两部分  
+
+1. 判断是否适合用正则，如果适合，制定正则规则  
+2. 用语言规则实现  
+
+所以，我觉得没有必要记住这些语法，到用的时候再看就是了。  
+
+# __6 进程和线程__  
+
+与其它语言相比，理念都是一样的。  
+
+问题是我们是否要学习Python进程和线程中的基本概念？还是直接用Python提供的库？  
+</code></pre>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
+    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
+    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma1.png" class=""> 
+
+<p>按两次shift就变成正常了  </p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma2.png" class="">  
+
+<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
+<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma3.png" class="">  
+
+<img src="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/luanma4.png" class="">  ]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>utf8 格式源代码跨平台编译</title>
+    <url>/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/</url>
+    <content><![CDATA[<p>在Windows平台，如果不指定bom头的话，是不清楚当前是什么编码格式的，如果我们在代码中使用了中文，系统根本不知道是utf-8 还是unicode-16，而对Linux来说，默认就是utf-8，所以写中文没关系。</p>
+<p>现在VS已经可以支持utf-8 without BOM的源码编译了，VS2015 update2之后就支持附加编译选项/utf-8，支持直接输出中文。  <a href="https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?redirectedfrom=MSDN&view=vs-2019">/utf-8 (Set Source and Executable character sets to UTF-8)</a>  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>一台机器最多可以维持多少TCP连接</title>
+    <url>/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/</url>
+    <content><![CDATA[<p><code>server code</code></p>
+<pre><code>import socket  
+
+if __name__ == &#39;__main__&#39;:
+    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
+    while True:
+        pass</code></pre>
+<p><code>client code</code>  </p>
+<pre><code>import socket
+if __name__ == &#39;__main__&#39;:
+    i = 0
+    while True:
+        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
+        if mySocket is None:
+            print(&quot;create client connect failed&quot;)
+            break
+        else:
+            print(&quot;create client connection succeed&quot;)
+            i = i + 1
+            print(&#39;current connection count &#39;, i)  </code></pre>
+<p>可以创建连接，但存在几个现象  </p>
+<ol>
+<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
+<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
+<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
+<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
+</ol>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何从100亿个url中找出相同的url</title>
+    <url>/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/</url>
+    <content><![CDATA[<p>看到这道题目的第一反应，HashMap，但100亿真的太多了，我不可能在内存中建立一个这个大的HashMap。</p>
+<p>这里面需要的操作是</p>
+<ol>
+<li>计算所有文件的hash（还要解决可能出现的哈希冲突）</li>
+<li>内存中要保存一个几百G的哈希表</li>
+</ol>
+<p>查找的时候因为是哈希，所以不需要遍历匹配，所以这块消耗不大。</p>
+<p>但内存就否决了方案。  </p>
+<p>一个优化思路是 计算出hash之后%1000，这样可以分成1000个文件夹，这次每次处理其中一个文件夹就好。  </p>
+<p>但这里也要问题</p>
+<ol>
+<li>如何保证尽量均为分布到1000个文件夹？很难，尽量选用合适的哈希算法。  </li>
+<li>IO操作大，因为计算哈希之后要先保存下来，再%1000。  </li>
+</ol>
+<p>还有一个思路，就是外部排序，然后逐个比较，但外部排序100亿个，O(NlogN)，而且也不能一次加载到内存中。 </p>
+<p>从知乎一个回答上看可以用布隆filter，而这又是redis里的概念，所以</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">mapreduce</span> redis是怎么实现的呢？</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+]]></content>
+      <categories>
+        <category>algorithm</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>并行编程</title>
+    <url>/2021/02/24/%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><p>《C++ Concurrency In Action》<br>《Concurrency With Modern CPP》</p>
+<h2 id="并发和并行的概念"><a href="#并发和并行的概念" class="headerlink" title="并发和并行的概念"></a><strong>并发和并行的概念</strong></h2><p>在一般的理念中，并发是指 多个thread 请求同一个CPU资源，需要来回切换context；并行是指 每个thread 跑在单独的CPU核上。  </p>
+<p>在我的工作实践和理解中， 并行是指充分利用CPU多核优势，将代码分解成可以同时运行的模块，当然这里可以同时运行，并不意味着线程间完全没有交互或者耦合，实际工作中我遇到的基本上线程间还是要访问共享内存的，很少遇到那种[0,10e8]相加这种可以完全没有耦合的情况。</p>
+<p>并行可以分成两种：</p>
+<ol>
+<li>数据并行<br>数据并行是指 可以将数据切分，然后每个部分同时执行相同的逻辑，最终合并结果就可以了。  这是非常完美符合并行概念的。</li>
+<li>业务并行<br>业务并行，就是将业务切分，每个线程执行其中一个业务，但每个业务中数据是全程参与的，比如业务分为A B C D，raw_data 进入A， 出来data1 进入B，出来data2 进入C, 出来data3 进入D。 当然这里的raw_data必须是流式的，否则不如单线程 顺序处理所有业务。</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
+<h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>分析一段业务逻辑是否可以采用多线程，至于能否充分利用硬件并行的概念再说（我的理解是，将简单的任务切分成子任务 增加的负担 远远超过了带来的益处，负担有可能是代码复杂度的提升，减少的时间远远不能弥补，子任务切分的太多，远远超过了硬件所支持的最优线程数，导致context切换负担太重）。 </p>
+<p><strong><font color=red>总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
+<h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><p>Todo</p>
+<h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3><p>Todo</p>
+<h2 id="C-线程库概述"><a href="#C-线程库概述" class="headerlink" title="C++线程库概述"></a><strong>C++线程库概述</strong></h2><p>C++11开始提供thread库，一直以来大家都有顾虑，就是抽象的代价高不高？  </p>
+<p>从网上的资料看，标准委员会在设计线程库时，就力求实现相同功能的情况下，高级API和底层API的性能收益相当。而且很多情况下，使用底层API带来的一点点便利，也会带来更高的代码复杂度和出错率，这样是不划算的。即便是瓶颈出现在C++标准库的工具中，也可能由低劣的程序设计造成。例如，如果过多的线程竞争一个互斥单元，将会很明显的影响性能。与其在互斥操作上耗费时间，不如重新设计，减少互斥单元上的竞争。</p>
+<p>如果系统API提供了一些线程库没有的功能，那么还可以通过native_handle获取句柄 来调用系统 API。</p>
+<h2 id="线程的创建启动和执行"><a href="#线程的创建启动和执行" class="headerlink" title="线程的创建启动和执行"></a><strong>线程的创建启动和执行</strong></h2><p>1 thread只支持move constructor &amp;&amp; move assignment operator， 不支持拷贝构造和左值引用的operator= 重载。<br>2 thread需要在程序结束前调用join or detach，调用前要先判断joinable<br>3 如果发生异常，如何保证一定会调用join or detach呢？ C++20有jthread来解决这个问题，[C++11, C++17] 的 版本需要自己控制，比如thread_guard这种。<br>4 thread构造时 传递的参数是 传值方式，参数被被拷贝到新线程的内存空间（如同临时变量），即使函数中的参数是引用的形式，拷贝操作也会执行。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i, <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f, <span class="number">3</span>, <span class="string">&quot;hello&quot;</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>另外，传递参数 有可能会在线程 detach之前 __失去意义__， 导致未定义的行为。  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//wrong</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i,<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">oops</span><span class="params">(<span class="keyword">int</span> some_param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>]; <span class="comment">// 1</span></span><br><span class="line">  <span class="built_in">sprintf</span>(<span class="built_in">buffer</span>, <span class="string">&quot;%i&quot;</span>,some_param);</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f,<span class="number">3</span>,<span class="built_in">buffer</span>)</span></span>; <span class="comment">// 只复制了buffer指针</span></span><br><span class="line">  t.<span class="built_in">detach</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//right</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> i,<span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; s)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">not_oops</span><span class="params">(<span class="keyword">int</span> some_param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>];</span><br><span class="line">  <span class="built_in">sprintf</span>(<span class="built_in">buffer</span>,<span class="string">&quot;%i&quot;</span>,some_param);</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(f,<span class="number">3</span>,<span class="built_in">std</span>::<span class="built_in">string</span>(<span class="built_in">buffer</span>))</span></span>;  <span class="comment">// 使用std::string，避免悬空指针，</span></span><br><span class="line">  t.<span class="built_in">detach</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果thread proc要求的参数是非常量引用呢 </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">update_data_for_widget</span><span class="params">(widget_id w,widget_data&amp; data)</span></span>; <span class="comment">// 1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">oops_again</span><span class="params">(widget_id w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  widget_data data;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(update_data_for_widget,w,data)</span></span>; <span class="comment">//wrong</span></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::thread <span class="title">t</span><span class="params">(update_data_for_widget,w,<span class="built_in">std</span>::ref(data))</span></span>; <span class="comment">//right</span></span><br><span class="line">  display_status();</span><br><span class="line">  t.join();</span><br><span class="line">  process_widget_data(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>类似于unique_ptr， 线程的所有权 可以在std::thread实例中转移，这依赖于std::thread的 moveable &amp;&amp; uncopyable。 不可复制的含义是—— 在某一个时间点，一个thread<br>实例只能关联一个执行线程。  </p>
+<h2 id="所有权转移"><a href="#所有权转移" class="headerlink" title="所有权转移"></a><strong>所有权转移</strong></h2><p>C++ 标准库中有很多资源占有(resource owning)类型，比如ifstream unique_ptr还有std::thread， 都是可移动，不可复制。  </p>
+<p>所有权转移之后，thread实例就不能调用join 或者 detach。 </p>
+<p>这里有scoped_thread和jthread，可以参考，也就是说 我们在谈转移权的时候，原先的线程 必须满足joinable()。 </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">thread <span class="title">t</span><span class="params">(f)</span></span>;</span><br><span class="line">t.<span class="built_in">detach</span>();</span><br><span class="line">thread x = <span class="built_in">std</span>::<span class="built_in">move</span>(t)；</span><br></pre></td></tr></table></figure>
+
+<p>对x来讲， 此时joinable必然是false，好像也没有什么影响，那就是析构的时候，也判断joinable，来决定是否detach或者join。 </p>
+<p>从代码上看，scoped_thread 和 jthread 在这一块的判断不同， jthread是在几乎在所有成员函数中 都判断了joinable，但区别是，jthread在构造的时候 没有判断t是否joinable，而scoped_thread在构造中判断如果joinable为false，<br>那么直接抛出异常，这就比较奇怪了。</p>
+<h2 id="确定线程数量以及简单的计算一个范围内结果的小例子"><a href="#确定线程数量以及简单的计算一个范围内结果的小例子" class="headerlink" title="确定线程数量以及简单的计算一个范围内结果的小例子"></a><strong>确定线程数量以及简单的计算一个范围内结果的小例子</strong></h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator,<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">accumulate_block</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(Iterator first,Iterator last,T&amp; result)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    result=<span class="built_in">std</span>::accumulate(first,last,result);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator,<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">parallel_accumulate</span><span class="params">(Iterator first,Iterator last,T init)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> length=<span class="built_in">std</span>::distance(first,last);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!length) <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">return</span> init;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> min_per_thread=<span class="number">25</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> max_threads=</span><br><span class="line">      (length+min_per_thread<span class="number">-1</span>)/min_per_thread; <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> hardware_threads=</span><br><span class="line">      <span class="built_in">std</span>::thread::hardware_concurrency();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> num_threads=  <span class="comment">// 3</span></span><br><span class="line">      <span class="built_in">std</span>::<span class="built_in">min</span>(hardware_threads != <span class="number">0</span> ? hardware_threads : <span class="number">2</span>, max_threads);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> block_size=length/num_threads; <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt; <span class="title">results</span><span class="params">(num_threads)</span></span>;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::thread&gt; <span class="title">threads</span><span class="params">(num_threads<span class="number">-1</span>)</span></span>;  <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">  Iterator block_start=first;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span> i=<span class="number">0</span>; i &lt; (num_threads<span class="number">-1</span>); ++i)</span><br><span class="line">  &#123;</span><br><span class="line">    Iterator block_end=block_start;</span><br><span class="line">    <span class="built_in">std</span>::advance(block_end,block_size);  <span class="comment">// 6</span></span><br><span class="line">    threads[i]=<span class="built_in">std</span>::thread(     <span class="comment">// 7</span></span><br><span class="line">        accumulate_block&lt;Iterator,T&gt;(),</span><br><span class="line">        block_start,block_end,<span class="built_in">std</span>::ref(results[i]));</span><br><span class="line">    block_start=block_end;  <span class="comment">// 8</span></span><br><span class="line">  &#125;</span><br><span class="line">  accumulate_block&lt;Iterator,T&gt;()(</span><br><span class="line">      block_start,last,results[num_threads<span class="number">-1</span>]); <span class="comment">// 9</span></span><br><span class="line">      </span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; entry : threads)</span><br><span class="line">    entry.join();  <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">std</span>::accumulate(results.<span class="built_in">begin</span>(),results.<span class="built_in">end</span>(),init); <span class="comment">// 11</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这就是纯粹的数据并行化概念，把数据分成几份，每份数据都执行相同的计算过程。<br>当然，为了得到最终结果，必须等待所有线程执行完毕。  </p>
+<p>在我们通过GL刷新图像的时候，经常会遇到一个现象，有时候刷新率特别低，就会出现 屏幕的不同部分 的刷新频率不同，导致画面的不同部分 不同步。 </p>
+<h3 id="线程标识"><a href="#线程标识" class="headerlink" title="线程标识"></a><strong>线程标识</strong></h3><p>std::thread::get_id() 可以获取获取 线程ID，当然native_handle() 也能获取 handle，这里的handlle 是系统层级的handle，可以传入系统API使用。<br>而ID是纯标识，不同线程的ID不会相同， 但理论上handle应该也不会相同，那直接比较handle也可以？ 如果也可以的话，好像ID 有点多余。  </p>
+<h2 id="共享数据"><a href="#共享数据" class="headerlink" title="共享数据"></a><strong>共享数据</strong></h2><p>共享数据也是没有办法的事情， 线程间如果有业务逻辑的耦合，就要有数据交换，除了socket，我能想到的方式 都涉及到 共享数据（全局变量 ）。  </p>
+<p>共享数据的难点 在于 read-write，当有至少一个线程在修改共享数据的时候， 就要解决同步问题。读的时候要锁定数据不被修改（但是可以允许其他线程读，不知道读写锁 是不是为了解决这个问题）， 写的时候更要锁定。 </p>
+<h3 id="如何避免恶性数据竞争-race-condition"><a href="#如何避免恶性数据竞争-race-condition" class="headerlink" title="如何避免恶性数据竞争(race condition)"></a><strong>如何避免恶性数据竞争(race condition)</strong></h3><ul>
+<li>某种保护机制  </li>
+<li>无锁编程  </li>
+<li>software transactional memory(STL， 软件事物内存)</li>
+</ul>
+<p>在《C++ Concurrency in Action》 中提到 无锁编程 “无论是内存模型上的细微差异，还是线程访问数据的能力，都会让工作量变的很大，而且这种方式也很难得到正确的结果”。STM类似于数据库里的事物操作，但C++中没有对STM直接支持，<br>而且这也是一个很热门的理论研究领域，暂时就不做讨论。 </p>
+<h2 id="使用互斥量"><a href="#使用互斥量" class="headerlink" title="使用互斥量"></a><strong>使用互斥量</strong></h2><p>mutex是经常会用到的一种保护机制，直接锁上就可以了，但存在两个问题</p>
+<ul>
+<li>多个锁，有可能导致死锁(dead lock)</li>
+<li>锁定过多，导致效率低下，耗时增加；锁定过少，没有保护好数据  </li>
+</ul>
+<p>std::mutext有lock unlock接口，不建议直接调用成员函数，而是利用RAII机制，使用标准库提供的lock_guard。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">注：C++<span class="number">17</span> 添加了新特性 模板类参数推导 lock_guard可以省略参数 lock_guard guard(some_mutex), C++<span class="number">17</span>还提供了一种加强版数据保护机制scoped_lock</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么对代码加锁就可以了吗？如果函数返回的是 被保护数据的指针或者引用，就会破坏数据，所以要对接口谨慎设计，要确保mutex能锁住数据访问，不留后门。  </p>
+<h3 id="接口中的条件竞争"><a href="#接口中的条件竞争" class="headerlink" title="接口中的条件竞争"></a><strong>接口中的条件竞争</strong></h3><p>以std::stack的实现举例。  </p>
+<p>stack需要支持的操作 构造、swap、push、pop、top、empty、size </p>
+<p>empty size top是读操作，push pop swap是写操作。  </p>
+<p>如果不加锁，empty size top返回的结果可能在返回时是正确的，但并不可靠。如果同时有多个线程push pop swap也会出现问题。  </p>
+<p>前面我们提到了 返回数据 导致 接口内部加锁 失效的问题， 那么我们将接口返回值 都改成 返回 数据的拷贝 这样能解决问题吗？ 不能。对size empty来说，返回值当时是正确的，但接下来进行pop push top 并不能依靠上面size emtpy返回的结果，除非对这一整段代码都加锁。<br>类似</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">stack</span> s;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">do_something</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="function">lock_guard <span class="title">lck</span><span class="params">(some_mutex)</span></span>;</span><br><span class="line">   <span class="keyword">if</span>(!s.empty())&#123;</span><br><span class="line">      <span class="keyword">if</span>(s.<span class="built_in">size</span>() &gt;= <span class="number">10</span>)&#123;</span><br><span class="line">         <span class="comment">//do some work</span></span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">         <span class="comment">//do some work</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="comment">//do some work</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>所以不仅仅是接口内部的问题，是接口本身所实现功能的问题。  </p>
+<p>下面我们以pop为例解释下接口竞争以及相应的解决方案。  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">s::empty();</span><br><span class="line">s::pop();</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，先调用empty判断是否为空，不为空的话，就pop栈顶元素。很明显，如果不在整段代码加锁的话，在我们执行pop的时候，很可能其它线程操作导致stack为空了，此时pop该怎么操作呢？抛出异常是一个选项，但这样empty本身就没有意义了，反正为空pop就抛出异常，那么我们也不需要再check empty了。  </p>
+<p>于是设计者想出了top，top为空就抛出异常，这样empty为空的情况下也要抛出异常，这让empty变成了一个无用的函数。</p>
+<p>比如stack&lt; vector<int> &gt;，我们在返回的时候会调用构造函数，但如果构造函数崩溃（系统资源不足或者其它原因），抛出异常，这时候返回失败了，不确定stack上的元素是否已经被移除了。（因为我不确定，如果抛出bad_alloc异常，s.pop()是否还会返回？返回的话，stack已经确实将数据移除了，这时候的情况是：stack 元素确实被移除了，但数据没有正常返回，因为构造失败）。  </p>
+<p>top确实能解决上面的问题，但引入了新的接口竞争。  </p>
+<p>当然，问题也有解决方案，但都有相应的代价。  </p>
+<h4 id="选项1：传引用"><a href="#选项1：传引用" class="headerlink" title="选项1：传引用"></a>选项1：传引用</h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; result;</span><br><span class="line">some_stack.pop(result);</span><br></pre></td></tr></table></figure>
+
+<p>传引用的问题是，在哪里分配空间，有人说引用肯定是在函数调用外部了。对，基本类型是这样的没错，但如果是指针呢？ 如果是自定义类型呢？ 看下面的例子。  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f1</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    result.push_back(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f2</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp;  result)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; temp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i) &#123;</span><br><span class="line">        temp.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">    result.push_back(temp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f3</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;*&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; temp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; ++i) &#123;</span><br><span class="line">        temp.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">    result.push_back(&amp;temp);<span class="comment">//离开作用域的时候，temp会析构，这样虽然temp里添加了一个元素，但这个元素size为0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; r1;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; r2;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;*&gt; r3;</span><br><span class="line">    f1(r1);</span><br><span class="line">    f2(r2);</span><br><span class="line">    f3(r3);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然传引用的时候肯定都会遇到这样的问题，如果引用本身是复杂类型，那么还要关注引用内部是否有分配到子函数call stack上的变量，这样离开作用域就会析构。而r3在离开作用域的时候又要析构子函数。 </p>
+<p>书上说</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">这种方式还不错，缺点也很明显：需要构造出一个栈中类型的实例，用于接收目标值。对于一些类型，这样做是不现实的，因为临时构造一个实例，从时间和资源的角度上来看都不划算。对于其他的类型，这样也不总行得通，因为构造函数需要的参数，在这个阶段不一定可用。最后，需要可赋值的存储类型，这是一个重大限制：即使支持移动构造，甚至是拷贝构造<span class="comment">(从而允许返回一个值)</span>，很多用户自定义类型可能都不支持赋值操作。</span><br></pre></td></tr></table></figure>
+
+<p>最开始这里没理解，为什么要构造一个栈中类型的实例，以为是在子函数中构造。实际上是这样的，一般情况下，我们认为弹出元素最好是move，这样就不需要再构造。 </p>
+<h4 id="选项2：无异常抛出的拷贝构造函数或者移动构造函数"><a href="#选项2：无异常抛出的拷贝构造函数或者移动构造函数" class="headerlink" title="选项2：无异常抛出的拷贝构造函数或者移动构造函数"></a><strong>选项2：无异常抛出的拷贝构造函数或者移动构造函数</strong></h4><p>移动构造不会抛出异常，所以对pop来讲，如果确实要返回值的版本，那么直接返回右值或者右值引用肯定是最合适的，移动构造也不会抛出异常。</p>
+<p>这一点没办法确保。移动构造函数当然好，还是有一些类（无论是历史遗留还是其它原因），没有移动构造函数，而拷贝构造函数此时如果涉及到某些操作，确实是需要抛出 异常的。  </p>
+<h4 id="选项3：返回指向弹出值的指针"><a href="#选项3：返回指向弹出值的指针" class="headerlink" title="选项3：返回指向弹出值的指针"></a><strong>选项3：返回指向弹出值的指针</strong></h4><p>这时候要进行内存管理，最好返回shared_ptr。</p>
+<h4 id="选项4：“选项1-选项2”-或-“选项1-选项3”"><a href="#选项4：“选项1-选项2”-或-“选项1-选项3”" class="headerlink" title="选项4：“选项1 + 选项2” 或 “选项1 + 选项3”"></a><strong>选项4：“选项1 + 选项2” 或 “选项1 + 选项3”</strong></h4><p>例子： 定义线程安全的堆栈  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stack&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">empty_stack</span>:</span> <span class="built_in">std</span>::exception</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">what</span><span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;empty stack!&quot;</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">threadsafe_stack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;T&gt; data;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="built_in">std</span>::mutex m;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  threadsafe_stack()</span><br><span class="line">	: data(<span class="built_in">std</span>::<span class="built_in">stack</span>&lt;T&gt;())&#123;&#125;</span><br><span class="line">  </span><br><span class="line">  threadsafe_stack(<span class="keyword">const</span> threadsafe_stack&amp; other)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(other.m)</span></span>;</span><br><span class="line">    data = other.data; <span class="comment">// 1 在构造函数体中的执行拷贝</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  threadsafe_stack&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> threadsafe_stack&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(T new_value)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    data.push(new_value);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.empty()) <span class="keyword">throw</span> empty_stack(); <span class="comment">// 在调用pop前，检查栈是否为空</span></span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="keyword">const</span> <span class="title">res</span><span class="params">(<span class="built_in">std</span>::make_shared&lt;T&gt;(data.top()))</span></span>; <span class="comment">// 在修改堆栈前，分配出返回值</span></span><br><span class="line">    data.pop();</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">pop</span><span class="params">(T&amp; value)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(data.empty()) <span class="keyword">throw</span> empty_stack();</span><br><span class="line">	</span><br><span class="line">    value=data.top();</span><br><span class="line">    data.pop();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> data.empty();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="deal-lock问题"><a href="#deal-lock问题" class="headerlink" title="deal-lock问题"></a><strong>deal-lock问题</strong></h4><p>两个或以上mutex因为互相等待而导致的 永远也没有一方能完整获得 所有mutex的 现象，我称为deal lock。 </p>
+<p>C++11开始提供了std::lock来一次性锁定两个或以上的mutex（避免死锁算法是STL内部实现的）。</p>
+<p>在谈论std::lock之前，先谈论以下几个概念</p>
+<ul>
+<li>BasicLockable : 支持lock unlock</li>
+<li>Lockable      : 支持lock unlock try_lock</li>
+<li>TimedLockable : 支持lock unlock try_lock try_lock_for try_lock_until</li>
+</ul>
+<p>目前，BasicLockable有四个 mutex recursive_mutex timed_mutex recursive_timed_mutex</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt; <span class="class"><span class="keyword">class</span> <span class="title">Lockable1</span>, <span class="title">class</span> <span class="title">Lockable2</span>, <span class="title">class</span>... <span class="title">LockableN</span> &gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">lock</span>( <span class="title">Lockable1</span>&amp; <span class="title">lock1</span>, <span class="title">Lockable2</span>&amp; <span class="title">lock2</span>, <span class="title">LockableN</span>&amp;... <span class="title">lockn</span> );</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> &#123;</span></span><br><span class="line">    Employee(<span class="built_in">std</span>::<span class="built_in">string</span> id) : id(id) &#123;&#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> id;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; lunch_partners;</span><br><span class="line">    <span class="built_in">std</span>::mutex m;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">string</span> <span class="title">output</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">string</span> ret = <span class="string">&quot;Employee &quot;</span> + id + <span class="string">&quot; has lunch partners: &quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">const</span> <span class="keyword">auto</span>&amp; partner : lunch_partners )</span><br><span class="line">            ret += partner + <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">send_mail</span><span class="params">(Employee &amp;, Employee &amp;)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 模拟耗时的发信操作</span></span><br><span class="line">    <span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">assign_lunch_partner</span><span class="params">(Employee &amp;e1, Employee &amp;e2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::mutex io_mutex;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk</span><span class="params">(io_mutex)</span></span>;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e1.id &lt;&lt; <span class="string">&quot; and &quot;</span> &lt;&lt; e2.id &lt;&lt; <span class="string">&quot; are waiting for locks&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 用 std::lock 获得二个锁，而不担心对 assign_lunch_partner 的其他调用会死锁我们</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::lock(e1.m, e2.m);</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::adopt_lock)</span></span>;<span class="comment">//</span></span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::adopt_lock)</span></span>;</span><br><span class="line"><span class="comment">// 等价代码（若需要 unique_locks ，例如对于条件变量）</span></span><br><span class="line"><span class="comment">//        std::unique_lock&lt;std::mutex&gt; lk1(e1.m, std::defer_lock);</span></span><br><span class="line"><span class="comment">//        std::unique_lock&lt;std::mutex&gt; lk2(e2.m, std::defer_lock);</span></span><br><span class="line"><span class="comment">//        std::lock(lk1, lk2);</span></span><br><span class="line"><span class="comment">// C++17 中可用的较优解法</span></span><br><span class="line"><span class="comment">//        std::scoped_lock lk(e1.m, e2.m);</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk</span><span class="params">(io_mutex)</span></span>;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e1.id &lt;&lt; <span class="string">&quot; and &quot;</span> &lt;&lt; e2.id &lt;&lt; <span class="string">&quot; got locks&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        e1.lunch_partners.push_back(e2.id);</span><br><span class="line">        e2.lunch_partners.push_back(e1.id);</span><br><span class="line">    &#125;</span><br><span class="line">    send_mail(e1, e2);</span><br><span class="line">    send_mail(e2, e1);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Employee alice(&quot;alice&quot;), bob(&quot;bob&quot;), christina(&quot;christina&quot;), dave(&quot;dave&quot;);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 在平行线程指派，因为发邮件给用户告知午餐指派，会消耗长时间</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::thread&gt; threads;</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(alice), <span class="built_in">std</span>::ref(bob));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(christina), <span class="built_in">std</span>::ref(bob));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(christina), <span class="built_in">std</span>::ref(alice));</span><br><span class="line">    threads.emplace_back(assign_lunch_partner, <span class="built_in">std</span>::ref(dave), <span class="built_in">std</span>::ref(bob));</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;thread : threads) thread.join();</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; alice.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>  &lt;&lt; bob.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span></span><br><span class="line">              &lt;&lt; christina.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span> &lt;&lt; dave.output() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意三种写法</p>
+<p>写法1</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::lock(e1.m, e2.m); <span class="comment">//已经把e1.m e2.m都lock住了</span></span><br><span class="line"><span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::adopt_lock)</span></span>;<span class="comment">//所以adopt_lock就意味着不用再lock了</span></span><br><span class="line"><span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::adopt_lock)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>之前有个疑问是，如果std::lock都已经lock了，为什么还需要lock_guard？因为std::lock，没有std::unlock，所以这里用一个RAII的lock_guard来保证释放mutex。  </p>
+<p>写法2</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk1</span><span class="params">(e1.m, <span class="built_in">std</span>::defer_lock)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk2</span><span class="params">(e2.m, <span class="built_in">std</span>::defer_lock)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::lock(lk1, lk2);</span><br></pre></td></tr></table></figure>
+
+<p>首先unique_lock满足BasicLocable要求，如果模板参数mutex满足Lockable，那么unique_lock满足Lockable，如果mutex满足TimedLockable，那么unique_lock满足TimedLockable。 </p>
+<p>也就是说，unique_lock取决于模板参数。</p>
+<p>既然有了unique_lock，那么shared_lock自然也不会缺席，模板参数必须满足SharedMutex要求。 </p>
+<p>写法3</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="built_in">std</span>::scoped_lock <span class="title">lk</span><span class="params">(e1.m, e2.m)</span></span>; <span class="comment">//C++17开始支持</span></span><br></pre></td></tr></table></figure>
+<p>这里scoped_lock代替了lock_guard和unique_lock的RAII特性。</p>
+<p>那么scoped_lock除了RAII特性，减少代码量，相比于std::lock还有哪些优势？  <em>ToDo</em></p>
+<p><strong><font color=red>std::lock的出现将程序员从dead-lock的困扰中解脱出来，让代码变得更加简洁</font></strong>  </p>
+<h4 id="避免死锁的建议"><a href="#避免死锁的建议" class="headerlink" title="避免死锁的建议"></a><strong>避免死锁的建议</strong></h4><ul>
+<li>避免嵌套锁</li>
+<li>避免在持有锁时调用外部代码，因为外部代码有可能做任何事情，包括获取锁。</li>
+<li>使用固定顺序获取锁（一个思路是 定义 遍历的顺序，一个线程必须先锁住A 才能获取B的锁，在锁住B之后才能获取C的锁，依次类推）</li>
+<li>使用层次锁结构</li>
+</ul>
+<p>层次锁，实际上就是 使用固定顺序获取锁的一种实现方式。<br>有mutex A, B thread t1, t2<br>假如 t1要 A.lock B.lock这样的顺序 获取锁的控制权， t2如果 B.lock A.lock，这种情况下t1 t2就有可能死锁，所以我们可以规定好 必须按照 A B的顺序来获取mutex控制权。<br>但如果锁多了，那该怎么办呢？  层次锁就是这种思想的一个抽象概念，把锁分成不同的level，如果目前获取的是low level，那么就不可以再获取high level，当然如果你的业务代码中 先获取了B，但是也不需要获取A，那么也是满足这个原则的。  </p>
+<p>层次锁 代码实例 </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">hierarchical_mutex</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="built_in">std</span>::mutex internal_mutex;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">const</span> hierarchy_value;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> previous_hierarchy_value;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">thread_local</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> this_thread_hierarchy_value;  <span class="comment">// 1</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">check_for_hierarchy_violation</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(this_thread_hierarchy_value &lt;= hierarchy_value)  <span class="comment">// 2</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="built_in">std</span>::logic_error(“mutex hierarchy violated”);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">update_hierarchy_value</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    previous_hierarchy_value=this_thread_hierarchy_value;  <span class="comment">// 3</span></span><br><span class="line">    this_thread_hierarchy_value=hierarchy_value;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">hierarchical_mutex</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> value)</span>:</span></span><br><span class="line">      hierarchy_value(value),</span><br><span class="line">      previous_hierarchy_value(<span class="number">0</span>)</span><br><span class="line">  &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    check_for_hierarchy_violation();</span><br><span class="line">    internal_mutex.lock();  <span class="comment">// 4</span></span><br><span class="line">    update_hierarchy_value();  <span class="comment">// 5</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(this_thread_hierarchy_value!=hierarchy_value)</span><br><span class="line">      <span class="keyword">throw</span> <span class="built_in">std</span>::logic_error(“mutex hierarchy violated”);  <span class="comment">// 9</span></span><br><span class="line">    this_thread_hierarchy_value=previous_hierarchy_value;  <span class="comment">// 6</span></span><br><span class="line">    internal_mutex.unlock();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">try_lock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    check_for_hierarchy_violation();</span><br><span class="line">    <span class="keyword">if</span>(!internal_mutex.try_lock())  <span class="comment">// 7</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    update_hierarchy_value();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">thread_local</span> <span class="keyword">unsigned</span> <span class="keyword">long</span></span><br><span class="line">     hierarchical_mutex::this_thread_hierarchy_value(ULONG_MAX);  <span class="comment">// 8</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>拷贝构造函数 赋值运算符和强保证异常安全代码</title>
+    <url>/2021/02/14/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%BC%BA%E4%BF%9D%E8%AF%81%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81/</url>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Test()&#123;<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;explicit constructor with no argument&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125;</span><br><span class="line">    <span class="comment">//Test(Test t)&#123;cout &lt;&lt; &quot;copy constructor&quot; &lt;&lt;endl;&#125;  //1</span></span><br><span class="line">    Test(<span class="keyword">const</span> Test&amp; t)&#123;<span class="built_in">cout</span> &lt;&lt;<span class="string">&quot;copy constructor&quot;</span> &lt;&lt; <span class="built_in">endl</span>;&#125; <span class="comment">//2</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Test&amp; t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(const Test&amp; t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125; <span class="comment">//3</span></span><br><span class="line">    Test&amp; <span class="keyword">operator</span>=(Test t)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;operator=(Test t)&quot;</span> &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="comment">//4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么拷贝构造函数不能写成1的形式，必须写成2 的形式？  </p>
+<a id="more"></a>
+
+<p>之前的回答是 减少一次拷贝，因为传值的时候会调用拷贝构造函数，传引用可以避免掉，至于传const引用，主要是避免实参被修改。<br>但现在深入的再思考就会发现，传值的时候调用拷贝构造函数，但实际上这是一个无限套娃，调用拷贝构造函数的时候，传入参数也是传值，这又要调用拷贝构造函数。<br>循环往复，没有尽头了。  </p>
+<p>至于3和4的区别在哪里呢？<br>3和4是两种写法。  </p>
+<p>用写法3的时候，就是operator=的实现就是拷贝构造函数的另一种实现，唯一的区别是要多一步检查（检查= 两边的对象是否相同，如果相同的话不做任何操作，否则，就要释放掉当前的内存，申请新内存，并拷贝内容过来）。  </p>
+<p>写法4的时候，就是我的申请内存的操作都是放在拷贝构造函数里的，这样我们的operator=的实现就很简单了，因为构造的临时变量已经分配了内存，那么代码中只需要进行swap就好了。 而且在swap的时候，我们交换的是临时变量和this的内容，离开当前堆栈销毁临时变量的时候，释放的也是我们原先this指向的this的内容，还减少了我们释放旧内存的操作。  </p>
+<p>4相比于3的写法，个人认为最大的好处是确保了 the strong guarantee。因为operator=如果不调用拷贝构造函数的话，也要自己在内部申请内存，拷贝内容，而且内部申请内存 抛出异常的话，还要确保代码满足the strong gurantee。而在拷贝构造函数中申请内存的话，其实也要处理异常，不过这就保证operator=是nothrow的。<br>既然拷贝构造函数本身就有异常处理，那我们何苦在operator=中也要再加上抛出exception的风险呢。  而且swap本身也是nothrow的。  </p>
+<p>至于3和4的返回值都是 引用类型。如果我们返回的是普通值类型，那么返回值这里要调用拷贝构造函数，这里就会造成内存泄漏，就拿4来说，我们本身就调用拷贝构造生成了一个临时变量（虽然是临时变量，但内存不会被销毁）</p>
+<p>下面是我们的一个例子</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestArray</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TestArray(): len_(<span class="number">0</span>), data_(<span class="literal">nullptr</span>)&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;TestArray()&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    TestArray(<span class="keyword">const</span> TestArray&amp; ta):len_(ta.len_), data_(len_? <span class="keyword">new</span> <span class="keyword">char</span>[len_] : <span class="literal">nullptr</span>)&#123;</span><br><span class="line">        <span class="built_in">std</span>::copy(ta.data_, ta.data_ + len_, data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    TestArray&amp; <span class="keyword">operator</span>=(TestArray other)&#123;</span><br><span class="line">        swap(*<span class="keyword">this</span>, other);</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~TestArray()&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;destructor&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">size_t</span> len_;</span><br><span class="line">    <span class="keyword">char</span>* data_;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(TestArray&amp; one, TestArray&amp; another)</span><span class="keyword">noexcept</span></span>&#123;</span><br><span class="line">        <span class="keyword">using</span> <span class="built_in">std</span>::swap;</span><br><span class="line">        swap(one.len_, another.len_);</span><br><span class="line">        swap(one.data_, another.data_);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TestArray a; <span class="comment">//1</span></span><br><span class="line">    <span class="function">TestArray <span class="title">b</span><span class="params">(a)</span></span>; <span class="comment">//2</span></span><br><span class="line">    TestArray c = a;<span class="comment">//3</span></span><br><span class="line">    TestArray d;<span class="comment">//4</span></span><br><span class="line">    d = a;<span class="comment">//5</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;<span class="comment">//6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1 的输出 应该是 TestArray这没有疑问<br>2 的输出是 Copy Constructor 也没问题<br>3 的输出，照着我最初的理解，是TestArray c; c = a; 那么输出应该是TestArray Copy Constructor 26 destructor，但最终的输出是 Copy Constructor。<br>这是什么原因呢？ 在编译器看来，不会做这么麻烦的操作，因为c没有被构造，所以这里TestArray c = a 是初始化而不是赋值，可以被看作TestArray c(a)。这样理解的话，就能理解为什么3的输出只有一个copy constructor了。<br>4 的输出 是TestArray<br>5 =左边d是已经被初始化的值，所以，此时才适用于 赋值运算符，此时在调用=的时候，传值会导致调用copy constructor。所以输出是copy constructor 26。此时，swap之后，临时变量要被释放，此时会调用destructor。  </p>
+<p>接着在离开main函数的时候，依次调用d c b a的析构函数。 </p>
+<p>那么最终的输出是 </p>
+<figure class="highlight oxygene"><table><tr><td class="code"><pre><span class="line">TestArray</span><br><span class="line"><span class="keyword">Copy</span> <span class="function"><span class="keyword">Constructor</span></span></span><br><span class="line"><span class="function"><span class="title">Copy</span> <span class="title">Constructor</span></span></span><br><span class="line"><span class="function"><span class="title">TestArray</span></span></span><br><span class="line"><span class="function"><span class="title">Copy</span> <span class="title">Constructor</span></span></span><br><span class="line"><span class="function">26</span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br><span class="line"><span class="function"><span class="title">destructor</span></span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>数据格式比较 json xml protobuf yaml及others</title>
+    <url>/2021/01/04/%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E6%AF%94%E8%BE%83-json-xml-protobuf-yaml%E5%8F%8Aothers/</url>
+    <content><![CDATA[<p>在开发过程中，我们会把自己的数据做一些定义，在程序中表示是数据结构，在本地保存成文件时，就要在文件中定义格式。  </p>
+<p>那么数据以什么样的形式组织比较好呢？  </p>
+<p>首先，要明确需求，也就是我们关注的点有哪些？</p>
+<ul>
+<li>当前数据集的特点</li>
+<li>有没有好的第三方库（稳定，bug少，支持特性多，漏洞少，接口友好）</li>
+<li>效率（内存等，不同使用场景下也许不同库存在不同，比如A库在某些场景下优于B，B在某些场景下优于A）</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p> <a href="https://blog.mbedded.ninja/programming/serialization-formats/a-comparison-of-serialization-formats/">A Comparison Of Serialization Formats</a></p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>面试题总结</title>
+    <url>/2021/03/20/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>在面试或者被面试过程中收集的面试题目，不仅仅与C++相关，还有数据结构和算法，系统等等。  </p>
+<hr>
+<p><strong><font color=orange size=4> C++</font></strong> </p>
+<p>_<font size=3 color=green>如何让两个shared_ptr指向同一个实例</font>_  </p>
+<p>enable_shared_from_memory </p>
+<p>今天听面试人说的，以前真没考虑过  </p>
+<p><em><font size=3 color=green>只在堆或者栈上创建对象</font></em>  </p>
+<p>只在堆上 ： operator new()=delete<br>只在栈上 ： private ~base();  </p>
+<p><em><font size=3 color=green>static成员变量不能在类内部初始化吗</font></em>  </p>
+<p><strong>Case 1</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span>  m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.0f</span>; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.f</span>; <span class="comment">//OK</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Case 2</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : 空</span><br></pre></td></tr></table></figure>
+
+<p>对m_bObject没有进行类外初始化，但好像也没有调用base的构造函数。 </p>
+<p><strong>Case 3</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line">base m_bObject;<span class="comment">//约等于base m_object = base()</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : base construct</span><br></pre></td></tr></table></figure>
+
+<p>对m_bObject没有进行类外初始化，但好像也没有调用base的构造函数，难道static成员可以不同初始化，除非要使用？   </p>
+<p><strong>Case 3</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base(i)&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> base&amp; <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        m_bObject = base(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line">base m_bObject;<span class="comment">//约等于base m_object = base()</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : error: no matching function <span class="keyword">for</span> call to ‘base::base()’</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct no param&quot;</span>;&#125;</span><br><span class="line">    <span class="comment">//base(int i)&#123;std::cout&lt;&lt;&quot;base construct&quot;&lt;&lt;std::endl;&#125;</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;test&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Init</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">static</span> base temp;</span><br><span class="line">        m_bObject = temp;<span class="comment">//这是类内初始化吗？还是 简单的赋值？</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//base::m_bObject::print(); //error</span></span><br><span class="line">    base::m_bObject.<span class="built_in">print</span>();<span class="comment">//虽然没有初始化，但并不妨碍调用static方法</span></span><br><span class="line">    base::<span class="built_in">print</span>();</span><br><span class="line">    <span class="comment">//static base b = base::m_bObject; //undefined reference to `base::m_bObject&#x27; 因为此时静态变量没有初始化（分配内存）</span></span><br><span class="line">    b.<span class="built_in">print</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有两个问题 </p>
+<ul>
+<li>为初始化的静态成员变量 </li>
+</ul>
+<p>从上面可以总结得出</p>
+<ul>
+<li>static变量在未使用之前可以不用初始化</li>
+<li>static成员变量不会默认初始化（如果不在类外初始化的话）</li>
+<li>static成员类外初始化</li>
+</ul>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+</search>

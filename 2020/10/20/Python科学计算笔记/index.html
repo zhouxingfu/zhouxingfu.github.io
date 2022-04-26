@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1 numpy1.1 如何创建array创建array的几种方式  numpy.array()    An array, any object exposing the array interface, an object whose       __array__ method returns an array, or any (nested) sequence  numpy.asarray()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python科学计算笔记">
+<meta property="og:url" content="zhouxingfu.github.io/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="1 numpy1.1 如何创建array创建array的几种方式  numpy.array()    An array, any object exposing the array interface, an object whose       __array__ method returns an array, or any (nested) sequence  numpy.asarray()">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-20T12:41:57.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:09:48.885Z">
+<meta property="article:author" content="zhouxingfu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="zhouxingfu.github.io/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Python科学计算笔记 | I WILL TRY ANYTHING ONCE</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">I WILL TRY ANYTHING ONCE</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python科学计算笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-20 20:41:57" itemprop="dateCreated datePublished" datetime="2020-10-20T20:41:57+08:00">2020-10-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-numpy"><a href="#1-numpy" class="headerlink" title="1 numpy"></a><strong>1 numpy</strong></h2><h3 id="1-1-如何创建array"><a href="#1-1-如何创建array" class="headerlink" title="1.1 如何创建array"></a><strong>1.1 如何创建array</strong></h3><p>创建array的几种方式</p>
+<ul>
+<li><p>numpy.array() </p>
+<p>  An array, any object exposing the array interface, an object whose</p>
+<pre><code>      __array__ method returns an array, or any (nested) sequence</code></pre>
+</li>
+<li><p>numpy.asarray()  </p>
+<p>  array_like</p>
+<pre><code>      Input data, in any form that can be converted to an array.  This
+      includes lists, lists of tuples, tuples, tuples of tuples, tuples
+      of lists and ndarrays.</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>自动生成数组 numpy.arange  numpy.logspace numpy.linspace 用于创建等差 等比 array（arange和linspace创建等差array的方式有区别）  </p>
+</li>
+<li><p>numpy.full numpy.zeros numpy.ones</p>
+</li>
+<li><p>numpy.fromstring numpy.frombuffer numpy.from function </p>
+</li>
+</ul>
+<h3 id="1-3-存取元素"><a href="#1-3-存取元素" class="headerlink" title="1.3 存取元素"></a><strong>1.3 存取元素</strong></h3><a id="more"></a>
+
+<p>有了创造，就要有访问，那么该怎么访问元素呢？  </p>
+<ul>
+<li>切片<br>  正常的切片方式，比如连续切片 a[3:5] 非连续切片a[[1,3,5]]</li>
+</ul>
+<p><strong><font color=red>一维数组和多维数组的存取</font></strong><br>我们可以用数组作为索引，来构造新数组  </p>
+<p>这里有一个公式 output = method(input)  </p>
+<p>首先我们要明确input和output是什么，然后才能找到适合的公式来套用。  </p>
+<p>下面是一个简单的总结，其中多维我们先用二维来替代。  </p>
+<table>
+<thead>
+<tr>
+<th align="left">input</th>
+<th align="left">output</th>
+<th align="left">note</th>
+<th align="left">sample</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">一维</td>
+<td align="left">一维</td>
+<td align="left">从一维中取数，组成一维array</td>
+<td align="left"><del>a[np.array([x1, x2, x3, x4])]</del></td>
+</tr>
+<tr>
+<td align="left">一维</td>
+<td align="left">多维</td>
+<td align="left">从一维中取数，组成N维array</td>
+<td align="left"><del>错误的方式 a[[[x1,x2,x3,x4],[x5,x6,x7,x8]]]</del> <br><del>正确的方式 a[np.array([[1, 2, 3], [4, 5, 6]])]</del></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">一维</td>
+<td align="left">从N维中取数，组成一维array</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">多维</td>
+<td align="left">多维</td>
+<td align="left">从N维中取数，组成N维array</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>本来想着列个表就能简单的说清楚，但现在看，还是有些复杂的，下面就展开来说吧。  </p>
+<p>下面有几种写法，让我们看一看 </p>
+<p><font color=red>input : 一维数组    output : 一维数组和二维数组</font></p>
+<pre><code>a = np.array(1, 10, 1)
+print(a[1, 3, 5]) # 错误，因为a是一维数组，但提供了3维索引
+print(a[[1, 3, 5], [2, 4, 6]]) # 错误，跟上面一样，提供了两个index
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x]) # 错误，IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed
+# 上述语句还有warning  FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+y = np.array([[1, 3, 5], [2, 4, 6]])
+print(numpy.array(y)) # 正确</code></pre>
+<p>从上面的例子中，我们可以得到以下几个简单的结论 </p>
+<ul>
+<li>input为一维数组，索引必须也是一维的，不管输出是怎么样，要确保能访问到input中的元素，下标必须为一维，所以a[[1, 3, 5]]是正确的，a[1, 3, 5]是错误的</li>
+</ul>
+<p>但这里有一个问题，就是a[x]和a[np.array(x)]有什么区别？<br>通过help(x)可以得知一个是numpy.ndarray，一个是list。个人猜测，list是不确定大小的，也就是我们拿到一个list，里面的元素大小也不一定相同，所以需要转成ndarray，明确是一个正常的数组。否则，就会报上面的IndexError和Warning。  </p>
+<p><font color=red>input : 二维数组    output : 一维数组和二维数组</font> </p>
+<pre><code>a = np.arange(1, 10, 1).reshape(-1,1) + np.arange(10, 60, 5)
+x = [[1, 3, 5], [2, 4, 6]] 
+print(a[x])  # 正确，但会报warning，输出一个1*3的数组array
+m = ([1,2,3], [4,5,6])
+print(a[m])  # 正确，无warning，下标是有两个元素的元组，输出结果是1*3的数组array
+print(a(np.array(x))) # 正确，但输出是一个三维数组
+y = [[1,2], [3,4]]
+z = [[5,6], [7,8]]
+print(a[y,z]) #正确</code></pre>
+<p>上面我们看到，print(a[x])会报warning， _<font color=red>FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use <code>arr[tuple(seq)]</code> instead of <code>arr[seq]</code>. In the future this will be interpreted as an array index, <code>arr[np.array(seq)]</code>, which will result either in an error or a different result.</font>_。<br>也就是说，对于多维数组的index操作，我们需要传入一个tuple sequence，传入non-tuple sequence的方法已经被废弃了。  </p>
+<p>至于print(a(np.array(x)))输出一个三维数组，可以这样理解，首先np.array(x)得到的是一个array，但只有一个元素，在书中有这么一句话 <em><font color=red>当所有轴都用形状仙童的整数数组作为下标时，得到的数组和下标数组的形状相同。</font></em> 但当我们传入的是只有一个元素的tuple的时候（不管这个元素内部是多么复杂）， 当我们没有指定第一轴的下标的时候，我们用:来代替。此时，我们要重新明确一下a[m,n]中代表的涵义，m是0轴坐标，n是1轴坐标，既然n为:，那么所有的列数据都被占用。  </p>
+<p><strong><font color=green size=5>总结</font></strong><br>说实话，这块理解还是挺难的，而且实际使用中有些内容已经有差别了，比如被废弃的方法，还是要时常温故，多加体会。  </p>
+<p><strong>关于存取元素时是否与原数据共用</strong>  </p>
+<p>中心思想，是抓住问题的核心，如果我们可以仅仅通过修改stride shape就能得到一份新数据，这时候肯定是不用拷贝最合算，如果没办法通过修改stride shape得到数据，那么就只能拷贝了。  两个简单的例子， a[::2, :]是无需拷贝的，只需要把元素的stride*2就可以“得到”我们想要的数据；a[[1,4,7,9]]是需要拷贝的，此时我们不能通过简单修改stride就得到我们想要的数据。  </p>
+<h3 id="1-4-frompyfunc"><a href="#1-4-frompyfunc" class="headerlink" title="1.4 frompyfunc"></a><strong>1.4 frompyfunc</strong></h3><p>感觉类似于函数指针typedef，不过问题是看上去它只有一个可以遍历的arg.  </p>
+<pre><code>def calc_test(a, b, c, d):
+    print(a + c + b + d)
+
+
+def create():
+    a = np.arange(1, 10, 1) # 正确
+    a = 10 # 正确
+    b = np.arange(10, 100, 10)
+    c = np.arange(100, 1000, 100)
+    d = np.arange(1000, 10000, 1000)
+    calc_test_func = np.frompyfunc(calc_test, 4, 1)
+    print(calc_test_func(a, b, c, d))</code></pre>
+<p>上面这段代码，经过几次测试，得出的规律是，frompyfunc的几个特点</p>
+<pre><code>m = np.arange(1, 10, 5) + np.arange(10, 100, 10) # 错误 ValueError: operands could not be broadcast together with shapes (2,) (9,) </code></pre>
+<p>如果两个或者多个数组size不一致，那么这时候就出发挥 广播机制  </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/" rel="prev" title="Python中mutable与immutable">
+      <i class="fa fa-chevron-left"></i> Python中mutable与immutable
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/" rel="next" title="git学习">
+      git学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-numpy"><span class="nav-number">1.</span> <span class="nav-text">1 numpy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BAarray"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 如何创建array</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%AD%98%E5%8F%96%E5%85%83%E7%B4%A0"><span class="nav-number">1.2.</span> <span class="nav-text">1.3 存取元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-frompyfunc"><span class="nav-number">1.3.</span> <span class="nav-text">1.4 frompyfunc</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhouxingfu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9379501/zhou-xingfu" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9379501&#x2F;zhou-xingfu" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouxingfu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
