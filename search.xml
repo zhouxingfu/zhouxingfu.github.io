@@ -365,15 +365,6 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
-    <title>Language support library</title>
-    <url>/2020/09/02/Language-support-library/</url>
-    <content><![CDATA[<h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a><strong>参考内容</strong></h2><p><a href="">Item 47: Use traits classes for information about types</a><br><a href="https://en.cppreference.com/w/cpp/types">Type support (basic types, RTTI, type traits)</a><br><a href="https://www.youtube.com/watch?v=VvbTP_k_Df4">CppCon 2015:Marshall Clow “Type Traits - what are they and why should I use them?”</a><br><a href="https://www.youtube.com/watch?v=tiAVWcjIF6o">Template Metaprogramming: Type Traits (part 1 of 2) - Jody Hagins - CppCon 2020</a><br><a href="https://www.youtube.com/watch?v=dLZcocFOb5Q">Template Metaprogramming: Type Traits (part 2 of 2) - Jody Hagins - CppCon 2020</a></p>
-]]></content>
-      <categories>
-        <category>STL</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Linux构建程序时如何判断库能否被找到</title>
     <url>/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/</url>
     <content><![CDATA[<p>在用CMake构建程序的时候，经常要用到find_package来查找库，那么什么样的库可以被find_package找到呢？  </p>
@@ -855,89 +846,6 @@ npm install</code></pre>
 ]]></content>
       <categories>
         <category>tools</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Input/Output library</title>
-    <url>/2020/08/30/input-output-library/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>现代语言都有抽象出来的IO操作库。<br>在写C++代码的时候，发现很多人还是喜欢用C语言的那一套fopen/fread/fwrite/fclose，从效果上说没有区别，但从代码风格上看就比较诡异了。<br>尤其是fopen这套操作得到的是内存流，而我们的C++代码里经常要用到Stream流（因为很多STL库或者C++11风格三方库要求输入Stream流，虽然有一些也保留了指针接口，但大趋势是C++11风格）。<br>为了后续兼容性和代码风格上的统一，C++ IO是我们C++工程的首选。  </p>
-   
-
-
-<h2 id="关于文件IO与标准IO"><a href="#关于文件IO与标准IO" class="headerlink" title="关于文件IO与标准IO"></a><strong><font color=0xFFFFFF>关于文件IO与标准IO</font></strong></h2>   
-
-<p>文件IO是syscall，而标准IO是库接口。文件IO是没有缓存的，标准IO有三种形式：全缓存，行缓存，无缓存。 </p>
-<a id="more"></a>
-
-<font color=green>
-NOTE:
-这里有两个需要注意的点  
-1. 文件IO也是有缓存的，只不过标准IO是用户态缓存，文件IO是内核态缓存，标准IO的好处是可以减少访问CPU的次数。  
-2. 文件IO也叫低级别IO，所以不要以为fread fwrite就是文件IO，这里其实有混淆，感觉起名字不严谨。  
-</font>
-
-<table>
-<thead>
-<tr>
-<th align="left">操作</th>
-<th align="left">标准ＩＯ</th>
-<th align="left">文件ＩＯ(低级IO)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">打开</td>
-<td align="left">fopen,freopen,fdopen</td>
-<td align="left">open</td>
-</tr>
-<tr>
-<td align="left">关闭</td>
-<td align="left">fclose</td>
-<td align="left">close</td>
-</tr>
-<tr>
-<td align="left">读</td>
-<td align="left">getc,fgetc,getchar fgets,gets,fread</td>
-<td align="left">read</td>
-</tr>
-<tr>
-<td align="left">写</td>
-<td align="left">putc,fputc,putchar fputs,puts,fwrite</td>
-<td align="left">write</td>
-</tr>
-</tbody></table>
-<h2 id="状态标志符"><a href="#状态标志符" class="headerlink" title="状态标志符"></a><strong>状态标志符</strong></h2><p>以VC中实现为例</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Dummy</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> _<span class="title">Iosb</span> &#123;</span> <span class="comment">// define templatized bitmask/enumerated types, instantiate on demand</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> _Dummy_enum &#123; _Dummy_enum_val = <span class="number">1</span> &#125;; <span class="comment">// don&#x27;t ask, TRANSITION, ABI</span></span><br><span class="line">    <span class="keyword">enum</span> _Fmtflags &#123; <span class="comment">// constants for formatting options</span></span><br><span class="line">        _Fmtmask = <span class="number">0xffff</span>,</span><br><span class="line">        _Fmtzero = <span class="number">0</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags skipws     = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0001</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags unitbuf    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0002</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags uppercase  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0004</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showbase   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0008</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpoint  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0010</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags showpos    = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0020</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags left       = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0040</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags right      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0080</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags internal   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0100</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags dec        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0200</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags oct        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0400</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hex        = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0800</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags scientific = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x1000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags fixed      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x2000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags hexfloat = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// added with TR1 (not in C++11)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags boolalpha   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x4000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags _Stdio      = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x8000</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags adjustfield = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x01C0</span>); <span class="comment">// left | right | internal</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags basefield   = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x0E00</span>); <span class="comment">// dec | oct | hex</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Fmtflags floatfield  = <span class="keyword">static_cast</span>&lt;_Fmtflags&gt;(<span class="number">0x3000</span>); <span class="comment">// scientific | fixed</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Iostate &#123; <span class="comment">// constants for stream states</span></span><br><span class="line">        _Statmask = <span class="number">0x17</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate goodbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x0</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate eofbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x1</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate failbit = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x2</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Iostate badbit  = <span class="keyword">static_cast</span>&lt;_Iostate&gt;(<span class="number">0x4</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Openmode &#123; <span class="comment">// constants for file opening options</span></span><br><span class="line">        _Openmask = <span class="number">0xff</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode in         = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x01</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode out        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x02</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode ate        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x04</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode app        = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x08</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode trunc      = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x10</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Nocreate  = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x40</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode _Noreplace = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x80</span>);</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Openmode binary     = <span class="keyword">static_cast</span>&lt;_Openmode&gt;(<span class="number">0x20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> _Seekdir &#123; <span class="comment">// constants for file positioning options</span></span><br><span class="line">        _Seekbeg,</span><br><span class="line">        _Seekcur,</span><br><span class="line">        _Seekend</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir beg = _Seekbeg;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir cur = _Seekcur;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> _Seekdir <span class="built_in">end</span> = _Seekend;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> &#123; <span class="comment">// TRANSITION, ABI</span></span><br><span class="line">        _Openprot = _SH_DENYNO</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> _Default_open_prot = _SH_DENYNO; <span class="comment">// constant for default file opening protection</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>在_Iosb中的实现为例，里面有四个关于文件的状态定义</p>
-<ul>
-<li>_Fmtflags = format flags</li>
-<li>_Iostate = io state   当前iosbase的状态位（通过调用iosbase::rdstate()随时可以与这些预定义好的常量对比）</li>
-<li>_Openmode = open mode  以什么样的方式打开文件（读取或写入，包括文件本身的性质，以及我们会如何使用它）</li>
-<li>_Seekdir = seek dir 从哪个地方开始访问（更加智能便捷，不用每次都把position 0当作start index）</li>
-</ul>
-<p><em><font color=red>注意</font>:为什么_Fmtflags enum只有一个成员，而_Seekdir enum就定义完全了呢？</em>  </p>
-<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a><strong>文件操作</strong></h2><h3 id="文件读"><a href="#文件读" class="headerlink" title="文件读"></a><strong>文件读</strong></h3><p>我所理解的读取一个文件的正常思路</p>
-<ul>
-<li>确定要访问的初始位置</li>
-<li>确定当前距离文件结尾的数据长度</li>
-<li>read读取（按照需要读取，只要是&lt;= left_length就可以）</li>
-</ul>
-<p>如果我们想要读取文本一行呢？<br>我们可以调用basic_istream::getline()，当然也有全局性的函数getline(std::basic_istream&amp;, , )，效果是一致的（其实我一直认为这种实现本质上是一样的，为什么要有两个接口？还一个global，一个类接口）</p>
-<h3 id="文件写"><a href="#文件写" class="headerlink" title="文件写"></a><strong>文件写</strong></h3><p>文件写的思路</p>
-<ul>
-<li>确定写的方式（追加，清空，还是截断truncate）</li>
-<li>确定要访问的初始位置</li>
-<li>write写入  </li>
-</ul>
-<p>写入文本一行没有writeline，因为没有必要，直接write之后，再写入一个endl就可以了。<br>其实读取的道理也是一样，也是一个个字符读取，然后遇到endl就把buffer中的数据作为一行输出。  </p>
-<h2 id="stringstream"><a href="#stringstream" class="headerlink" title="stringstream"></a><strong>stringstream</strong></h2><p>stringstream有什么用途呢？如果是内存操作，我们直接用string是不是就可以了呢？ </p>
-<p>stringstream不仅仅是string，更重要的是stream的特性。  </p>
-<p>比如ss &gt;&gt; 100; stringstream重载的&lt;&lt; &gt;&gt;。</p>
-<p>比如 str=  “ hello world “; string word;如果要想按照单词来读，那么可以通过ss &gt;&gt; word 来操作。</p>
-<p>在我看来，stringstream就是在内存中操作io（这是与文件IO的本质区别），本质上还是io 流，只不过在内存中是以string来作为对外沟通的数据结构。  </p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/io">Input/output library</a>  </p>
-]]></content>
-      <categories>
-        <category>STL</category>
       </categories>
   </entry>
   <entry>
@@ -1479,6 +1387,24 @@ if __name__ == &#39;__main__&#39;:
 ]]></content>
       <categories>
         <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>CS15-213:CSAPP读书笔记(1)</title>
+    <url>/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/</url>
+    <content><![CDATA[<h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
+<p><a href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
+<p>CS15213 参考资料<br><a href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
+<p>MIT 6.828 参考资料<br><a href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
+<p><a href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
+<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
+<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
+<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
+<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
+<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1>]]></content>
+      <categories>
+        <category>CSAPP</category>
       </categories>
   </entry>
 </search>
