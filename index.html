@@ -184,6 +184,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/" class="post-title-link" itemprop="url">Praat验证音素时间戳准确度</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-07-29 17:20:38 / Modified: 18:06:32" itemprop="dateCreated datePublished" datetime="2022-07-29T17:20:38+08:00">2022-07-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9F%B3%E8%A7%86%E9%A2%91/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="音素与音频"><a href="#音素与音频" class="headerlink" title="音素与音频"></a><strong>音素与音频</strong></h1><p>最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。</p>
+<p>声音驱动表情（包括口型）有很多方案，比较著名的是微软的视素驱动，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/how-to-speech-synthesis-viseme?pivots=programming-language-cpp">获取 lip-sync 的人脸姿态事件</a>，但好像根据语言也会有不同的视素，所以最终还是跟音素相关。  </p>
+<p>现在很多语音厂商都能够同时提供音频对应的音素了，比如AiSpeech，Data Baker，但拿到音频和音素之后，我们先要想要的是 ———— 如何判断音素和音频在时间维度上对应的准确度。  </p>
+<p>为了解决这个问题，我们先来介绍一个工具和一种格式。  </p>
+<h2 id="TextGrid格式"><a href="#TextGrid格式" class="headerlink" title="TextGrid格式"></a><strong>TextGrid格式</strong></h2><p>TextGrid一种专门对声音进行标注的文本格式，里面可以记录很多信息 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/388306735">Praat scripting 入门 (2) TextGrid 和录音管理</a>。   </p>
+<p>我一般用来标准音素时间戳，大概格式如下 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">File type &#x3D; &quot;ooTextFile&quot;</span><br><span class="line">Object class &#x3D; &quot;TextGrid&quot;</span><br><span class="line"></span><br><span class="line">xmin &#x3D; 0</span><br><span class="line">xmax &#x3D; 2.3</span><br><span class="line">tiers? &lt;exists&gt;</span><br><span class="line">size &#x3D; 3</span><br><span class="line">item []:</span><br><span class="line">    item [1]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;sentence&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 1</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;říkej &quot;&quot;ahoj&quot;&quot; dvakrát&quot;</span><br><span class="line">    item [2]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;phonemes&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 3</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 0.7</span><br><span class="line">          text &#x3D; &quot;r̝iːkɛj&quot;</span><br><span class="line">       intervals [2]:</span><br><span class="line">          xmin &#x3D; 0.7</span><br><span class="line">          xmax &#x3D; 1.6</span><br><span class="line">          text &#x3D; &quot;ʔaɦɔj&quot;</span><br><span class="line">       intervals [3]:</span><br><span class="line">          xmin &#x3D; 1.6</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;dʋakraːt&quot;</span><br><span class="line">    item [3]:</span><br><span class="line">       class &#x3D; &quot;TextTier&quot;</span><br><span class="line">       name &#x3D; &quot;bell&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       points: size &#x3D; 2</span><br><span class="line">       points [1]:</span><br><span class="line">          number &#x3D; 0.9</span><br><span class="line">          mark &#x3D; &quot;ding&quot;</span><br><span class="line">       points [2]:</span><br><span class="line">          number &#x3D; 1.3</span><br><span class="line">          mark &#x3D; &quot;dong&quot;</span><br></pre></td></tr></table></figure>
+
+<p>我们拿到厂商提供的音素之后，可以保存成这样的文件 <a target="_blank" rel="noopener" href="https://github.com/eiichiroi/textgrid.hpp">一个开源的TextGrid读写器</a>，此时，我们手中有了音频和对应的TextGrid文件。  </p>
+<p>当然生成textgrid的代码也可以参考kaldi代码，kaldi是语音界的天花板和军火库，非常多的人从里面汲取营养，以后有兴趣或需要的时候，可以参考这个工程，后面我会单独写一篇文章，讨论如何使用kaldi，实现从音频到嘴型驱动的全流程。  </p>
+<p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
+<p><strong>Praat</strong>  </p>
+<h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
+<p><img src="assets/Praat-Phoneme-a.png" alt="Praat音素音频对齐-1"></p>
+<p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
+<ul>
+<li>出现的界面中有两个文件，同时选中，就会在窗口右侧出现Edit and Continue按钮，此时点击这个按钮，就会出现一个界面，这个界面是上面是音频，下面是音素时间戳，每个音素时间戳占用1格（格子有大有小，跟duration有关），我们点击这个格子，就能提到这段格子所对应的音频，假设这个格子上标注的是 ang，但听到的声音明显不仅仅包含ang，比如杨 i ang2，如果我们听到了 i的声音，那么我们就可以证明，这个音素时间戳太靠前了。  </li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -215,7 +300,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-06 16:56:00" itemprop="dateModified" datetime="2022-05-06T16:56:00+08:00">2022-05-06</time>
+                <time title="Modified: 2022-05-09 10:26:38" itemprop="dateModified" datetime="2022-05-09T10:26:38+08:00">2022-05-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +333,15 @@
 <h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
 <h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
 <p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
-<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1>
+<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
+<p>我目前的理解是：</p>
+<ol>
+<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
+<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
+<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
+</ol>
+<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
+
       
     </div>
 
@@ -936,106 +1029,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06+08:00">2020-11-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><code>server code</code></p>
-<pre><code>import socket  
-
-if __name__ == &#39;__main__&#39;:
-    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
-    while True:
-        pass</code></pre>
-<p><code>client code</code>  </p>
-<pre><code>import socket
-if __name__ == &#39;__main__&#39;:
-    i = 0
-    while True:
-        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
-        if mySocket is None:
-            print(&quot;create client connect failed&quot;)
-            break
-        else:
-            print(&quot;create client connection succeed&quot;)
-            i = i + 1
-            print(&#39;current connection count &#39;, i)  </code></pre>
-<p>可以创建连接，但存在几个现象  </p>
-<ol>
-<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
-<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
-<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
-<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1105,14 +1098,14 @@ if __name__ == &#39;__main__&#39;:
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

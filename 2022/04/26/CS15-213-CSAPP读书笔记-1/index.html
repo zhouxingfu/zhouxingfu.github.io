@@ -28,7 +28,7 @@
 <meta property="og:description" content="为什么要学习这本书？Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎 如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎 MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎 CS15213 参考资料CMU 15213&#x2F;15513 CS">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-04-26T13:48:25.000Z">
-<meta property="article:modified_time" content="2022-05-06T08:56:00.536Z">
+<meta property="article:modified_time" content="2022-05-09T02:26:38.701Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
@@ -219,7 +219,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-06 16:56:00" itemprop="dateModified" datetime="2022-05-06T16:56:00+08:00">2022-05-06</time>
+                <time title="Modified: 2022-05-09 10:26:38" itemprop="dateModified" datetime="2022-05-09T10:26:38+08:00">2022-05-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,7 +252,15 @@
 <h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
 <h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
 <p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
-<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1>
+<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
+<p>我目前的理解是：</p>
+<ol>
+<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
+<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
+<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
+</ol>
+<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
+
     </div>
 
     
@@ -270,7 +278,10 @@
     <a href="/2021/03/20/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93/" rel="prev" title="面试题总结">
       <i class="fa fa-chevron-left"></i> 面试题总结
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/" rel="next" title="Praat验证音素时间戳准确度">
+      Praat验证音素时间戳准确度 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -329,7 +340,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%E4%B9%A0%E8%BF%99%E6%9C%AC%E4%B9%A6%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">为什么要学习这本书？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">学习路线是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E7%A8%8B%E5%AE%89%E6%8E%92"><span class="nav-number">3.</span> <span class="nav-text">日程安排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">学习方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E6%80%BB%E8%A7%88"><span class="nav-number">5.</span> <span class="nav-text">课程总览</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%E4%B9%A0%E8%BF%99%E6%9C%AC%E4%B9%A6%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">为什么要学习这本书？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">学习路线是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E7%A8%8B%E5%AE%89%E6%8E%92"><span class="nav-number">3.</span> <span class="nav-text">日程安排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">学习方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E6%80%BB%E8%A7%88"><span class="nav-number">5.</span> <span class="nav-text">课程总览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-2-%E4%BF%A1%E6%81%AF%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="nav-number">5.1.</span> <span class="nav-text">Chapter 2 信息的表示与存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Q1-%E6%88%91%E4%BB%AC%E9%83%BD%E7%9F%A5%E9%81%93CPU%E5%A4%84%E7%90%86%E7%9A%84%E6%98%AF%E8%A1%A5%E7%A0%81%EF%BC%8C%E9%82%A3%E4%B9%88%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E7%BB%93%E6%9E%9C%E6%98%AF%E6%AD%A3%E8%BF%98%E6%98%AF%E8%B4%9F%E7%9A%84%EF%BC%9F%E5%8F%A6%E5%A4%96%E4%B8%8D%E6%98%AF%E8%BF%98%E6%9C%89%E4%B8%80%E4%BA%9B%E6%8C%87%E4%BB%A4%E6%98%AF%E5%8C%BA%E5%88%86%E6%AD%A3%E8%B4%9F%E7%9A%84%E5%90%97%EF%BC%9F%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8%E9%87%8C%E5%AD%98%E5%82%A8%E7%9A%84%E6%98%AF%E7%BB%93%E6%9E%9C%E7%9A%84%E6%AD%A3%E8%B4%9F%E5%80%BC%E5%90%97%EF%BC%9F"><span class="nav-number">5.1.1.</span> <span class="nav-text">Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q2-char%E6%95%B0%E6%8D%AE%E5%B7%A6%E7%A7%BB8%E4%BD%8D%E7%9A%84%E7%BB%93%E6%9E%9C%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E5%8F%AF%E8%83%BD%E4%B8%8D%E6%98%AF0%EF%BC%9F"><span class="nav-number">5.1.2.</span> <span class="nav-text">Q2 char数据左移8位的结果为什么有可能不是0？</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -343,14 +354,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
