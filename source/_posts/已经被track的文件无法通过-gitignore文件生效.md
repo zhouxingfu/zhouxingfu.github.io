@@ -28,4 +28,4 @@ git commit -m "delete file"
 git push
 ```
 
-当我们需要删除暂存区或分支上的文件，但是工作区**需要**这个文件，可以使用 git rm —cached
+当我们需要删除暂存区或分支上的文件，但是工作区**需要**这个文件，可以使用 git rm --cached
