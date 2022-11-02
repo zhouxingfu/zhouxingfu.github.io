@@ -1471,7 +1471,7 @@ if __name__ == &#39;__main__&#39;:
 <p>当我们需要删除暂存区或分支上的文件，同时工作区<strong>不需要</strong>这个文件，可以使用 git rm</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">git rm file</span><br><span class="line">git commit -m &quot;delete file&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
 
-<p>当我们需要删除暂存区或分支上的文件，但是工作区<strong>需要</strong>这个文件，可以使用 git rm —cached</p>
+<p>当我们需要删除暂存区或分支上的文件，但是工作区<strong>需要</strong>这个文件，可以使用 git rm –cached</p>
 ]]></content>
       <categories>
         <category>git</category>

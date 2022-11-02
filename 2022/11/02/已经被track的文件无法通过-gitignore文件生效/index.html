@@ -28,7 +28,7 @@
 <meta property="og:description" content="最近遇到一个问题，把某些文件夹添加到 .gitignore，但git add的时候却还是添加进去了，不生效。 原因是，gitignore只针对untracked files。 如果是tracked files(之前已经commit过)，那么修改 .gitignore不能在 add的时候忽略掉tracked files。 但如果我们的工作区还需要这些文件，那该怎么办？我们肯定是不希望在本地重新生成的">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-11-02T03:37:00.000Z">
-<meta property="article:modified_time" content="2022-11-02T03:38:26.233Z">
+<meta property="article:modified_time" content="2022-11-02T08:46:49.944Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
@@ -213,7 +213,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-11-02 11:37:00 / Modified: 11:38:26" itemprop="dateCreated datePublished" datetime="2022-11-02T11:37:00+08:00">2022-11-02</time>
+              <time title="Created: 2022-11-02 11:37:00 / Modified: 16:46:49" itemprop="dateCreated datePublished" datetime="2022-11-02T11:37:00+08:00">2022-11-02</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,7 +245,7 @@
 <p>当我们需要删除暂存区或分支上的文件，同时工作区<strong>不需要</strong>这个文件，可以使用 git rm</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm file</span><br><span class="line">git commit -m &quot;delete file&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
 
-<p>当我们需要删除暂存区或分支上的文件，但是工作区<strong>需要</strong>这个文件，可以使用 git rm —cached</p>
+<p>当我们需要删除暂存区或分支上的文件，但是工作区<strong>需要</strong>这个文件，可以使用 git rm –cached</p>
 
     </div>
 
