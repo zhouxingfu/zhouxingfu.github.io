@@ -184,6 +184,269 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">gtest学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-05 10:53:44" itemprop="dateCreated datePublished" datetime="2021-01-05T10:53:44+08:00">2021-01-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>如果让我设计一个测试框架，我会怎么弄？</p>
+<p>我有几个疑问：  </p>
+<ul>
+<li>是面向接口测试，还是面向功能测试？比如我要实现某个功能X，可能要调用接口A，接着B，最后C。当然可以采用test suite的概念，还是按照接口写test case，但一些test case可以组成test suite</li>
+<li>test case能否做到与input output无关？比如A-&gt;B A-&gt;C ， 这两个test suite，给A的输入不同，输出也不同，有人说那你test suite组合起来就好了，接口可以做到跟输入分离，可如果是单独测试A接口呢？有单独的input？ 这倒是也可以。</li>
+</ul>
+<p>这么一想，问题倒是都能解决，接口测试为基本的test case，接口与输入、输出分离，比如可以有config，不是写死的状态；根据功能性，某些test case可以组成test suite，这里面接口用到的input output也是不同的。  </p>
+<p>接下来我们看看Googletest的使用以及实现原理吧。  </p>
+<h2 id="1-大体思路"><a href="#1-大体思路" class="headerlink" title="1 大体思路"></a><strong>1 大体思路</strong></h2><p>gtest的github repository里有gtest和gmock，gmock可以认为是依托gtest实现了更高级的功能（现在还没看，后面写sample）。编译成功之后，会生成libgtest.a libgmock.a libgtest_main.a libgmock_main.a，这里libgtest_main.a 其实是包含了以下代码</p>
+<pre><code>int main(int argc, char* argv[])
+&#123;
+    testing::InitGoogleTest(&amp;argc, argv);
+    return RUN_ALL_TESTS();
+&#125;</code></pre>
+<p>这样我们写unit_test.cpp就可以了，然后直接编译进去，生成可执行，然后直接跑就会进入到libgtest_main.a的main函数里，跑所有的test。  </p>
+<h2 id="2-正式集成"><a href="#2-正式集成" class="headerlink" title="2 正式集成"></a><strong>2 正式集成</strong></h2><h3 id="2-1-现有工程的TestSuite"><a href="#2-1-现有工程的TestSuite" class="headerlink" title="2.1 现有工程的TestSuite"></a><strong>2.1 现有工程的TestSuite</strong></h3><p>今天看公司代码里的测试用例，全部是按照功能来写的，大概类似于</p>
+<pre><code>TEST(TestSuiteName, TestCaseName)
+&#123;
+    Init();
+    Start();
+    Stop();
+    Destroy();
+&#125;</code></pre>
+<p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="post-title-link" itemprop="url">Python学习路线</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26+08:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/" class="post-title-link" itemprop="url">ubuntu搜狗输入法乱码需切换两次shift才恢复</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-10 17:20:52" itemprop="dateCreated datePublished" datetime="2020-10-10T17:20:52+08:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
+ 
+
+<p>按两次shift就变成正常了  </p>
+  
+
+<p>每次都特别麻烦，后来在网上找到原因了<a target="_blank" rel="noopener" href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
+<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
+  
+
+  
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -814,296 +1077,6 @@ if __name__ == &#39;__main__&#39;:
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/Partition-Labels/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/23/Partition-Labels/" class="post-title-link" itemprop="url">Partition Labels</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-23 22:24:48" itemprop="dateCreated datePublished" datetime="2020-09-23T22:24:48+08:00">2020-09-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong><font color=red>题目</font></strong>  </p>
-<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
-<p><strong>Example 1:</strong>  </p>
-<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
-Output: [9,7,8]
-Explanation:
-The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
-This is a partition so that each letter appears in at most one part.
-A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
-<p><strong>Note:</strong></p>
-<ul>
-<li>S will have length in range [1, 500].</li>
-<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/23/Partition-Labels/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/20/Python%E4%B8%ADmutable%E4%B8%8Eimmutable/" class="post-title-link" itemprop="url">Python中mutable与immutable</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-20 14:40:54" itemprop="dateCreated datePublished" datetime="2020-10-20T14:40:54+08:00">2020-10-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在Python的数据类型中，根据是否可改变，分为mutable与immutable。   </p>
-<p>那么跟C/C++相比，所谓的不可修改是什么意思？  </p>
-<ul>
-<li>不能进行单个元素的赋值操作</li>
-<li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
-</ul>
-<p>下面我们针对tuple来写几个例子。  </p>
-<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
-<pre><code>a = (1, 2)  
-a[0] = 2 #error</code></pre>
-<p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
-<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = (<span class="number">1</span>, <span class="number">2</span>)  </span><br><span class="line">id(a) <span class="comment">#140036094436208</span></span><br><span class="line">a = <span class="number">-2</span>, <span class="number">-1</span> <span class="comment"># right (-2, -1)</span></span><br><span class="line">id(a) <span class="comment">#140036072923616</span></span><br><span class="line">a += (<span class="number">-1</span>, <span class="number">4</span>) <span class="comment"># right (-2, -1, -1, 4)</span></span><br><span class="line">id(a) <span class="comment"># 140036094653072</span></span><br></pre></td></tr></table></figure>
-
-<p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
-<p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
-<p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
-<p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
-<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
-<p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
-<p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">Python科学计算笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-20 20:41:57" itemprop="dateCreated datePublished" datetime="2020-10-20T20:41:57+08:00">2020-10-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-numpy"><a href="#1-numpy" class="headerlink" title="1 numpy"></a><strong>1 numpy</strong></h2><h3 id="1-1-如何创建array"><a href="#1-1-如何创建array" class="headerlink" title="1.1 如何创建array"></a><strong>1.1 如何创建array</strong></h3><p>创建array的几种方式</p>
-<ul>
-<li><p>numpy.array() </p>
-<p>  An array, any object exposing the array interface, an object whose</p>
-<pre><code>      __array__ method returns an array, or any (nested) sequence</code></pre>
-</li>
-<li><p>numpy.asarray()  </p>
-<p>  array_like</p>
-<pre><code>      Input data, in any form that can be converted to an array.  This
-      includes lists, lists of tuples, tuples, tuples of tuples, tuples
-      of lists and ndarrays.</code></pre>
-</li>
-</ul>
-<ul>
-<li><p>自动生成数组 numpy.arange  numpy.logspace numpy.linspace 用于创建等差 等比 array（arange和linspace创建等差array的方式有区别）  </p>
-</li>
-<li><p>numpy.full numpy.zeros numpy.ones</p>
-</li>
-<li><p>numpy.fromstring numpy.frombuffer numpy.from function </p>
-</li>
-</ul>
-<h3 id="1-3-存取元素"><a href="#1-3-存取元素" class="headerlink" title="1.3 存取元素"></a><strong>1.3 存取元素</strong></h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/20/Python%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AE%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1173,14 +1146,14 @@ a[0] = 2 #error</code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
