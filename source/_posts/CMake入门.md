@@ -2,7 +2,7 @@
 title: CMake入门
 date: 2021-03-20 05:20:39
 tags:
-categories: other
+categories: CMake
 ---
 
 现在的构建工具有很多，CMake是其中的佼佼者，虽然很多人说CMake编译速度太慢，但架不住兼容性好。  
