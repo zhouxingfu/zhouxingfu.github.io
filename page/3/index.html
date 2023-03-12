@@ -184,6 +184,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/03/20/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/20/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">面试题总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-20 05:42:33" itemprop="dateCreated datePublished" datetime="2021-03-20T05:42:33+08:00">2021-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在面试或者被面试过程中收集的面试题目，不仅仅与C++相关，还有数据结构和算法，系统等等。  </p>
+<hr>
+<p><strong><font color=orange size=4> C++</font></strong> </p>
+<p>_<font size=3 color=green>如何让两个shared_ptr指向同一个实例</font>_  </p>
+<p>enable_shared_from_memory </p>
+<p>今天听面试人说的，以前真没考虑过  </p>
+<p><em><font size=3 color=green>只在堆或者栈上创建对象</font></em>  </p>
+<p>只在堆上 ： operator new()=delete<br>只在栈上 ： private ~base();  </p>
+<p><em><font size=3 color=green>static成员变量不能在类内部初始化吗</font></em>  </p>
+<p><strong>Case 1</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span>  m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.0f</span>; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.f</span>; <span class="comment">//OK</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Case 2</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : 空</span><br></pre></td></tr></table></figure>
+
+<p>对m_bObject没有进行类外初始化，但好像也没有调用base的构造函数。 </p>
+<p><strong>Case 3</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line">base m_bObject;<span class="comment">//约等于base m_object = base()</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : base construct</span><br></pre></td></tr></table></figure>
+
+<p>对m_bObject没有进行类外初始化，但好像也没有调用base的构造函数，难道static成员可以不同初始化，除非要使用？   </p>
+<p><strong>Case 3</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base(i)&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct&quot;</span>&lt;&lt;<span class="built_in">endl</span>;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> base&amp; <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        m_bObject = base(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;</span><br><span class="line">base m_bObject;<span class="comment">//约等于base m_object = base()</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output : error: no matching function <span class="keyword">for</span> call to ‘base::base()’</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    base()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;base construct no param&quot;</span>;&#125;</span><br><span class="line">    <span class="comment">//base(int i)&#123;std::cout&lt;&lt;&quot;base construct&quot;&lt;&lt;std::endl;&#125;</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;test&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Init</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">static</span> base temp;</span><br><span class="line">        m_bObject = temp;<span class="comment">//这是类内初始化吗？还是 简单的赋值？</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> base m_bObject;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//base::m_bObject::print(); //error</span></span><br><span class="line">    base::m_bObject.<span class="built_in">print</span>();<span class="comment">//虽然没有初始化，但并不妨碍调用static方法</span></span><br><span class="line">    base::<span class="built_in">print</span>();</span><br><span class="line">    <span class="comment">//static base b = base::m_bObject; //undefined reference to `base::m_bObject&#x27; 因为此时静态变量没有初始化（分配内存）</span></span><br><span class="line">    b.<span class="built_in">print</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有两个问题 </p>
+<ul>
+<li>为初始化的静态成员变量 </li>
+</ul>
+<p>从上面可以总结得出</p>
+<ul>
+<li>static变量在未使用之前可以不用初始化</li>
+<li>static成员变量不会默认初始化（如果不在类外初始化的话）</li>
+<li>static成员类外初始化</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/Partition-Labels/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -998,92 +1107,6 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/" class="post-title-link" itemprop="url">PE ELF文件格式浅析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-09 17:25:15" itemprop="dateCreated datePublished" datetime="2020-10-09T17:25:15+08:00">2020-10-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>在Windows平台，我们的exe dll 都是PE格式，在Linux平台是ELF格式（x86/arm等）。  </p>
-<p>那种格式可以被OS识别甚至加载、启动都与OS息息相关。  </p>
-<p>我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32/64上？<br>这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么导致这些结果的原因是什么呢？</p>
-<p>首先说Apple，使用的是一种叫做Fat Binary的技术，也就是我在编译程序的时候里面其实有包含了两套代码，同时支持x86/64，苹果现在宣布今后将把macos从x86迁移到arm平台，那么是要还是用Fat Binary技术吗？Fat Binary的优点和缺点都显而易见，那么还有其它方式吗？  </p>
-<p>我们知道，Windows系统，32位应用可以在64位系统上运行，64位程序不能在32位系统上运行，这是为什么？  </p>
-<p><strong><font color=0xFF>ToDoList</font></strong>  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1153,14 +1176,14 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
@@ -1192,7 +1215,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
