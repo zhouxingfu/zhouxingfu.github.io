@@ -1541,4 +1541,24 @@ if __name__ == &#39;__main__&#39;:
         <category>UnrealEngine</category>
       </categories>
   </entry>
+  <entry>
+    <title>CUDA</title>
+    <url>/2023/09/01/CUDA/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>TVM概览</title>
+    <url>/2023/09/01/TVM%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>机器学习概览</title>
+    <url>/2023/09/01/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HPC概览</title>
+    <url>/2023/09/01/HPC%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
 </search>
