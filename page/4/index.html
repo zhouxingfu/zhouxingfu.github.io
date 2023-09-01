@@ -184,6 +184,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/" class="post-title-link" itemprop="url">Linux构建程序时如何判断库能否被找到</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-23 14:47:56" itemprop="dateCreated datePublished" datetime="2020-10-23T14:47:56+08:00">2020-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在用CMake构建程序的时候，经常要用到find_package来查找库，那么什么样的库可以被find_package找到呢？  </p>
+<ul>
+<li><p>ldconfig -p | grep libjpeg  </p>
+</li>
+<li><p>locate libGL.so</p>
+</li>
+<li><p>pkg-config </p>
+<p>  pkg-config –cflags jpeg<br>  pkg-config –libs jpeg<br>  pkg-config –cflags “jpeg &gt;= 1.0.0” # for version check<br>  pkg-config  –modversion jpeg | awk -F. ‘{ printf “0x%02X%02X%02X\n”,$1,$2,$3 }’ #version check  </p>
+</li>
+<li><p>dpkg -s packagename (deb-based distribution)</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -621,7 +706,7 @@ Output: [1,1,8,8]  </code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

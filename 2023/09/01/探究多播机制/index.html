@@ -20,28 +20,32 @@
     var CONFIG = {"hostname":"zhouxingfu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="I WILL TRY ANYTHING ONCE">
-<meta property="og:url" content="zhouxingfu.github.io/index.html">
+  <meta name="description" content="前言在前面一篇中，我们认识了delegate，具体内容可以看上一篇。 前两天遇到一个crash，就是提示我 Slate can only be accessed from the GameThread or the SlateLoadingThread! 具体操作是—— 我绑定了event到delegate，在event里我会对UI进行操作，结果就是crash报上面的错误。 根据提示信息，在bro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究多播机制">
+<meta property="og:url" content="zhouxingfu.github.io/2023/09/01/%E6%8E%A2%E7%A9%B6%E5%A4%9A%E6%92%AD%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
+<meta property="og:description" content="前言在前面一篇中，我们认识了delegate，具体内容可以看上一篇。 前两天遇到一个crash，就是提示我 Slate can only be accessed from the GameThread or the SlateLoadingThread! 具体操作是—— 我绑定了event到delegate，在event里我会对UI进行操作，结果就是crash报上面的错误。 根据提示信息，在bro">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-01T08:24:03.000Z">
+<meta property="article:modified_time" content="2023-09-01T08:31:14.518Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="zhouxingfu.github.io/">
+<link rel="canonical" href="zhouxingfu.github.io/2023/09/01/%E6%8E%A2%E7%A9%B6%E5%A4%9A%E6%92%AD%E6%9C%BA%E5%88%B6/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>I WILL TRY ANYTHING ONCE</title>
+  <title>探究多播机制 | I WILL TRY ANYTHING ONCE</title>
   
 
 
@@ -178,9 +182,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -196,10 +201,9 @@
       <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/01/%E6%8E%A2%E7%A9%B6%E5%A4%9A%E6%92%AD%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">探究多播机制</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          探究多播机制
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -232,7 +236,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h2><p>在前面一篇中，我们认识了delegate，具体内容可以看上一篇。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h2><p>在前面一篇中，我们认识了delegate，具体内容可以看上一篇。</p>
 <p>前两天遇到一个crash，就是提示我 Slate can only be accessed from the GameThread or the SlateLoadingThread!</p>
 <p>具体操作是—— 我绑定了event到delegate，在event里我会对UI进行操作，结果就是crash报上面的错误。</p>
 <p>根据提示信息，在broadcast()的位置调用IsGameThread()发现当前线程不是GameThread，而UE要求对UI的操作必须在GameThread线程，否则会直接crash。（从这里也能看出来，UE引擎是很严密的，正是这个严密，才给了我们很大的自由度）。</p>
@@ -273,762 +277,31 @@
 <p>FuncParamList 和 FuncParamPassThru 有什么区别？<br>对UHT更深入地理解<br>其它未想到的问题<br>后面希望能出一篇关于UHT的文章，结合UHT源码，剖析架构。</p>
 <p>其它问题就等想起来再说了。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2023/03/12/%E5%90%AC%E5%A6%88%E8%AF%B4%E4%B8%9C%E4%B8%9C%E9%80%81%E5%A4%96%E5%8D%96%E4%BB%A5%E5%8F%8A%E8%B7%9F%E5%AF%B9%E8%B1%A1%E5%90%B5%E6%9E%B6%E7%9A%84%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/12/%E5%90%AC%E5%A6%88%E8%AF%B4%E4%B8%9C%E4%B8%9C%E9%80%81%E5%A4%96%E5%8D%96%E4%BB%A5%E5%8F%8A%E8%B7%9F%E5%AF%B9%E8%B1%A1%E5%90%B5%E6%9E%B6%E7%9A%84%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">听妈说东东送外卖以及跟对象吵架的思考</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-03-12 16:09:40 / Modified: 16:34:41" itemprop="dateCreated datePublished" datetime="2023-03-12T16:09:40+08:00">2023-03-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/life/" itemprop="url" rel="index"><span itemprop="name">life</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>前几天听妈说东东在送外卖，说一单给好几块钱，哎，之前看到网上说中年人送外卖，只是嘴上感叹哀民生之多艰，但听到小时候玩伴现在在送外卖，真的触动很深，我隐隐约约看见了自己的未来，但却没有胆量正视这个问题。</p>
-<p>我今年37岁，周围总围绕着一种略带紧张的氛围，ZhangChun今年也被裁了，但给了20w的补偿，虽然N只有2，但工资高就是给力啊，很羡慕，我N现在是4，如果能领大礼包，也就是这么个数字。</p>
-<p>在国内就是得卷，出了国估计也得卷，但这种卷不是上班无意义地卷，而是要学会有意义地卷，要努力在工作之外提升自己，适应新的环境，了解他们的价值观和风俗。</p>
-<p>跟对象吵架了，因为我妈奶瓶没有刷干净，结果就在那边摔冰箱门，冲着我阴阳怪气，她问我我不想回答，然后就说没听见，她就骂我SB，以及一些其它的词汇。相比较于之前那次我喊她，她不反应，我的操作是自己默默走开，然后她妈怪罪于我，还说我不去帮她，搞得我还哭了，当时自己真是傻叉。  </p>
-<p>太双标了，我还是坚持我之前的观点，太双标了，然后到现在还成了我的过错，之前我犯了错都会认错，但人家没有，上次吵架达成的协议没有任何意义，上次她问我，为什么不回答，回答什么，她列举了一系列举措，如何控制自己的情绪，如何不双标，我认为她能做到吗？我从来没有认为她能做到。以后的生活以后再说，过一天算一天，自己做好准备就是了，为自己也为父母，至于肉肉，交给她了，房产和以前给她的钱我通通不要。  </p>
-<p>至于以后会不会再结婚，我完全没有想法，我不想再给自己设限制了，我小时候家庭是不幸福，导致我有很多缺点，算了，也许问题出在我身上，一切都是我的问题，但我没办法骗自己，我想了很久，我目前的价值观和性格告诉我，对方有问题，对方现在不觉得自己有问题，那么这既是价值观冲突了，这也是我的悲哀，根本没有人教会我如何选择自己的人身伴侣，如何与别人相处，如何知道跟人是合适还是不合适。  </p>
-<p>一切太晚，都是因为自己不够决断。</p>
-<p>勇气，可以解决一切问题，即使是得了癌症，终归是有一个结果的，而自己现在的问题是不敢面对，以及做出抉择，不知道脑子里在考虑什么。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/11/02/%E5%B7%B2%E7%BB%8F%E8%A2%ABtrack%E7%9A%84%E6%96%87%E4%BB%B6%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87-gitignore%E6%96%87%E4%BB%B6%E7%94%9F%E6%95%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/02/%E5%B7%B2%E7%BB%8F%E8%A2%ABtrack%E7%9A%84%E6%96%87%E4%BB%B6%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87-gitignore%E6%96%87%E4%BB%B6%E7%94%9F%E6%95%88/" class="post-title-link" itemprop="url">已经被track的文件无法通过.gitignore文件生效</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-11-02 11:37:00 / Modified: 16:46:49" itemprop="dateCreated datePublished" datetime="2022-11-02T11:37:00+08:00">2022-11-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近遇到一个问题，把某些文件夹添加到 .gitignore，但git add的时候却还是添加进去了，不生效。</p>
-<p>原因是，gitignore只针对untracked files。</p>
-<p>如果是tracked files(之前已经commit过)，那么修改 .gitignore不能在 add的时候忽略掉tracked files。</p>
-<p><strong>但如果我们的工作区还需要这些文件，那该怎么办？我们肯定是不希望在本地重新生成的，太浪费时间了。</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm -r --cached tempFile</span><br><span class="line">git commit -m &quot;从版本库移除 tempFile&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>当我们需要删除暂存区或分支上的文件，同时工作区<strong>不需要</strong>这个文件，可以使用 git rm</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm file</span><br><span class="line">git commit -m &quot;delete file&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>当我们需要删除暂存区或分支上的文件，但是工作区<strong>需要</strong>这个文件，可以使用 git rm –cached</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/10/25/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E4%B9%8Bcondition-variable/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/25/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E4%B9%8Bcondition-variable/" class="post-title-link" itemprop="url">C++语言特性之condition_variable</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-10-25 18:10:56" itemprop="dateCreated datePublished" datetime="2022-10-25T18:10:56+08:00">2022-10-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-11-02 11:36:28" itemprop="dateModified" datetime="2022-11-02T11:36:28+08:00">2022-11-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="为什么引入condition-variable"><a href="#为什么引入condition-variable" class="headerlink" title="为什么引入condition_variable"></a><strong>为什么引入condition_variable</strong></h1><h1 id="语法规定"><a href="#语法规定" class="headerlink" title="语法规定"></a><strong>语法规定</strong></h1><h1 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a><strong>内部实现</strong></h1><h2 id="你会如何实现condition-variable"><a href="#你会如何实现condition-variable" class="headerlink" title="你会如何实现condition_variable"></a><strong>你会如何实现condition_variable</strong></h2><h1 id="应用拓展"><a href="#应用拓展" class="headerlink" title="应用拓展"></a><strong>应用拓展</strong></h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h1><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/thread/condition_variable">std::condition_variable</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/03/20/CMake%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/20/CMake%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">CMake入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-20 05:20:39" itemprop="dateCreated datePublished" datetime="2021-03-20T05:20:39+08:00">2021-03-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-10-25 18:11:32" itemprop="dateModified" datetime="2022-10-25T18:11:32+08:00">2022-10-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CMake/" itemprop="url" rel="index"><span itemprop="name">CMake</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>现在的构建工具有很多，CMake是其中的佼佼者，虽然很多人说CMake编译速度太慢，但架不住兼容性好。  </p>
-<p>我了解的构建工具有bazel、ninja等，但暂时都没用过，先掌握CMake吧。  </p>
-<h2 id="从一个简单的项目开始"><a href="#从一个简单的项目开始" class="headerlink" title="从一个简单的项目开始"></a><strong>从一个简单的项目开始</strong></h2><p><strong><font color=orange>一个最简单的例子</font></strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br></pre></td></tr></table></figure>
-
-<p>只有3行，但也构建了CMakeLists.txt的骨架。  </p>
-<ul>
-<li>指定cmake支持的最小版本</li>
-<li>指定项目名称</li>
-<li>指定目标名称及其依赖  </li>
-</ul>
-<p><strong><font size = 4 color=red>注意事项</font></strong>  </p>
-<ol>
-<li><em>关于targetname和projectname</em><br>targetname和projectname不要相同，projectname直接在CMakeLists.txt中指定，</li>
-</ol>
-<h2 id="那么如果我们要依赖库呢"><a href="#那么如果我们要依赖库呢" class="headerlink" title="那么如果我们要依赖库呢"></a><strong>那么如果我们要依赖库呢</strong></h2><p>我们先添加一个预先生成好的库，CMakeLists.txt更新为 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br><span class="line">target_link_libraries(myTarget PUBLIC ui PRIVATE algorithm INTERNAL framework)</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">MetaHumans分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-23 11:08:47 / Modified: 11:10:13" itemprop="dateCreated datePublished" datetime="2022-09-23T11:08:47+08:00">2022-09-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnrealEngine/" itemprop="url" rel="index"><span itemprop="name">UnrealEngine</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文用来分析Epic提供的MetaHumans工程架构和业务逻辑。  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/" class="post-title-link" itemprop="url">Praat验证音素时间戳准确度</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-07-29 17:20:38 / Modified: 18:06:32" itemprop="dateCreated datePublished" datetime="2022-07-29T17:20:38+08:00">2022-07-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9F%B3%E8%A7%86%E9%A2%91/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="音素与音频"><a href="#音素与音频" class="headerlink" title="音素与音频"></a><strong>音素与音频</strong></h1><p>最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。</p>
-<p>声音驱动表情（包括口型）有很多方案，比较著名的是微软的视素驱动，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/how-to-speech-synthesis-viseme?pivots=programming-language-cpp">获取 lip-sync 的人脸姿态事件</a>，但好像根据语言也会有不同的视素，所以最终还是跟音素相关。  </p>
-<p>现在很多语音厂商都能够同时提供音频对应的音素了，比如AiSpeech，Data Baker，但拿到音频和音素之后，我们先要想要的是 ———— 如何判断音素和音频在时间维度上对应的准确度。  </p>
-<p>为了解决这个问题，我们先来介绍一个工具和一种格式。  </p>
-<h2 id="TextGrid格式"><a href="#TextGrid格式" class="headerlink" title="TextGrid格式"></a><strong>TextGrid格式</strong></h2><p>TextGrid一种专门对声音进行标注的文本格式，里面可以记录很多信息 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/388306735">Praat scripting 入门 (2) TextGrid 和录音管理</a>。   </p>
-<p>我一般用来标准音素时间戳，大概格式如下 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">File type &#x3D; &quot;ooTextFile&quot;</span><br><span class="line">Object class &#x3D; &quot;TextGrid&quot;</span><br><span class="line"></span><br><span class="line">xmin &#x3D; 0</span><br><span class="line">xmax &#x3D; 2.3</span><br><span class="line">tiers? &lt;exists&gt;</span><br><span class="line">size &#x3D; 3</span><br><span class="line">item []:</span><br><span class="line">    item [1]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;sentence&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 1</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;říkej &quot;&quot;ahoj&quot;&quot; dvakrát&quot;</span><br><span class="line">    item [2]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;phonemes&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 3</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 0.7</span><br><span class="line">          text &#x3D; &quot;r̝iːkɛj&quot;</span><br><span class="line">       intervals [2]:</span><br><span class="line">          xmin &#x3D; 0.7</span><br><span class="line">          xmax &#x3D; 1.6</span><br><span class="line">          text &#x3D; &quot;ʔaɦɔj&quot;</span><br><span class="line">       intervals [3]:</span><br><span class="line">          xmin &#x3D; 1.6</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;dʋakraːt&quot;</span><br><span class="line">    item [3]:</span><br><span class="line">       class &#x3D; &quot;TextTier&quot;</span><br><span class="line">       name &#x3D; &quot;bell&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       points: size &#x3D; 2</span><br><span class="line">       points [1]:</span><br><span class="line">          number &#x3D; 0.9</span><br><span class="line">          mark &#x3D; &quot;ding&quot;</span><br><span class="line">       points [2]:</span><br><span class="line">          number &#x3D; 1.3</span><br><span class="line">          mark &#x3D; &quot;dong&quot;</span><br></pre></td></tr></table></figure>
-
-<p>我们拿到厂商提供的音素之后，可以保存成这样的文件 <a target="_blank" rel="noopener" href="https://github.com/eiichiroi/textgrid.hpp">一个开源的TextGrid读写器</a>，此时，我们手中有了音频和对应的TextGrid文件。  </p>
-<p>当然生成textgrid的代码也可以参考kaldi代码，kaldi是语音界的天花板和军火库，非常多的人从里面汲取营养，以后有兴趣或需要的时候，可以参考这个工程，后面我会单独写一篇文章，讨论如何使用kaldi，实现从音频到嘴型驱动的全流程。  </p>
-<p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
-<p><strong>Praat</strong>  </p>
-<h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<p><img src="assets/Praat-Phoneme-a.png" alt="Praat音素音频对齐-1"></p>
-<p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
-<ul>
-<li>出现的界面中有两个文件，同时选中，就会在窗口右侧出现Edit and Continue按钮，此时点击这个按钮，就会出现一个界面，这个界面是上面是音频，下面是音素时间戳，每个音素时间戳占用1格（格子有大有小，跟duration有关），我们点击这个格子，就能提到这段格子所对应的音频，假设这个格子上标注的是 ang，但听到的声音明显不仅仅包含ang，比如杨 i ang2，如果我们听到了 i的声音，那么我们就可以证明，这个音素时间戳太靠前了。  </li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/" class="post-title-link" itemprop="url">CS15-213:CSAPP读书笔记(1)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-04-26 21:48:25" itemprop="dateCreated datePublished" datetime="2022-04-26T21:48:25+08:00">2022-04-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-09 10:26:38" itemprop="dateModified" datetime="2022-05-09T10:26:38+08:00">2022-05-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
-<p>CS15213 参考资料<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a target="_blank" rel="noopener" href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
-<p>MIT 6.828 参考资料<br><a target="_blank" rel="noopener" href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a target="_blank" rel="noopener" href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a target="_blank" rel="noopener" href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
-<p><a target="_blank" rel="noopener" href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
-<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
-<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
-<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
-<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
-<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
-<p>我目前的理解是：</p>
-<ol>
-<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
-<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
-<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
-</ol>
-<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/29/build-and-backup-github-pages-with-hexo/" class="post-title-link" itemprop="url">用hexo搭建github blog</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-29 16:46:06" itemprop="dateCreated datePublished" datetime="2020-08-29T16:46:06+08:00">2020-08-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
-<p>我们的操作步骤是</p>
-<ol>
-<li>在github.io　hexo分支备份源文件</li>
-<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
-</ol>
-<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/29/build-and-backup-github-pages-with-hexo/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/12/%E5%90%AC%E5%A6%88%E8%AF%B4%E4%B8%9C%E4%B8%9C%E9%80%81%E5%A4%96%E5%8D%96%E4%BB%A5%E5%8F%8A%E8%B7%9F%E5%AF%B9%E8%B1%A1%E5%90%B5%E6%9E%B6%E7%9A%84%E6%80%9D%E8%80%83/" rel="prev" title="听妈说东东送外卖以及跟对象吵架的思考">
+      <i class="fa fa-chevron-left"></i> 听妈说东东送外卖以及跟对象吵架的思考
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">enable_if_t分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-02-26 05:45:03" itemprop="dateCreated datePublished" datetime="2021-02-26T05:45:03+08:00">2021-02-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>To be continued</strong></p>
-<p>在看VS版本的thread库源码时，发现了这么一段</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color=red>enable_if_t</font>__。</p>
-<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
-<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
-
-<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
-<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
-<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
-<p>首先，我们要介绍一个概念 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
-<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
-<p>此特性被用于模板元编程。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -1080,6 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DELEGATE%E5%AE%8F%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%85%B6%E5%B1%95%E5%BC%80"><span class="nav-number">2.</span> <span class="nav-text">DELEGATE宏定义及其展开</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
