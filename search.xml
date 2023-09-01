@@ -118,113 +118,9 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
-    <title>CS15-213:CSAPP读书笔记(1)</title>
-    <url>/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/</url>
-    <content><![CDATA[<h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
-<p><a href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
-<p>CS15213 参考资料<br><a href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
-<p>MIT 6.828 参考资料<br><a href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
-<p><a href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
-<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
-<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
-<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
-<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
-<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
-<p>我目前的理解是：</p>
-<ol>
-<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
-<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
-<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
-</ol>
-<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
-]]></content>
-      <categories>
-        <category>CSAPP</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CUDA</title>
     <url>/2023/09/01/CUDA/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Diagnostics_Library(Error-Handling)</title>
-    <url>/2020/09/02/Diagnostics-Library-Error-Handling/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color="0xFFFFFF">前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
-<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<a id="more"></a>
-<p><strong>video time 1.05 EH is for Synchronous Program Errors</strong></p>
-<p>“异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。</p>
-<p>通俗一点的将就是：中断异步就是我可以不用立即处理，而是等执行完一条指令时候才可能处理，异常同步是指出了异常必须立马处理。”</p>
-<p><strong>video time 3:11 Returning Error Indicators</strong></p>
-<p>C语言中没有异常处理，所有的错误都是通过返回值的方式来告知调用者。</p>
-<p>但是通过返回值的方式通知 变得越来越臃肿  在很多情况下，接收返回值的函数不能处理错误，只能一步步往上传。这确实把错误检测和错误处理解耦了，但代价是高昂的，通过call chain传递错误码增加了分支处理，源代码增加，程序变大，可读性也变差。 </p>
-<p>而且，很多情况下我们会忘记检查错误码（这本身就不鲁棒）。</p>
-<p>但什么时候用返回码，什么时候用异常呢？  </p>
-<p><strong>video time 8:11 Exception Handling throw catch try</strong>  </p>
-<p>throw exception, the exception can be primitive values, but perferable to throw objects of class types.  </p>
-<p>base <exception><br>derived <stdexcept>  : invalid_argument out_of_range overflow_error<br>other derived exception defined in <new> <typeinfo></typeinfo></new></stdexcept></exception></p>
-<p><strong>video time 10:56 throw by value, catch by reference</strong>  </p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">int</span>&amp; a)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">const</span> <span class="keyword">char</span>* msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(...)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;catch errors&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>video time 14:59 “Unwinding” the Stack</strong>  </p>
-<p>没看懂，很尴尬<br><strong>video time 19:58 nocept</strong>  </p>
-<p>void f() noexcept;</p>
-<p>noexcept不会在编译时起作用；如果一个noexcept实际上throw exception，那么std::terminate会被调用。  </p>
-<p>所以，确保声明为noexcept的函数不会throw exception。  </p>
-<p>这里有一个疑问，如果确信不会throw了，那么声明noexcept的意义在哪里？有利于编译器优化。</p>
-<p>noexcept还可以作有条件选择，比如 void swap(Type&amp; x, Type&amp; y) noexcept(noexcept(x.swap(y)))，如果x.swap(y)不发生异常，那么swap(Type&amp; x, Type&amp; y)一定不发生异常。  </p>
-<p>鼓励使用noexcept的情形：</p>
-<ul>
-<li>move constructor</li>
-<li>move assignment</li>
-<li>destructor</li>
-<li>Leaf Function 叶子函数是指在函数内部不分配栈空间，也不调用其它函数，也不存储非易失性寄存器，也不处理异常。  </li>
-</ul>
-<p><strong>video time 23:58 Exception Safety</strong>  </p>
-<ul>
-<li>the basic guarantee</li>
-<li>the strong guarantee</li>
-<li>the noexcept guarantee  </li>
-</ul>
-<p><strong>video time 31:05 RAII</strong></p>
-<p>还有Herb Sutter 2019 ACCU Conference上的演讲<br> KEYNOTE: De-fragmenting C++: Making exceptions more affordable and usable - Herb Sutter [ACCU 2019]</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/os7cqJ5qlzo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>Jon Kalb “Exception-Safe Code, Part I”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/W7fIy_54y-w&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=84" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-
-<p>Jon Kalb “Exception-Safe Code, Part II”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/b9xMIKb1jMk&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=83" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>Jon Kalb “Exception-Safe Code, Part III”</p>
-<div class="video-container"><iframe src="https://www.youtube.com/embed/MiKxfdkMJW8&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=82" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
-
-<p>在Jon Kalb的演讲里也提到了 the basic guarantee the strong guarantee the nothrow guarantee 这三个概念，无论哪种概念都要首先满足两点  </p>
-<ul>
-<li>异常发生后，不能有内存泄漏</li>
-<li>异常发生后，不允许数据结构恶化，比如 Object* p = new Object(“test”) 此时因为new异常，那么我们不知道此时到底分配了多少内存（对象构造到什么程度了），或者说p指向的是一块销毁的区域。</li>
-</ul>
-<p>保证没有内存泄漏很简单，靠RAII的锁机制。  std::unique_lock m(&amp;mtx)<br>保证第二点有一个，可以通过<br>std::shared_ptr<Object> ptr_obj_;<br>ptr_obj_.reset(new Object(“test”))<br>此时当new Object产生异常的时候，根本不会走到reset中，也就不会对shared_ptr产生影响。<br>美中不足的是，如果是通过拷贝构造或者复制构造的方式来reset<br>ptr_obj_.reset(new Object(old_object))<br>如果new Object抛出异常，那么old_object到底会发生什么变化呢？此时，就不会满足strong guarantee了（要么成功，即使失败，也要像完全没调用过那样）。</Object></p>
-<p>那么该怎么解决这个问题呢？ <em><font color="blue">copy and swap</font></em><br>“copy and swap”类似于buffer的概念，在某篇博文中是这么讲述的</p>
-<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 <span class="string">&quot;copy and swap&quot;</span>。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 <span class="string">&quot;pimpl idiom&quot;</span>，Item <span class="number">31</span> 描述了它的一些细节。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">PMImpl</span> &#123;</span> <span class="comment">// PMImpl = &quot;PrettyMenu</span></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;Image&gt; bgImage; <span class="comment">// Impl.&quot;; see below for</span></span><br><span class="line">　<span class="keyword">int</span> imageChanges; <span class="comment">// why it’s a struct</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrettyMenu</span> &#123;</span></span><br><span class="line">　...</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">　Mutex mutex;</span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; pImpl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrettyMenu::changeBackground</span><span class="params">(<span class="built_in">std</span>::istream&amp; imgSrc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">　<span class="keyword">using</span> <span class="built_in">std</span>::swap; <span class="comment">// see Item 25</span></span><br><span class="line"></span><br><span class="line">　<span class="function">Lock <span class="title">ml</span><span class="params">(&amp;mutex)</span></span>; <span class="comment">// acquire the mutex</span></span><br><span class="line"></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; <span class="comment">// copy obj. data</span></span><br><span class="line">　pNew(<span class="keyword">new</span> PMImpl(*pImpl));</span><br><span class="line"></span><br><span class="line">　pNew-&gt;bgImage.reset(<span class="keyword">new</span> Image(imgSrc)); <span class="comment">// modify the copy</span></span><br><span class="line">　++pNew-&gt;imageChanges;</span><br><span class="line"></span><br><span class="line">　swap(pImpl, pNew); <span class="comment">// swap the new</span></span><br><span class="line">　<span class="comment">// data into place</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// release the mutex</span></span><br></pre></td></tr></table></figure>
-
-<p> 　在这个例子中，我选择将 PMImpl 做成一个结构体，而不是类，因为通过让 pImpl 是 private 就可以确保 PrettyMenu 数据的封装。将 PMImpl 做成一个类虽然有些不那么方便，却没有增加什么好处。（这也会使有面向对象洁癖者走投无路。）如果你愿意，PMImpl 可以嵌套在 PrettyMenu 内部，像这样的打包问题与我们这里所关心的写异常安全的代码的问题没有什么关系。</p>
-<p>　　 copy-and-swap 策略是一种全面改变或丝毫不变一个对象的状态的极好的方法，但是，在通常情况下，它不能保证全部函数都是强力异常安全的。因为如果在changeBackground中我们调用了其他函数比如func()，如果func()不能保证strong guarantee，那么changeBackground即使我们写的再好，也不能保证strong guarantee，俗称“一颗老鼠屎，坏了一锅粥”，就是这样的道理。</p>
-<p>有一篇讲述copy-and-swap的很好的文章 <a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a></p>
-<p><a href="https://blog.csdn.net/qq_36553031/article/details/89057433">C++ 拷贝构造函数和赋值构造函数</a></p>
-<p>其实copy-and-swap的思想确实很好，但也有一个疑问，就是这样会不会造成性能的损失？</p>
-<p><strong>疑问：但是basic guarantee跟strong guarantee相比，缺了什么呢？</strong></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color="0xFFFFFF">参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/error">Error handling</a><br><a href="https://blog.csdn.net/weixin_37817539/article/details/102421184">中断是异步的，异常是同步的</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a><br><a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a></p>
-]]></content>
-      <categories>
-        <category>STL</category>
-      </categories>
   </entry>
   <entry>
     <title>调试与汇编</title>
@@ -357,6 +253,110 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
+    <title>CS15-213:CSAPP读书笔记(1)</title>
+    <url>/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/</url>
+    <content><![CDATA[<h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
+<p><a href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
+<p>CS15213 参考资料<br><a href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
+<p>MIT 6.828 参考资料<br><a href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
+<p><a href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
+<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
+<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
+<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
+<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
+<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
+<p>我目前的理解是：</p>
+<ol>
+<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
+<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
+<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
+</ol>
+<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
+]]></content>
+      <categories>
+        <category>CSAPP</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Diagnostics_Library(Error-Handling)</title>
+    <url>/2020/09/02/Diagnostics-Library-Error-Handling/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color="0xFFFFFF">前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+<p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<a id="more"></a>
+<p><strong>video time 1.05 EH is for Synchronous Program Errors</strong></p>
+<p>“异常是同步的，是指异常发生的时候，CPU立即处理本次异常，直到异常处理结束之后才能继续进行接下来的任务。例如在进行程序调试的时候，添加一个断点，就必须在断点出发生异常，CPU立即处理，先暂停其工作，否则就无法查看断点处的程序运行信息。</p>
+<p>通俗一点的将就是：中断异步就是我可以不用立即处理，而是等执行完一条指令时候才可能处理，异常同步是指出了异常必须立马处理。”</p>
+<p><strong>video time 3:11 Returning Error Indicators</strong></p>
+<p>C语言中没有异常处理，所有的错误都是通过返回值的方式来告知调用者。</p>
+<p>但是通过返回值的方式通知 变得越来越臃肿  在很多情况下，接收返回值的函数不能处理错误，只能一步步往上传。这确实把错误检测和错误处理解耦了，但代价是高昂的，通过call chain传递错误码增加了分支处理，源代码增加，程序变大，可读性也变差。 </p>
+<p>而且，很多情况下我们会忘记检查错误码（这本身就不鲁棒）。</p>
+<p>但什么时候用返回码，什么时候用异常呢？  </p>
+<p><strong>video time 8:11 Exception Handling throw catch try</strong>  </p>
+<p>throw exception, the exception can be primitive values, but perferable to throw objects of class types.  </p>
+<p>base <exception><br>derived <stdexcept>  : invalid_argument out_of_range overflow_error<br>other derived exception defined in <new> <typeinfo></typeinfo></new></stdexcept></exception></p>
+<p><strong>video time 10:56 throw by value, catch by reference</strong>  </p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">int</span>&amp; a)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="keyword">const</span> <span class="keyword">char</span>* msg)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">string</span>(msg) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(...)&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;catch errors&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>video time 14:59 “Unwinding” the Stack</strong>  </p>
+<p>没看懂，很尴尬<br><strong>video time 19:58 nocept</strong>  </p>
+<p>void f() noexcept;</p>
+<p>noexcept不会在编译时起作用；如果一个noexcept实际上throw exception，那么std::terminate会被调用。  </p>
+<p>所以，确保声明为noexcept的函数不会throw exception。  </p>
+<p>这里有一个疑问，如果确信不会throw了，那么声明noexcept的意义在哪里？有利于编译器优化。</p>
+<p>noexcept还可以作有条件选择，比如 void swap(Type&amp; x, Type&amp; y) noexcept(noexcept(x.swap(y)))，如果x.swap(y)不发生异常，那么swap(Type&amp; x, Type&amp; y)一定不发生异常。  </p>
+<p>鼓励使用noexcept的情形：</p>
+<ul>
+<li>move constructor</li>
+<li>move assignment</li>
+<li>destructor</li>
+<li>Leaf Function 叶子函数是指在函数内部不分配栈空间，也不调用其它函数，也不存储非易失性寄存器，也不处理异常。  </li>
+</ul>
+<p><strong>video time 23:58 Exception Safety</strong>  </p>
+<ul>
+<li>the basic guarantee</li>
+<li>the strong guarantee</li>
+<li>the noexcept guarantee  </li>
+</ul>
+<p><strong>video time 31:05 RAII</strong></p>
+<p>还有Herb Sutter 2019 ACCU Conference上的演讲<br> KEYNOTE: De-fragmenting C++: Making exceptions more affordable and usable - Herb Sutter [ACCU 2019]</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/os7cqJ5qlzo" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part I”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/W7fIy_54y-w&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=84" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+
+<p>Jon Kalb “Exception-Safe Code, Part II”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/b9xMIKb1jMk&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=83" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Jon Kalb “Exception-Safe Code, Part III”</p>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/MiKxfdkMJW8&list=PLHTh1InhhwT7esTl1bRitiizeEnksGU7J&index=82" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>在Jon Kalb的演讲里也提到了 the basic guarantee the strong guarantee the nothrow guarantee 这三个概念，无论哪种概念都要首先满足两点  </p>
+<ul>
+<li>异常发生后，不能有内存泄漏</li>
+<li>异常发生后，不允许数据结构恶化，比如 Object* p = new Object(“test”) 此时因为new异常，那么我们不知道此时到底分配了多少内存（对象构造到什么程度了），或者说p指向的是一块销毁的区域。</li>
+</ul>
+<p>保证没有内存泄漏很简单，靠RAII的锁机制。  std::unique_lock m(&amp;mtx)<br>保证第二点有一个，可以通过<br>std::shared_ptr<Object> ptr_obj_;<br>ptr_obj_.reset(new Object(“test”))<br>此时当new Object产生异常的时候，根本不会走到reset中，也就不会对shared_ptr产生影响。<br>美中不足的是，如果是通过拷贝构造或者复制构造的方式来reset<br>ptr_obj_.reset(new Object(old_object))<br>如果new Object抛出异常，那么old_object到底会发生什么变化呢？此时，就不会满足strong guarantee了（要么成功，即使失败，也要像完全没调用过那样）。</Object></p>
+<p>那么该怎么解决这个问题呢？ <em><font color="blue">copy and swap</font></em><br>“copy and swap”类似于buffer的概念，在某篇博文中是这么讲述的</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">有一种通常的设计策略可以有代表性地产生强力保证，而且熟悉它是非常必要的。这个策略被称为 <span class="string">&quot;copy and swap&quot;</span>。它的原理很简单。先做出一个你要改变的对象的拷贝，然后在这个拷贝上做出全部所需的改变。如果改变过程中的某些操作抛出了异常，最初的对象保 持不变。在所有的改变完全成功之后，将被改变的对象和最初的对象在一个不会抛出异常的操作中进行交换。 这通常通过下面的方法实现：将每一个对象中的全部数据从“真正的”对象中放入到一个单独的实现对象中，然后将一个指向实现对象的指针交给真正对象。这通常 被称为 <span class="string">&quot;pimpl idiom&quot;</span>，Item <span class="number">31</span> 描述了它的一些细节。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">PMImpl</span> &#123;</span> <span class="comment">// PMImpl = &quot;PrettyMenu</span></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;Image&gt; bgImage; <span class="comment">// Impl.&quot;; see below for</span></span><br><span class="line">　<span class="keyword">int</span> imageChanges; <span class="comment">// why it’s a struct</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrettyMenu</span> &#123;</span></span><br><span class="line">　...</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">　Mutex mutex;</span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; pImpl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrettyMenu::changeBackground</span><span class="params">(<span class="built_in">std</span>::istream&amp; imgSrc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">　<span class="keyword">using</span> <span class="built_in">std</span>::swap; <span class="comment">// see Item 25</span></span><br><span class="line"></span><br><span class="line">　<span class="function">Lock <span class="title">ml</span><span class="params">(&amp;mutex)</span></span>; <span class="comment">// acquire the mutex</span></span><br><span class="line"></span><br><span class="line">　<span class="built_in">std</span>::tr1::<span class="built_in">shared_ptr</span>&lt;PMImpl&gt; <span class="comment">// copy obj. data</span></span><br><span class="line">　pNew(<span class="keyword">new</span> PMImpl(*pImpl));</span><br><span class="line"></span><br><span class="line">　pNew-&gt;bgImage.reset(<span class="keyword">new</span> Image(imgSrc)); <span class="comment">// modify the copy</span></span><br><span class="line">　++pNew-&gt;imageChanges;</span><br><span class="line"></span><br><span class="line">　swap(pImpl, pNew); <span class="comment">// swap the new</span></span><br><span class="line">　<span class="comment">// data into place</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// release the mutex</span></span><br></pre></td></tr></table></figure>
+
+<p> 　在这个例子中，我选择将 PMImpl 做成一个结构体，而不是类，因为通过让 pImpl 是 private 就可以确保 PrettyMenu 数据的封装。将 PMImpl 做成一个类虽然有些不那么方便，却没有增加什么好处。（这也会使有面向对象洁癖者走投无路。）如果你愿意，PMImpl 可以嵌套在 PrettyMenu 内部，像这样的打包问题与我们这里所关心的写异常安全的代码的问题没有什么关系。</p>
+<p>　　 copy-and-swap 策略是一种全面改变或丝毫不变一个对象的状态的极好的方法，但是，在通常情况下，它不能保证全部函数都是强力异常安全的。因为如果在changeBackground中我们调用了其他函数比如func()，如果func()不能保证strong guarantee，那么changeBackground即使我们写的再好，也不能保证strong guarantee，俗称“一颗老鼠屎，坏了一锅粥”，就是这样的道理。</p>
+<p>有一篇讲述copy-and-swap的很好的文章 <a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a></p>
+<p><a href="https://blog.csdn.net/qq_36553031/article/details/89057433">C++ 拷贝构造函数和赋值构造函数</a></p>
+<p>其实copy-and-swap的思想确实很好，但也有一个疑问，就是这样会不会造成性能的损失？</p>
+<p><strong>疑问：但是basic guarantee跟strong guarantee相比，缺了什么呢？</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color="0xFFFFFF">参考资料</font></strong></h2><p><a href="https://en.cppreference.com/w/cpp/error">Error handling</a><br><a href="https://blog.csdn.net/weixin_37817539/article/details/102421184">中断是异步的，异常是同步的</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a><br><a href="https://blog.csdn.net/xiajun07061225/article/details/7926722">【C++深入探索】Copy-and-swap idiom详解和实现安全自我赋值</a><br><a href="https://blog.csdn.net/weixin_34082789/article/details/85429805">C++箴言：争取异常安全的代码</a></p>
+]]></content>
+      <categories>
+        <category>STL</category>
+      </categories>
+  </entry>
+  <entry>
     <title>HPC概览</title>
     <url>/2023/09/01/HPC%E6%A6%82%E8%A7%88/</url>
     <content><![CDATA[]]></content>
@@ -410,15 +410,6 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
-    <title>MetaHumans分析</title>
-    <url>/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<p>本文用来分析Epic提供的MetaHumans工程架构和业务逻辑。  </p>
-]]></content>
-      <categories>
-        <category>UnrealEngine</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Linux构建程序时如何判断库能否被找到</title>
     <url>/2020/10/23/Linux%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F%E6%97%B6%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%BA%93%E8%83%BD%E5%90%A6%E8%A2%AB%E6%89%BE%E5%88%B0/</url>
     <content><![CDATA[<p>在用CMake构建程序的时候，经常要用到find_package来查找库，那么什么样的库可以被find_package找到呢？  </p>
@@ -436,6 +427,15 @@ Output: [1,1,8,8]  </code></pre>
 ]]></content>
       <categories>
         <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>MetaHumans分析</title>
+    <url>/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p>本文用来分析Epic提供的MetaHumans工程架构和业务逻辑。  </p>
+]]></content>
+      <categories>
+        <category>UnrealEngine</category>
       </categories>
   </entry>
   <entry>
@@ -517,39 +517,8 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
-    <title>Partition Labels</title>
-    <url>/2020/09/23/Partition-Labels/</url>
-    <content><![CDATA[<p><strong><font color="red">题目</font></strong>  </p>
-<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
-<p><strong>Example 1:</strong>  </p>
-<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
-Output: [9,7,8]
-Explanation:
-The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
-This is a partition so that each letter appears in at most one part.
-A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
-<p><strong>Note:</strong></p>
-<ul>
-<li>S will have length in range [1, 500].</li>
-<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
-</ul>
-<a id="more"></a>
-
-<p><strong>思路</strong>  </p>
-<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
-<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
-<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color="blue">__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
-<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">partitionLabels</span><span class="params">(<span class="built_in">string</span> S)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; map_assemble;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; vec_result;</span><br><span class="line">        <span class="keyword">int</span> length = S.length();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(map_assemble.<span class="built_in">find</span>(S[i]) != map_assemble.<span class="built_in">end</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//update</span></span><br><span class="line">                map_assemble[S[i]].second = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//add</span></span><br><span class="line">                map_assemble[S[i]] = <span class="built_in">make_pair</span>(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt; map_assemble_reverse;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= map_assemble.<span class="built_in">begin</span>(); it!=map_assemble.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(<span class="built_in">make_pair</span>(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//求相交集合的并集</span></span><br><span class="line">         <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(it = map_assemble_reverse.<span class="built_in">begin</span>(); it!=map_assemble_reverse.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> bProcessed = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> it1=vec_result.<span class="built_in">begin</span>(); it1!=vec_result.<span class="built_in">end</span>(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> a1 = it-&gt;first.first, b1 = it-&gt;first.second;</span><br><span class="line">                <span class="keyword">int</span> a2 = it1-&gt;first, b2 = it1-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>((a1 &gt; b2) <span class="keyword">or</span> (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    it1 = vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(<span class="built_in">make_pair</span>(<span class="built_in">min</span>(a1, a2), <span class="built_in">max</span>(b1, b2)));</span><br><span class="line">                    bProcessed = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bProcessed)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vec_result.push_back(<span class="built_in">make_pair</span>(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; final_result;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= vec_result.<span class="built_in">begin</span>(); it!=vec_result.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Praat验证音素时间戳准确度</title>
-    <url>/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/</url>
+    <url>/2022/07/29/Praat-Verify-Phoneme-Timestamp/</url>
     <content><![CDATA[<h1 id="音素与音频"><a href="#音素与音频" class="headerlink" title="音素与音频"></a><strong>音素与音频</strong></h1><p>最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。</p>
 <p>声音驱动表情（包括口型）有很多方案，比较著名的是微软的视素驱动，<a href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/how-to-speech-synthesis-viseme?pivots=programming-language-cpp">获取 lip-sync 的人脸姿态事件</a>，但好像根据语言也会有不同的视素，所以最终还是跟音素相关。  </p>
 <p>现在很多语音厂商都能够同时提供音频对应的音素了，比如AiSpeech，Data Baker，但拿到音频和音素之后，我们先要想要的是 ———— 如何判断音素和音频在时间维度上对应的准确度。  </p>
@@ -563,8 +532,7 @@ A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect
 <p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
 <p><strong>Praat</strong>  </p>
 <h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<img src="/.io/2022/07//07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/Praat-Phoneme-a.png" class>
-
+<img src="/.io/2022/07//07/29/Praat-Verify-Phoneme-Timestamp/Praat-Phoneme-a.png" class title="Praat">
 
 <p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
 <ul>
@@ -599,6 +567,60 @@ a[0] = 2 #error</code></pre>
 <p>也就是说，<strong><font color="green">Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
 <p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
 <p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Partition Labels</title>
+    <url>/2020/09/23/Partition-Labels/</url>
+    <content><![CDATA[<p><strong><font color="red">题目</font></strong>  </p>
+<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>S will have length in range [1, 500].</li>
+<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
+</ul>
+<a id="more"></a>
+
+<p><strong>思路</strong>  </p>
+<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
+<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
+<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color="blue">__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
+<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">partitionLabels</span><span class="params">(<span class="built_in">string</span> S)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; map_assemble;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; vec_result;</span><br><span class="line">        <span class="keyword">int</span> length = S.length();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(map_assemble.<span class="built_in">find</span>(S[i]) != map_assemble.<span class="built_in">end</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//update</span></span><br><span class="line">                map_assemble[S[i]].second = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//add</span></span><br><span class="line">                map_assemble[S[i]] = <span class="built_in">make_pair</span>(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt; map_assemble_reverse;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= map_assemble.<span class="built_in">begin</span>(); it!=map_assemble.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(<span class="built_in">make_pair</span>(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//求相交集合的并集</span></span><br><span class="line">         <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(it = map_assemble_reverse.<span class="built_in">begin</span>(); it!=map_assemble_reverse.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> bProcessed = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> it1=vec_result.<span class="built_in">begin</span>(); it1!=vec_result.<span class="built_in">end</span>(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> a1 = it-&gt;first.first, b1 = it-&gt;first.second;</span><br><span class="line">                <span class="keyword">int</span> a2 = it1-&gt;first, b2 = it1-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>((a1 &gt; b2) <span class="keyword">or</span> (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    it1 = vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(<span class="built_in">make_pair</span>(<span class="built_in">min</span>(a1, a2), <span class="built_in">max</span>(b1, b2)));</span><br><span class="line">                    bProcessed = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bProcessed)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vec_result.push_back(<span class="built_in">make_pair</span>(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; final_result;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= vec_result.<span class="built_in">begin</span>(); it!=vec_result.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python线程操作</title>
+    <url>/2020/11/20/Python%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="1-多线程操作的基本原理"><a href="#1-多线程操作的基本原理" class="headerlink" title="1 多线程操作的基本原理"></a><strong>1 多线程操作的基本原理</strong></h1><p>开发语言与系统架构无关，在学习使用C++的时候我们就接触过多线程编程，后面随着处理器多核的出现，有了并行编程，这两个还存在着很大的区别。  </p>
+<p>说一下我所理解的多线程编程  </p>
+<ol>
+<li>存在可以独立执行的Task</li>
+<li>Task之间的依赖关系是流式的（或者可以转变为流式）  </li>
+</ol>
+<p>举个人脸检测的例子</p>
+<pre class="mermaid">graph LR;
+　　视频流-->| 检测 |人脸信息;
+　　人脸信息-->| 后处理 |处理过的人脸信息;
+　　处理过的人脸信息-->| 显示 |上层回调;</pre>
+
+<p>在实际的操作中，我们可以把所有需要处理的视频流保存下来，然后传递给算法引擎，然后得到所有的人脸信息，然后对每一帧的人脸信息进行统一处理，然后再一帧帧返回结果。但这样做效率很低。<br>我们可以试着这么做，开一个线程A，用于获取视频帧；再开一个线程B，用于算法检测；再开一个线程C，用于回调显示。<br>这样做的好处是，我拿到一帧视频，放到buffer里（这里甚至可以设定双buffer）。 </p>
+<p><a href="https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics">Multiple buffering</a>  </p>
+<p>vsync</p>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -726,29 +748,6 @@ def create():
       </categories>
   </entry>
   <entry>
-    <title>Python线程操作</title>
-    <url>/2020/11/20/Python%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<h1 id="1-多线程操作的基本原理"><a href="#1-多线程操作的基本原理" class="headerlink" title="1 多线程操作的基本原理"></a><strong>1 多线程操作的基本原理</strong></h1><p>开发语言与系统架构无关，在学习使用C++的时候我们就接触过多线程编程，后面随着处理器多核的出现，有了并行编程，这两个还存在着很大的区别。  </p>
-<p>说一下我所理解的多线程编程  </p>
-<ol>
-<li>存在可以独立执行的Task</li>
-<li>Task之间的依赖关系是流式的（或者可以转变为流式）  </li>
-</ol>
-<p>举个人脸检测的例子</p>
-<pre class="mermaid">graph LR;
-　　视频流-->| 检测 |人脸信息;
-　　人脸信息-->| 后处理 |处理过的人脸信息;
-　　处理过的人脸信息-->| 显示 |上层回调;</pre>
-
-<p>在实际的操作中，我们可以把所有需要处理的视频流保存下来，然后传递给算法引擎，然后得到所有的人脸信息，然后对每一帧的人脸信息进行统一处理，然后再一帧帧返回结果。但这样做效率很低。<br>我们可以试着这么做，开一个线程A，用于获取视频帧；再开一个线程B，用于算法检测；再开一个线程C，用于回调显示。<br>这样做的好处是，我拿到一帧视频，放到buffer里（这里甚至可以设定双buffer）。 </p>
-<p><a href="https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics">Multiple buffering</a>  </p>
-<p>vsync</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Repeated Substring Pattern</title>
     <url>/2020/09/23/Repeated-Substring-Pattern/</url>
     <content><![CDATA[<p><strong><font color="red">题目</font></strong></p>
@@ -824,7 +823,7 @@ git push --set--upstream origin hexo　
 <p>然后把.git目录拷贝到blog folder</p>
 <h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color="0xFFFFFF">发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
 <h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color="0xFFFFFF">环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
-<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;</a>/username/username.github.io</del></p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;">&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;</a>/username/username.github.io</del></p>
 <p>The instrutions above is not right, you should do as follows</p>
 <pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
 npm install</code></pre>
@@ -878,6 +877,32 @@ npm install</code></pre>
       </categories>
   </entry>
   <entry>
+    <title>git学习</title>
+    <url>/2020/10/22/git%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<p>今天找到一个非常直观的git学习网站 <a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
+<p>Let’s go!  </p>
+<a id="more"></a>
+
+
+
+
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a><strong>Appendix</strong></h2><h3 id="git-merge-3-way-merge-algorithm"><a href="#git-merge-3-way-merge-algorithm" class="headerlink" title="git merge : 3-way merge algorithm"></a><strong>git merge : 3-way merge algorithm</strong></h3><p><a href="https://stackoverflow.com/questions/14961255/how-does-git-merge-work-in-details">How does ‘git merge’ work in details?</a><br><a href="https://en.wikipedia.org/wiki/Merge_(version_control)">Merge (version control)</a><br><a href="https://www.savaslabs.com/blog/strategies-and-tools-resolving-git-merge-conflicts#:~:text=In%20a%20three%20way%20merge,before%20the%20two%20branches%20forked">Strategies and Tools for Resolving Git Merge Conflicts</a>  </p>
+<h3 id="git-rebase-变基的原理是什么"><a href="#git-rebase-变基的原理是什么" class="headerlink" title="git rebase: 变基的原理是什么"></a><strong>git rebase: 变基的原理是什么</strong></h3><h3 id="git-reset-reset之后某些丢掉的commit能被找回来吗"><a href="#git-reset-reset之后某些丢掉的commit能被找回来吗" class="headerlink" title="git reset: reset之后某些丢掉的commit能被找回来吗"></a><strong>git reset: reset之后某些丢掉的commit能被找回来吗</strong></h3><p><a href="https://stackoverflow.com/questions/10099258/how-can-i-recover-a-lost-commit-in-git">How can I recover a lost commit in Git?</a>  </p>
+<h3 id="git-reset-reset如何调整commit的顺序？"><a href="#git-reset-reset如何调整commit的顺序？" class="headerlink" title="git reset: reset如何调整commit的顺序？"></a><strong>git reset: reset如何调整commit的顺序？</strong></h3><p>rebase调整commit的原理是什么？</p>
+<h3 id="git-cherry-pick"><a href="#git-cherry-pick" class="headerlink" title="git cherry-pick"></a><strong>git cherry-pick</strong></h3><ol>
+<li>cherry-pick 多个不同branch的commit，可以直接像下面这么写吗 git cherry-pick commit1 commit4 commit9（这三个commit分属不同的branch）  </li>
+<li>cherry-pick的commit是由merge而来的，此时会出现什么问题？遇到这种情况，该怎么处理？  </li>
+</ol>
+<h3 id="如何定位哪个commit开始引入了某个bug"><a href="#如何定位哪个commit开始引入了某个bug" class="headerlink" title="如何定位哪个commit开始引入了某个bug"></a><strong>如何定位哪个commit开始引入了某个bug</strong></h3><h3 id="之前的某个commit存在bug，该如何修复"><a href="#之前的某个commit存在bug，该如何修复" class="headerlink" title="之前的某个commit存在bug，该如何修复"></a><strong>之前的某个commit存在bug，该如何修复</strong></h3><ul>
+<li>直接新加一个修复bug的commit，简单直接  </li>
+<li></li>
+</ul>
+]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+  </entry>
+  <entry>
     <title>gtest学习</title>
     <url>/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<p>如果让我设计一个测试框架，我会怎么弄？</p>
@@ -910,29 +935,21 @@ npm install</code></pre>
       </categories>
   </entry>
   <entry>
-    <title>git学习</title>
-    <url>/2020/10/22/git%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<p>今天找到一个非常直观的git学习网站 <a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
-<p>Let’s go!  </p>
-<a id="more"></a>
+    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
+    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
+    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
+ 
 
+<p>按两次shift就变成正常了  </p>
+  
 
+<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
+<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
+  
 
-
-<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a><strong>Appendix</strong></h2><h3 id="git-merge-3-way-merge-algorithm"><a href="#git-merge-3-way-merge-algorithm" class="headerlink" title="git merge : 3-way merge algorithm"></a><strong>git merge : 3-way merge algorithm</strong></h3><p><a href="https://stackoverflow.com/questions/14961255/how-does-git-merge-work-in-details">How does ‘git merge’ work in details?</a><br><a href="https://en.wikipedia.org/wiki/Merge_(version_control)">Merge (version control)</a><br><a href="https://www.savaslabs.com/blog/strategies-and-tools-resolving-git-merge-conflicts#:~:text=In%20a%20three%20way%20merge,before%20the%20two%20branches%20forked">Strategies and Tools for Resolving Git Merge Conflicts</a>  </p>
-<h3 id="git-rebase-变基的原理是什么"><a href="#git-rebase-变基的原理是什么" class="headerlink" title="git rebase: 变基的原理是什么"></a><strong>git rebase: 变基的原理是什么</strong></h3><h3 id="git-reset-reset之后某些丢掉的commit能被找回来吗"><a href="#git-reset-reset之后某些丢掉的commit能被找回来吗" class="headerlink" title="git reset: reset之后某些丢掉的commit能被找回来吗"></a><strong>git reset: reset之后某些丢掉的commit能被找回来吗</strong></h3><p><a href="https://stackoverflow.com/questions/10099258/how-can-i-recover-a-lost-commit-in-git">How can I recover a lost commit in Git?</a>  </p>
-<h3 id="git-reset-reset如何调整commit的顺序？"><a href="#git-reset-reset如何调整commit的顺序？" class="headerlink" title="git reset: reset如何调整commit的顺序？"></a><strong>git reset: reset如何调整commit的顺序？</strong></h3><p>rebase调整commit的原理是什么？</p>
-<h3 id="git-cherry-pick"><a href="#git-cherry-pick" class="headerlink" title="git cherry-pick"></a><strong>git cherry-pick</strong></h3><ol>
-<li>cherry-pick 多个不同branch的commit，可以直接像下面这么写吗 git cherry-pick commit1 commit4 commit9（这三个commit分属不同的branch）  </li>
-<li>cherry-pick的commit是由merge而来的，此时会出现什么问题？遇到这种情况，该怎么处理？  </li>
-</ol>
-<h3 id="如何定位哪个commit开始引入了某个bug"><a href="#如何定位哪个commit开始引入了某个bug" class="headerlink" title="如何定位哪个commit开始引入了某个bug"></a><strong>如何定位哪个commit开始引入了某个bug</strong></h3><h3 id="之前的某个commit存在bug，该如何修复"><a href="#之前的某个commit存在bug，该如何修复" class="headerlink" title="之前的某个commit存在bug，该如何修复"></a><strong>之前的某个commit存在bug，该如何修复</strong></h3><ul>
-<li>直接新加一个修复bug的commit，简单直接  </li>
-<li></li>
-</ul>
-]]></content>
+  ]]></content>
       <categories>
-        <category>git</category>
+        <category>other</category>
       </categories>
   </entry>
   <entry>
@@ -1166,24 +1183,6 @@ JSON的数据类型和Python的数据类型是很容易找到对应关系的，�
 ]]></content>
       <categories>
         <category>Python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
-    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
-    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
- 
-
-<p>按两次shift就变成正常了  </p>
-  
-
-<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
-<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
-  
-
-  ]]></content>
-      <categories>
-        <category>other</category>
       </categories>
   </entry>
   <entry>

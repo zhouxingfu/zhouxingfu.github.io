@@ -184,6 +184,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/23/MetaHumans%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">MetaHumans分析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-09-23 11:08:47" itemprop="dateCreated datePublished" datetime="2022-09-23T11:08:47+08:00">2022-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-10-25 18:06:41" itemprop="dateModified" datetime="2022-10-25T18:06:41+08:00">2022-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnrealEngine/" itemprop="url" rel="index"><span itemprop="name">UnrealEngine</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文用来分析Epic提供的MetaHumans工程架构和业务逻辑。  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -528,103 +602,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">gtest学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-05 10:53:44" itemprop="dateCreated datePublished" datetime="2021-01-05T10:53:44+08:00">2021-01-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>如果让我设计一个测试框架，我会怎么弄？</p>
-<p>我有几个疑问：  </p>
-<ul>
-<li>是面向接口测试，还是面向功能测试？比如我要实现某个功能X，可能要调用接口A，接着B，最后C。当然可以采用test suite的概念，还是按照接口写test case，但一些test case可以组成test suite</li>
-<li>test case能否做到与input output无关？比如A-&gt;B A-&gt;C ， 这两个test suite，给A的输入不同，输出也不同，有人说那你test suite组合起来就好了，接口可以做到跟输入分离，可如果是单独测试A接口呢？有单独的input？ 这倒是也可以。</li>
-</ul>
-<p>这么一想，问题倒是都能解决，接口测试为基本的test case，接口与输入、输出分离，比如可以有config，不是写死的状态；根据功能性，某些test case可以组成test suite，这里面接口用到的input output也是不同的。  </p>
-<p>接下来我们看看Googletest的使用以及实现原理吧。  </p>
-<h2 id="1-大体思路"><a href="#1-大体思路" class="headerlink" title="1 大体思路"></a><strong>1 大体思路</strong></h2><p>gtest的github repository里有gtest和gmock，gmock可以认为是依托gtest实现了更高级的功能（现在还没看，后面写sample）。编译成功之后，会生成libgtest.a libgmock.a libgtest_main.a libgmock_main.a，这里libgtest_main.a 其实是包含了以下代码</p>
-<pre><code>int main(int argc, char* argv[])
-&#123;
-    testing::InitGoogleTest(&amp;argc, argv);
-    return RUN_ALL_TESTS();
-&#125;</code></pre>
-<p>这样我们写unit_test.cpp就可以了，然后直接编译进去，生成可执行，然后直接跑就会进入到libgtest_main.a的main函数里，跑所有的test。  </p>
-<h2 id="2-正式集成"><a href="#2-正式集成" class="headerlink" title="2 正式集成"></a><strong>2 正式集成</strong></h2><h3 id="2-1-现有工程的TestSuite"><a href="#2-1-现有工程的TestSuite" class="headerlink" title="2.1 现有工程的TestSuite"></a><strong>2.1 现有工程的TestSuite</strong></h3><p>今天看公司代码里的测试用例，全部是按照功能来写的，大概类似于</p>
-<pre><code>TEST(TestSuiteName, TestCaseName)
-&#123;
-    Init();
-    Start();
-    Stop();
-    Destroy();
-&#125;</code></pre>
-<p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/22/git%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -707,7 +684,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -721,7 +698,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="post-title-link" itemprop="url">Python学习路线</a>
+            <a href="/2021/01/05/gtest%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">gtest学习</a>
         </h2>
 
         <div class="post-meta">
@@ -731,7 +708,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26+08:00">2020-10-10</time>
+              <time title="Created: 2021-01-05 10:53:44" itemprop="dateCreated datePublished" datetime="2021-01-05T10:53:44+08:00">2021-01-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -746,7 +723,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                  <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
                 </span>
             </span>
 
@@ -761,17 +738,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
-<p>下面开始正经的学习一下Python。</p>
-<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <p>如果让我设计一个测试框架，我会怎么弄？</p>
+<p>我有几个疑问：  </p>
+<ul>
+<li>是面向接口测试，还是面向功能测试？比如我要实现某个功能X，可能要调用接口A，接着B，最后C。当然可以采用test suite的概念，还是按照接口写test case，但一些test case可以组成test suite</li>
+<li>test case能否做到与input output无关？比如A-&gt;B A-&gt;C ， 这两个test suite，给A的输入不同，输出也不同，有人说那你test suite组合起来就好了，接口可以做到跟输入分离，可如果是单独测试A接口呢？有单独的input？ 这倒是也可以。</li>
+</ul>
+<p>这么一想，问题倒是都能解决，接口测试为基本的test case，接口与输入、输出分离，比如可以有config，不是写死的状态；根据功能性，某些test case可以组成test suite，这里面接口用到的input output也是不同的。  </p>
+<p>接下来我们看看Googletest的使用以及实现原理吧。  </p>
+<h2 id="1-大体思路"><a href="#1-大体思路" class="headerlink" title="1 大体思路"></a><strong>1 大体思路</strong></h2><p>gtest的github repository里有gtest和gmock，gmock可以认为是依托gtest实现了更高级的功能（现在还没看，后面写sample）。编译成功之后，会生成libgtest.a libgmock.a libgtest_main.a libgmock_main.a，这里libgtest_main.a 其实是包含了以下代码</p>
+<pre><code>int main(int argc, char* argv[])
+&#123;
+    testing::InitGoogleTest(&amp;argc, argv);
+    return RUN_ALL_TESTS();
+&#125;</code></pre>
+<p>这样我们写unit_test.cpp就可以了，然后直接编译进去，生成可执行，然后直接跑就会进入到libgtest_main.a的main函数里，跑所有的test。  </p>
+<h2 id="2-正式集成"><a href="#2-正式集成" class="headerlink" title="2 正式集成"></a><strong>2 正式集成</strong></h2><h3 id="2-1-现有工程的TestSuite"><a href="#2-1-现有工程的TestSuite" class="headerlink" title="2.1 现有工程的TestSuite"></a><strong>2.1 现有工程的TestSuite</strong></h3><p>今天看公司代码里的测试用例，全部是按照功能来写的，大概类似于</p>
+<pre><code>TEST(TestSuiteName, TestCaseName)
+&#123;
+    Init();
+    Start();
+    Stop();
+    Destroy();
+&#125;</code></pre>
+<p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
+
       
     </div>
 
@@ -873,6 +864,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="post-title-link" itemprop="url">Python学习路线</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-10 20:33:26" itemprop="dateCreated datePublished" datetime="2020-10-10T20:33:26+08:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a><strong>1 前言</strong></h1><p>编程语言是特性的合集，比如for while，很多语言都有，lambda表达式也是，语言也在不断发展，协程的概念出来之后，很多语言也就着手修订新的标准（特性或者标准库）。如果从这个角度来理解，作为一个开发者，我们所掌握的其实是 算法 + 架构 + 语言特性，算法是可以完全抽离的，架构从宏观的角度上看也可以抽象出来，但因为不同语言生态差异，同一种架构用不同语言开发的成本千差万别，比如后端业务逻辑我们用C++的成本远远大于Java。至于语言特性，作为一个大的set，每一种语言从中挑选若干特性组合起来。至于为什么每个语言的写法不同，但即使两种语言有完全相同的特性，因为底层机制的不同，性能和写法差异也很大，比如Python这种胶水语言就比C++写的方便多了，还有Java C#也明显比C++写起来快，它们底层的虚拟机屏蔽了系统的细节，比如内存管理。</p>
+<p>下面开始正经的学习一下Python。</p>
+<p>声明一下本篇为自己参考<a target="_blank" rel="noopener" href="https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/12.%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md">Python 100天</a> 做的学习笔记。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/10/python%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -929,106 +1003,6 @@
       
           <p>在Windows平台，如果不指定bom头的话，是不清楚当前是什么编码格式的，如果我们在代码中使用了中文，系统根本不知道是utf-8 还是unicode-16，而对Linux来说，默认就是utf-8，所以写中文没关系。</p>
 <p>现在VS已经可以支持utf-8 without BOM的源码编译了，VS2015 update2之后就支持附加编译选项/utf-8，支持直接输出中文。  <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8?redirectedfrom=MSDN&view=vs-2019">/utf-8 (Set Source and Executable character sets to UTF-8)</a>  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06+08:00">2020-11-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><code>server code</code></p>
-<pre><code>import socket  
-
-if __name__ == &#39;__main__&#39;:
-    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
-    while True:
-        pass</code></pre>
-<p><code>client code</code>  </p>
-<pre><code>import socket
-if __name__ == &#39;__main__&#39;:
-    i = 0
-    while True:
-        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
-        if mySocket is None:
-            print(&quot;create client connect failed&quot;)
-            break
-        else:
-            print(&quot;create client connection succeed&quot;)
-            i = i + 1
-            print(&#39;current connection count &#39;, i)  </code></pre>
-<p>可以创建连接，但存在几个现象  </p>
-<ol>
-<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
-<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
-<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
-<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
-</ol>
 
       
     </div>
