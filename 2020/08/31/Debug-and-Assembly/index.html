@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
 <meta property="og:description" content="前言首先介绍一个可以在线查看C++转汇编的网站 www.godbolt.org，可以选择任意平台 任意版本的编译器，非常方便学习。  C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。   对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-call.png">
-<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png">
-<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/registers.jpg">
+<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png">
+<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-leave.png">
+<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/registers.jpg">
 <meta property="article:published_time" content="2020-08-31T03:36:09.000Z">
 <meta property="article:modified_time" content="2022-04-26T11:09:48.853Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-call.png">
+<meta name="twitter:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png">
 
 <link rel="canonical" href="zhouxingfu.github.io/2020/08/31/Debug-and-Assembly/">
 
@@ -246,7 +246,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color="0xFFFFFF">前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
 <p>C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。  </p>
 <p>对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从这个角度看，C++语言的代码耦合度太高了。至少以下几个方面并不适合C++  </p>
 <pre><code>1. 界面开发: 很多大厂的PC端用的是directUI架构，要想写好需要对C++熟练，而且要自己做各种精细控制。  
@@ -254,7 +254,7 @@
 3. 科学试验性质项目：比如机器学习模型训练  </code></pre>
 <p>其他：比如一般的程序开发，除非其它语言没有对应的库，否则都应该选用JAVA/C#/PYTHON这类语言开发，或者golang/rust。总之，C++的学习曲线太陡峭，但跟rust相比，历史包袱又很重。<br>既然这样，为什么我们还要学习C++呢？就是因为目前来说没有特别好能替代的，或许再过两年，rust和go成长起来之后，C++的市场份额会进一步萎缩，慢慢地被淘汰掉吧，淘汰也不是仅仅靠喊就行的，新语言还是得加油努力喔。  </p>
 <p>在Linux下我们用gdb进行代码调试和crash分析。在Windows平台我们有很多工具，一般是用IDA进行静态反汇编，用OD或者WinDbg进行动态分析，WinDbg也可以反汇编。<br>现在写blog的平台是Linux，所以先写linux的。我们的重点放在分析crashdump上。  </p>
-<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color=0xFFFFFF>gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
+<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color="0xFFFFFF">gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
 <p>一般发布版本，要从几个方面考虑</p>
 <ol>
 <li>可追溯</li>
@@ -264,7 +264,7 @@
 <p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
 <h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3><a id="more"></a>
 
-<img src="/2020/08/31/Debug-and-Assembly/stack-frame-call.png" class="" title="stack frame call">
+<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png" class title="stack frame call">
 
 
 <p>从上面我们可知<br>入栈时具体操作是</p>
@@ -277,11 +277,11 @@
 <pre><code>1)movq %rbp, %rsp ; 使 %rsp 和 %rbp 指向同一位置，即子栈帧的起始处, 收回子栈帧空间
 2)popq %rbp ; 将栈中保存的父栈帧的 %rbp 的值赋值给 %rbp，并且 %rsp 上移一个位置指向父栈帧的结尾处</code></pre>
 <p>为了便于栈帧恢复，x86_64 架构中提供了 leave 指令来实现上述两条命令的功能。执行 leave 后，前面图中函数调用的栈帧结构如下　　</p>
-<img src="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png" class="" title="stack frame leave">
+<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-leave.png" class title="stack frame leave">
 
 <p>调用 leave 后，%rsp 指向返回地址；ret 指令，从栈顶弹出数据，并跳转到此数据指向的地址处。在leave 执行后，%rsp 指向返回地址，因而 ret 的作用就是把 %rsp 上移一个位置，并跳转到返回地址执行。</p>
 <p>所以，leave 指令用于恢复父函数的栈帧，ret 用于跳转到返回地址处，leave 和ret 配合共同完成了子函数的返回。当执行完成 ret 后，%rsp 指向的是父栈帧的结尾处，父栈帧尾部存储的调用参数由编译器自动释放。</p>
-<h2 id="恢复被破坏的堆栈"><a href="#恢复被破坏的堆栈" class="headerlink" title="恢复被破坏的堆栈"></a><strong><font color=0xFFFFFF>恢复被破坏的堆栈</font></strong></h2><p>看知乎上回答问题的人，经常会开头来一句“先问有没有，再问是不是，再问为什么”。  </p>
+<h2 id="恢复被破坏的堆栈"><a href="#恢复被破坏的堆栈" class="headerlink" title="恢复被破坏的堆栈"></a><strong><font color="0xFFFFFF">恢复被破坏的堆栈</font></strong></h2><p>看知乎上回答问题的人，经常会开头来一句“先问有没有，再问是不是，再问为什么”。  </p>
 <p>怎么判断一个堆栈被破坏了？<br>很明显的，EIP EBP RETADDR这些都不是正常的内存值，比如?????或者0x00000000这类的。  </p>
 <p>至于该怎么恢复堆栈，我觉得总体上建立在一个基础上，也就是<a target="_blank" rel="noopener" href="https://devblogs.microsoft.com/oldnewthing/20110309-00/?p=11263">How to rescue a broken stack trace: Recovering the EBP</a>  这里面所说的，堆栈其实就是EBP组成的linked-list，虽然因为各种原因（比如数组越界等）会破坏堆栈，但终归不会把所有层的堆栈给破坏了。  </p>
 <p>比如在上面的例子中，ESP看上去还算正常，那么我们就看一下ESP周围数据，根据linked-list的特性，如果有一个EBP，那么EBP本身是一个地址，同时，在它的底层函数，EBP也会是一个value（call 子函数的时候，会先push EBP）。</p>
@@ -313,10 +313,10 @@
 </tbody></table>
 <p>在这里，如果我们找到EBP，那么附近的就是RetAddr，在gdb下用info symbol 内存地址 可以看到具体的函数。  </p>
 <p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-254771.htm">[翻译]手把手教你修复被破坏的堆栈</a><br>上述链接对应的资源在 <a href="/2020/08/31/Debug-and-Assembly/corrupted-stack-example-resource.zip" title="这里下载">这里下载</a></p>
-<h2 id="FPO产生的影响"><a href="#FPO产生的影响" class="headerlink" title="FPO产生的影响"></a><strong><font color=0xFFFFFF>FPO产生的影响</font></strong></h2><p>FPO = Frame Pointer Omission<br>FPO优化是intel处理器单独必备的，它的主要原理是不再为调用的子函数进行push EBP , mov ebp esp的操作。  </p>
+<h2 id="FPO产生的影响"><a href="#FPO产生的影响" class="headerlink" title="FPO产生的影响"></a><strong><font color="0xFFFFFF">FPO产生的影响</font></strong></h2><p>FPO = Frame Pointer Omission<br>FPO优化是intel处理器单独必备的，它的主要原理是不再为调用的子函数进行push EBP , mov ebp esp的操作。  </p>
 <p><a target="_blank" rel="noopener" href="http://www.nynaeve.net/?p=91">Frame pointer omission (FPO) optimization and consequences when debugging, part 1</a><br><a target="_blank" rel="noopener" href="http://www.nynaeve.net/?p=97">Frame pointer omission (FPO) optimization and consequences when debugging, part 2</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/archive/blogs/larryosterman/fpo">FPO</a>  </p>
-<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a><strong><font color=0xFFFFFF>通用命令</font></strong></h2><table>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a><strong><font color="0xFFFFFF">通用命令</font></strong></h2><table>
 <thead>
 <tr>
 <th>command</th>
@@ -344,26 +344,26 @@
 <td>查看具体变量value</td>
 </tr>
 </tbody></table>
-<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color=0xFFFFFF> 寄存器建议使用规则</font></strong></h2><img src="/2020/08/31/Debug-and-Assembly/registers.jpg" class="">
+<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color="0xFFFFFF"> 寄存器建议使用规则</font></strong></h2><img src="/.io/2020/08//08/31/Debug-and-Assembly/registers.jpg" class>
 
 
 
 
-<h3 id="GDB查看指定内存地址处的内容"><a href="#GDB查看指定内存地址处的内容" class="headerlink" title="GDB查看指定内存地址处的内容"></a><strong><font color=0xFF>GDB查看指定内存地址处的内容</font></strong></h3><p>命令格式：x/nfu <addr></p>
+<h3 id="GDB查看指定内存地址处的内容"><a href="#GDB查看指定内存地址处的内容" class="headerlink" title="GDB查看指定内存地址处的内容"></a><strong><font color="0xFF">GDB查看指定内存地址处的内容</font></strong></h3><p>命令格式：x/nfu <addr></addr></p>
 <p>如：</p>
 <p>（gdb）x/1xb 0x7fffffffd708</p>
 <p>x : examine 的缩写</p>
 <p>n : 表示要显示的内存单元个数</p>
 <p>f : 表示显示方式, 可取如下值<br>x 按十六进制格式显示变量。<br>d 按十进制格式显示变量。<br>u 按十进制格式显示无符号整型。<br>o 按八进制格式显示变量。<br>t 按二进制格式显示变量。<br>a 按十六进制格式显示变量。<br>i 指令地址格式<br>c 按字符格式显示变量。<br>f 按浮点数格式显示变量。</p>
 <p>u表示一个地址单元的长度，与n一起表示显示的地址长度<br>b表示单字节，<br>h表示双字节，<br>w表示四字节，<br>g表示八字节</p>
-<h3 id="查看正常函数名称"><a href="#查看正常函数名称" class="headerlink" title="查看正常函数名称"></a><strong><font color=0xFF>查看正常函数名称</font></strong></h3><p>_ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这类名字，该怎么知道它之前正常的名字呢？<br>这涉及到name mangling技术。最开始没记起这个名词，连搜索都不好搜索。  </p>
+<h3 id="查看正常函数名称"><a href="#查看正常函数名称" class="headerlink" title="查看正常函数名称"></a><strong><font color="0xFF">查看正常函数名称</font></strong></h3><p>_ZNSaIcEC1Ev@plt 在反汇编或者coredump堆栈中，我们经常会看到这类名字，该怎么知道它之前正常的名字呢？<br>这涉及到name mangling技术。最开始没记起这个名词，连搜索都不好搜索。  </p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1957228/how-to-make-gdb-show-the-original-non-mangling-function-name-on-disassembly-mode">How to make gdb show the original non-mangling function name on disassembly model?</a>  </p>
 <p>c++filt是一个经常用的技术，<del>但好像不是所有情况下都可以</del>。昨天c++file _ZNSaIcEC1Ev@plt，命令执行完还是这个字符串，当时认为是这个命令可能不适用于所有字符串，或者哪个环节出了问题。  </p>
 <p>c++filt _ZNSaIcEC1Ev  </p>
 <p><strong>后面那个@plt到底是干嘛的？</strong></p>
-<h3 id="objdump查看反汇编代码，如何从AT-amp-T风格改为intel"><a href="#objdump查看反汇编代码，如何从AT-amp-T风格改为intel" class="headerlink" title="objdump查看反汇编代码，如何从AT&amp;T风格改为intel"></a><strong><font color=0xFF>objdump查看反汇编代码，如何从AT&amp;T风格改为intel</font></strong></h3><p>gcc默认的汇编器是GAS，语法是AT&amp;T</p>
+<h3 id="objdump查看反汇编代码，如何从AT-amp-T风格改为intel"><a href="#objdump查看反汇编代码，如何从AT-amp-T风格改为intel" class="headerlink" title="objdump查看反汇编代码，如何从AT&amp;T风格改为intel"></a><strong><font color="0xFF">objdump查看反汇编代码，如何从AT&amp;T风格改为intel</font></strong></h3><p>gcc默认的汇编器是GAS，语法是AT&amp;T</p>
 <p>objdump -d -mi386:x86-64:intel exe or lib file name</p>
-<h3 id="FS寄存器分析"><a href="#FS寄存器分析" class="headerlink" title="FS寄存器分析"></a><strong><font color=0xFF>FS寄存器分析</font></strong></h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color=0xFFFFFF>参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27339191">x86-64 下函数调用及栈帧原理 - 冷风寒雨宿天涯的文章 - 知乎</a></p>
+<h3 id="FS寄存器分析"><a href="#FS寄存器分析" class="headerlink" title="FS寄存器分析"></a><strong><font color="0xFF">FS寄存器分析</font></strong></h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong><font color="0xFFFFFF">参考资料</font></strong></h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27339191">x86-64 下函数调用及栈帧原理 - 冷风寒雨宿天涯的文章 - 知乎</a></p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/107455887">x86_64架构下的函数调用及栈帧原理 - 看雪学院的文章 - 知乎</a>  </p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zrf2112/article/details/95661316">函数调用过程&amp;栈帧&amp;调用约定</a>  </p>
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/088fb171cd40">使用 gdb 恢复堆栈信息</a></p>
@@ -462,14 +462,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

@@ -254,7 +254,7 @@
 
 <h2 id="是否使用并发（并发的优缺点）"><a href="#是否使用并发（并发的优缺点）" class="headerlink" title="是否使用并发（并发的优缺点）"></a><strong>是否使用并发（并发的优缺点）</strong></h2><p>并发并不一定比非并发要好，要看具体的使用场景。</p>
 <h3 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a><strong>业务分析</strong></h3><p>分析一段业务逻辑是否可以采用多线程，至于能否充分利用硬件并行的概念再说（我的理解是，将简单的任务切分成子任务 增加的负担 远远超过了带来的益处，负担有可能是代码复杂度的提升，减少的时间远远不能弥补，子任务切分的太多，远远超过了硬件所支持的最优线程数，导致context切换负担太重）。 </p>
-<p><strong><font color=red>总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
+<p><strong><font color="red">总之，我们为了性能而使用并发：它可以大幅度提高应用的性能，但也很大可能让代码更加复杂，难以理解，并且更容易出错。因此，应用中只有特别影响性能的部分，我们才值得尝试优化，一句话，一切为了性能。</font></strong></p>
 <h3 id="并发的优点"><a href="#并发的优点" class="headerlink" title="并发的优点"></a><strong>并发的优点</strong></h3><p>Todo</p>
 <h3 id="并发的缺点"><a href="#并发的缺点" class="headerlink" title="并发的缺点"></a><strong>并发的缺点</strong></h3><p>Todo</p>
 <h2 id="C-线程库概述"><a href="#C-线程库概述" class="headerlink" title="C++线程库概述"></a><strong>C++线程库概述</strong></h2><p>C++11开始提供thread库，一直以来大家都有顾虑，就是抽象的代价高不高？  </p>
@@ -312,7 +312,7 @@
 
 <p>上面的代码中，先调用empty判断是否为空，不为空的话，就pop栈顶元素。很明显，如果不在整段代码加锁的话，在我们执行pop的时候，很可能其它线程操作导致stack为空了，此时pop该怎么操作呢？抛出异常是一个选项，但这样empty本身就没有意义了，反正为空pop就抛出异常，那么我们也不需要再check empty了。  </p>
 <p>于是设计者想出了top，top为空就抛出异常，这样empty为空的情况下也要抛出异常，这让empty变成了一个无用的函数。</p>
-<p>比如stack&lt; vector<int> &gt;，我们在返回的时候会调用构造函数，但如果构造函数崩溃（系统资源不足或者其它原因），抛出异常，这时候返回失败了，不确定stack上的元素是否已经被移除了。（因为我不确定，如果抛出bad_alloc异常，s.pop()是否还会返回？返回的话，stack已经确实将数据移除了，这时候的情况是：stack 元素确实被移除了，但数据没有正常返回，因为构造失败）。  </p>
+<p>比如stack&lt; vector<int> &gt;，我们在返回的时候会调用构造函数，但如果构造函数崩溃（系统资源不足或者其它原因），抛出异常，这时候返回失败了，不确定stack上的元素是否已经被移除了。（因为我不确定，如果抛出bad_alloc异常，s.pop()是否还会返回？返回的话，stack已经确实将数据移除了，这时候的情况是：stack 元素确实被移除了，但数据没有正常返回，因为构造失败）。  </int></p>
 <p>top确实能解决上面的问题，但引入了新的接口竞争。  </p>
 <p>当然，问题也有解决方案，但都有相应的代价。  </p>
 <h4 id="选项1：传引用"><a href="#选项1：传引用" class="headerlink" title="选项1：传引用"></a>选项1：传引用</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; result;</span><br><span class="line">some_stack.pop(result);</span><br></pre></td></tr></table></figure>
@@ -356,7 +356,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">std</span>::scoped_lock <span class="title">lk</span><span class="params">(e1.m, e2.m)</span></span>; <span class="comment">//C++17开始支持</span></span><br></pre></td></tr></table></figure>
 <p>这里scoped_lock代替了lock_guard和unique_lock的RAII特性。</p>
 <p>那么scoped_lock除了RAII特性，减少代码量，相比于std::lock还有哪些优势？  <em>ToDo</em></p>
-<p><strong><font color=red>std::lock的出现将程序员从dead-lock的困扰中解脱出来，让代码变得更加简洁</font></strong>  </p>
+<p><strong><font color="red">std::lock的出现将程序员从dead-lock的困扰中解脱出来，让代码变得更加简洁</font></strong>  </p>
 <h4 id="避免死锁的建议"><a href="#避免死锁的建议" class="headerlink" title="避免死锁的建议"></a><strong>避免死锁的建议</strong></h4><ul>
 <li>避免嵌套锁</li>
 <li>避免在持有锁时调用外部代码，因为外部代码有可能做任何事情，包括获取锁。</li>
@@ -459,14 +459,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

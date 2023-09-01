@@ -184,106 +184,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06+08:00">2020-11-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><code>server code</code></p>
-<pre><code>import socket  
-
-if __name__ == &#39;__main__&#39;:
-    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
-    while True:
-        pass</code></pre>
-<p><code>client code</code>  </p>
-<pre><code>import socket
-if __name__ == &#39;__main__&#39;:
-    i = 0
-    while True:
-        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
-        if mySocket is None:
-            print(&quot;create client connect failed&quot;)
-            break
-        else:
-            print(&quot;create client connection succeed&quot;)
-            i = i + 1
-            print(&#39;current connection count &#39;, i)  </code></pre>
-<p>可以创建连接，但存在几个现象  </p>
-<ol>
-<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
-<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
-<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
-<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -690,13 +590,13 @@ if __name__ == &#39;__main__&#39;:
       
           <p>在面试或者被面试过程中收集的面试题目，不仅仅与C++相关，还有数据结构和算法，系统等等。  </p>
 <hr>
-<p><strong><font color=orange size=4> C++</font></strong> </p>
-<p>_<font size=3 color=green>如何让两个shared_ptr指向同一个实例</font>_  </p>
+<p><strong><font color="orange" size="4"> C++</font></strong> </p>
+<p>_<font size="3" color="green">如何让两个shared_ptr指向同一个实例</font>_  </p>
 <p>enable_shared_from_memory </p>
 <p>今天听面试人说的，以前真没考虑过  </p>
-<p><em><font size=3 color=green>只在堆或者栈上创建对象</font></em>  </p>
+<p><em><font size="3" color="green">只在堆或者栈上创建对象</font></em>  </p>
 <p>只在堆上 ： operator new()=delete<br>只在栈上 ： private ~base();  </p>
-<p><em><font size=3 color=green>static成员变量不能在类内部初始化吗</font></em>  </p>
+<p><em><font size="3" color="green">static成员变量不能在类内部初始化吗</font></em>  </p>
 <p><strong>Case 1</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span>  m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.0f</span>; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.f</span>; <span class="comment">//OK</span></span><br></pre></td></tr></table></figure>
 
@@ -797,7 +697,7 @@ if __name__ == &#39;__main__&#39;:
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong><font color=red>题目</font></strong>  </p>
+          <p><strong><font color="red">题目</font></strong>  </p>
 <p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
 <p><strong>Example 1:</strong>  </p>
 <pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
@@ -898,18 +798,18 @@ A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect
 <li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
 </ul>
 <p>下面我们针对tuple来写几个例子。  </p>
-<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
+<p><strong><font color="red">不能进行单个元素的赋值操作</font></strong>  </p>
 <pre><code>a = (1, 2)  
 a[0] = 2 #error</code></pre>
 <p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
-<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
+<p><strong><font color="red">对变量进行整体赋值</font></strong>  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = (<span class="number">1</span>, <span class="number">2</span>)  </span><br><span class="line">id(a) <span class="comment">#140036094436208</span></span><br><span class="line">a = <span class="number">-2</span>, <span class="number">-1</span> <span class="comment"># right (-2, -1)</span></span><br><span class="line">id(a) <span class="comment">#140036072923616</span></span><br><span class="line">a += (<span class="number">-1</span>, <span class="number">4</span>) <span class="comment"># right (-2, -1, -1, 4)</span></span><br><span class="line">id(a) <span class="comment"># 140036094653072</span></span><br></pre></td></tr></table></figure>
 
 <p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
 <p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
 <p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
 <p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
-<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
+<p>也就是说，<strong><font color="green">Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
 <p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
 <p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
 
@@ -1117,6 +1017,100 @@ a[0] = 2 #error</code></pre>
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/Repeated-Substring-Pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/23/Repeated-Substring-Pattern/" class="post-title-link" itemprop="url">Repeated Substring Pattern</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-23 19:36:00" itemprop="dateCreated datePublished" datetime="2020-09-23T19:36:00+08:00">2020-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong><font color="red">题目</font></strong></p>
+<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: &quot;abab&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: &quot;aba&quot;
+Output: False </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: &quot;abcabcabcabc&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
+<p><strong>思路</strong>  </p>
+<p>start : 代表要比较的子串的开始索引  </p>
+<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
+<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
+<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
+<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">repeatedSubstringPattern</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">1</span>, start=<span class="number">0</span>, cmp_times=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= (<span class="built_in">floor</span>)(s.length() / <span class="number">2</span>); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length() % len != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            cmp_times = s.length() / len;</span><br><span class="line">            <span class="keyword">bool</span> bCurDup = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(s[j] != s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1186,14 +1180,14 @@ a[0] = 2 #error</code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

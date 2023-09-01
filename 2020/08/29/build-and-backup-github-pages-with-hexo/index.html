@@ -28,7 +28,7 @@
 <meta property="og:description" content="之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。   原理hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。注意：发布的东西和备份的">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-29T08:46:06.000Z">
-<meta property="article:modified_time" content="2022-04-26T11:09:48.889Z">
+<meta property="article:modified_time" content="2022-07-29T10:15:23.580Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
 
@@ -219,7 +219,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+                <time title="Modified: 2022-07-29 18:15:23" itemprop="dateModified" datetime="2022-07-29T18:15:23+08:00">2022-07-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,7 +243,7 @@
 
       
         <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color="0xFFFFFF">原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
 <p>我们的操作步骤是</p>
 <ol>
 <li>在github.io　hexo分支备份源文件</li>
@@ -253,19 +253,19 @@
 <a id="more"></a>
 
 <p>下面我们梳理一下具体的流程。  </p>
-<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color=0xFFFFFF>node及hexo环境</font></strong></h2><pre><code>mkdir blog
+<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color="0xFFFFFF">node及hexo环境</font></strong></h2><pre><code>mkdir blog
 npm i hexo-cli -g
 hexo -v 
 hexo init  
 npm install  </code></pre>
-<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color=0xFFFFFF>github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
-<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color=0xFFFFFF>发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
+<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color="0xFFFFFF">github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
+<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color="0xFFFFFF">发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
 <p>修改_config.yml文件</p>
 <pre><code>deploy:
 type: &#39;git&#39;
 repository: git@github.com:username/username.github.io.git
 branch: master</code></pre>
-<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color=0xFFFFFF>hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
+<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color="0xFFFFFF">hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
 <p>所以，我们有两种处理方法</p>
 <ol>
 <li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
@@ -279,20 +279,20 @@ git commit
 git push --set--upstream origin hexo　
 　</code></pre>
 <p>然后把.git目录拷贝到blog folder</p>
-<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color=0xFFFFFF>发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
-<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color=0xFFFFFF>环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
-<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#x6d;">&#x67;&#105;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#x6d;</a>/username/username.github.io</del></p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color="0xFFFFFF">发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
+<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color="0xFFFFFF">环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;</a>/username/username.github.io</del></p>
 <p>The instrutions above is not right, you should do as follows</p>
 <pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
 npm install</code></pre>
-<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color=0xFFFFFF>小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color=0xFF>添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color="0xFFFFFF">小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color="0xFF">添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
 <pre><code>npm install hexo-generator-searchdb  </code></pre>
-<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color=0xFF>首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
+<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color="0xFF">首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
 <p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
-<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color=0xFF>文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
+<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color="0xFF">文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span> <span class="comment">#从-date改成-updated</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color=0xFF>git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a target="_blank" rel="noopener" href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
+<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color="0xFF">git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a target="_blank" rel="noopener" href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
 <p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
 
     </div>
@@ -385,14 +385,14 @@ npm install</code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

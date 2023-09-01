@@ -184,100 +184,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/23/Repeated-Substring-Pattern/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/23/Repeated-Substring-Pattern/" class="post-title-link" itemprop="url">Repeated Substring Pattern</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-23 19:36:00" itemprop="dateCreated datePublished" datetime="2020-09-23T19:36:00+08:00">2020-09-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong><font color=red>题目</font></strong></p>
-<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
-<p><strong>Example 1:</strong>  </p>
-<pre><code>Input: &quot;abab&quot;
-Output: True
-Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
-<p><strong>Example 2:</strong>  </p>
-<pre><code>Input: &quot;aba&quot;
-Output: False </code></pre>
-<p><strong>Example 3:</strong>  </p>
-<pre><code>Input: &quot;abcabcabcabc&quot;
-Output: True
-Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
-<p><strong>思路</strong>  </p>
-<p>start : 代表要比较的子串的开始索引  </p>
-<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
-<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
-<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
-<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">repeatedSubstringPattern</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">1</span>, start=<span class="number">0</span>, cmp_times=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= (<span class="built_in">floor</span>)(s.length() / <span class="number">2</span>); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length() % len != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            cmp_times = s.length() / len;</span><br><span class="line">            <span class="keyword">bool</span> bCurDup = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(s[j] != s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/02/Diagnostics-Library-Error-Handling/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -332,7 +238,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color="0xFFFFFF">前言</font></strong></h2><p>我们都知道在高级语言中都有异常处理语法（C没有语法，但有异常处理，不过这是程序员在代码层面自己实现的），今天我们来讨论异常处理机制。  </p>
 <p>首先，我们来看CppCon 2019上Ben Saks关于Exception的演讲。</p>
 <div class="video-container"><iframe src="https://www.youtube.com/embed/W6jZKibuJpU" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
           <!--noindex-->
@@ -415,7 +321,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><font color=0xFFFFFF>本文所有方式均通过亲自验证</font></p>
+          <p><font color="0xFFFFFF">本文所有方式均通过亲自验证</font></p>
 <p>刻舟求剑是什么意思，今天算是认识到了。<br>为什么信息越来越多，我们却越来越累了呢，是因为有其他的东西吸引了我们本来的注意力吗？有这种原因，但还有更重要的是，有效信息太少。<br>今天我在网上找hexo显示本地图片的方式，尝试了很多都有问题，搜索出来的结果绝大部分都是无效信息。<br>下面我们说一说这些无效信息。  </p>
 <p><strong>npm install hexo-asset-image</strong><br>安装这个插件之后，显示图片不对。通过查看public目录下生成的index，发现是生成的图片link不对。<br>我们用上面这个命令安装的是hexo-asset-image 1.0.0版本，这个版本跟hexo3兼容上有问题，无法正确生成图片link。  </p>
 <p><strong>npm install <a target="_blank" rel="noopener" href="https://github.com/CodeFalling/hexo-asset-image">https://github.com/CodeFalling/hexo-asset-image</a> –save</strong><br>有的blog发现了这个问题，提示要用这个版本的插件0.0.5。<br>但这个插件也有问题，我们需要修改hexo-asset-image的index.js文件，可以参考<a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000020310187/a-1020000020311907">hexo 图片路径错误/.com//</a><br>也就是说，用很老的版本是可以的，但同样的，这个老版本的插件跟hexo3及以上版本也存在兼容问题。  </p>
@@ -683,7 +589,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
 <p>我一直有个疑问，就是为什么Windows 64位系统上可以跑32位应用，app可以同时跑在macos 32/64上？<br>这两个，一个是OS问题，一个是硬件平台指令集问题。现在Windows arm上也可以跑x86应用。那么导致这些结果的原因是什么呢？</p>
 <p>首先说Apple，使用的是一种叫做Fat Binary的技术，也就是我在编译程序的时候里面其实有包含了两套代码，同时支持x86/64，苹果现在宣布今后将把macos从x86迁移到arm平台，那么是要还是用Fat Binary技术吗？Fat Binary的优点和缺点都显而易见，那么还有其它方式吗？  </p>
 <p>我们知道，Windows系统，32位应用可以在64位系统上运行，64位程序不能在32位系统上运行，这是为什么？  </p>
-<p><strong><font color=0xFF>ToDoList</font></strong>  </p>
+<p><strong><font color="0xFF">ToDoList</font></strong>  </p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/#more" rel="contents">
@@ -764,7 +670,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color=0xFFFFFF>前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><font color="0xFFFFFF">前言</font></strong></h2><p>首先介绍一个可以在线查看C++转汇编的网站 <a href="www.godbolt.org">www.godbolt.org</a>，可以选择任意平台 任意版本的编译器，非常方便学习。 </p>
 <p>C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。  </p>
 <p>对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从这个角度看，C++语言的代码耦合度太高了。至少以下几个方面并不适合C++  </p>
 <pre><code>1. 界面开发: 很多大厂的PC端用的是directUI架构，要想写好需要对C++熟练，而且要自己做各种精细控制。  
@@ -772,7 +678,7 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
 3. 科学试验性质项目：比如机器学习模型训练  </code></pre>
 <p>其他：比如一般的程序开发，除非其它语言没有对应的库，否则都应该选用JAVA/C#/PYTHON这类语言开发，或者golang/rust。总之，C++的学习曲线太陡峭，但跟rust相比，历史包袱又很重。<br>既然这样，为什么我们还要学习C++呢？就是因为目前来说没有特别好能替代的，或许再过两年，rust和go成长起来之后，C++的市场份额会进一步萎缩，慢慢地被淘汰掉吧，淘汰也不是仅仅靠喊就行的，新语言还是得加油努力喔。  </p>
 <p>在Linux下我们用gdb进行代码调试和crash分析。在Windows平台我们有很多工具，一般是用IDA进行静态反汇编，用OD或者WinDbg进行动态分析，WinDbg也可以反汇编。<br>现在写blog的平台是Linux，所以先写linux的。我们的重点放在分析crashdump上。  </p>
-<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color=0xFFFFFF>gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
+<h2 id="gdb-crashdump分析"><a href="#gdb-crashdump分析" class="headerlink" title="gdb crashdump分析"></a><strong><font color="0xFFFFFF">gdb crashdump分析</font></strong></h2><p>生成dump的方式很简单就不用说了，ulimit -c unlimited，不过这里生成的是默认名称，为了方便保存且与代码对应，可以做些修改，每次生成新的名字。  </p>
 <p>一般发布版本，要从几个方面考虑</p>
 <ol>
 <li>可追溯</li>
@@ -861,11 +767,11 @@ Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substri
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong><font color=red>题目</font></strong>  </p>
+          <p><strong><font color="red">题目</font></strong>  </p>
 <p><strong>Given two binary search trees root1 and root2.</strong></p>
 <p><strong>Return a list containing all the integers from both trees sorted in ascending order.</strong>  </p>
 <p><strong>Example 1:</strong>  </p>
-<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e1.png" class="">  
+  
 
 <pre><code>Input: root1 = [2,1,4], root2 = [1,0,3]
 Output: [0,1,1,2,3,4]</code></pre>
@@ -879,7 +785,7 @@ Output: [0,1,2,5,7]  </code></pre>
 <pre><code>Input: root1 = [0,-10,10], root2 = []
 Output: [-10,0,10]  </code></pre>
 <p><strong>Example 5:</strong>  </p>
-<img src="/2020/09/24/All-Elements-in-Two-Binary-Search-Trees/q2-e5.png" class="">  
+  
 
 <pre><code>Input: root1 = [1,null,8], root2 = [8,1]
 Output: [1,1,8,8]  </code></pre>
@@ -1061,14 +967,14 @@ Output: [1,1,8,8]  </code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

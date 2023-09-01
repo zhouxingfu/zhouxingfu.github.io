@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,7 +198,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/" class="post-title-link" itemprop="url">Praat验证音素时间戳准确度</a>
+            <a href="/2020/08/29/build-and-backup-github-pages-with-hexo/" class="post-title-link" itemprop="url">用hexo搭建github blog</a>
         </h2>
 
         <div class="post-meta">
@@ -207,17 +207,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-07-29 17:20:38 / Modified: 18:06:32" itemprop="dateCreated datePublished" datetime="2022-07-29T17:20:38+08:00">2022-07-29</time>
+              <time title="Created: 2020-08-29 16:46:06" itemprop="dateCreated datePublished" datetime="2020-08-29T16:46:06+08:00">2020-08-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-07-29 18:15:23" itemprop="dateModified" datetime="2022-07-29T18:15:23+08:00">2022-07-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9F%B3%E8%A7%86%E9%A2%91/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a>
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
                 </span>
             </span>
 
@@ -232,25 +238,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="音素与音频"><a href="#音素与音频" class="headerlink" title="音素与音频"></a><strong>音素与音频</strong></h1><p>最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。</p>
-<p>声音驱动表情（包括口型）有很多方案，比较著名的是微软的视素驱动，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/how-to-speech-synthesis-viseme?pivots=programming-language-cpp">获取 lip-sync 的人脸姿态事件</a>，但好像根据语言也会有不同的视素，所以最终还是跟音素相关。  </p>
-<p>现在很多语音厂商都能够同时提供音频对应的音素了，比如AiSpeech，Data Baker，但拿到音频和音素之后，我们先要想要的是 ———— 如何判断音素和音频在时间维度上对应的准确度。  </p>
-<p>为了解决这个问题，我们先来介绍一个工具和一种格式。  </p>
-<h2 id="TextGrid格式"><a href="#TextGrid格式" class="headerlink" title="TextGrid格式"></a><strong>TextGrid格式</strong></h2><p>TextGrid一种专门对声音进行标注的文本格式，里面可以记录很多信息 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/388306735">Praat scripting 入门 (2) TextGrid 和录音管理</a>。   </p>
-<p>我一般用来标准音素时间戳，大概格式如下 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">File type &#x3D; &quot;ooTextFile&quot;</span><br><span class="line">Object class &#x3D; &quot;TextGrid&quot;</span><br><span class="line"></span><br><span class="line">xmin &#x3D; 0</span><br><span class="line">xmax &#x3D; 2.3</span><br><span class="line">tiers? &lt;exists&gt;</span><br><span class="line">size &#x3D; 3</span><br><span class="line">item []:</span><br><span class="line">    item [1]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;sentence&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 1</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;říkej &quot;&quot;ahoj&quot;&quot; dvakrát&quot;</span><br><span class="line">    item [2]:</span><br><span class="line">       class &#x3D; &quot;IntervalTier&quot;</span><br><span class="line">       name &#x3D; &quot;phonemes&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       intervals: size &#x3D; 3</span><br><span class="line">       intervals [1]:</span><br><span class="line">          xmin &#x3D; 0</span><br><span class="line">          xmax &#x3D; 0.7</span><br><span class="line">          text &#x3D; &quot;r̝iːkɛj&quot;</span><br><span class="line">       intervals [2]:</span><br><span class="line">          xmin &#x3D; 0.7</span><br><span class="line">          xmax &#x3D; 1.6</span><br><span class="line">          text &#x3D; &quot;ʔaɦɔj&quot;</span><br><span class="line">       intervals [3]:</span><br><span class="line">          xmin &#x3D; 1.6</span><br><span class="line">          xmax &#x3D; 2.3</span><br><span class="line">          text &#x3D; &quot;dʋakraːt&quot;</span><br><span class="line">    item [3]:</span><br><span class="line">       class &#x3D; &quot;TextTier&quot;</span><br><span class="line">       name &#x3D; &quot;bell&quot;</span><br><span class="line">       xmin &#x3D; 0</span><br><span class="line">       xmax &#x3D; 2.3</span><br><span class="line">       points: size &#x3D; 2</span><br><span class="line">       points [1]:</span><br><span class="line">          number &#x3D; 0.9</span><br><span class="line">          mark &#x3D; &quot;ding&quot;</span><br><span class="line">       points [2]:</span><br><span class="line">          number &#x3D; 1.3</span><br><span class="line">          mark &#x3D; &quot;dong&quot;</span><br></pre></td></tr></table></figure>
-
-<p>我们拿到厂商提供的音素之后，可以保存成这样的文件 <a target="_blank" rel="noopener" href="https://github.com/eiichiroi/textgrid.hpp">一个开源的TextGrid读写器</a>，此时，我们手中有了音频和对应的TextGrid文件。  </p>
-<p>当然生成textgrid的代码也可以参考kaldi代码，kaldi是语音界的天花板和军火库，非常多的人从里面汲取营养，以后有兴趣或需要的时候，可以参考这个工程，后面我会单独写一篇文章，讨论如何使用kaldi，实现从音频到嘴型驱动的全流程。  </p>
-<p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
-<p><strong>Praat</strong>  </p>
-<h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<p><img src="assets/Praat-Phoneme-a.png" alt="Praat音素音频对齐-1"></p>
-<p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
-<ul>
-<li>出现的界面中有两个文件，同时选中，就会在窗口右侧出现Edit and Continue按钮，此时点击这个按钮，就会出现一个界面，这个界面是上面是音频，下面是音素时间戳，每个音素时间戳占用1格（格子有大有小，跟duration有关），我们点击这个格子，就能提到这段格子所对应的音频，假设这个格子上标注的是 ang，但听到的声音明显不仅仅包含ang，比如杨 i ang2，如果我们听到了 i的声音，那么我们就可以证明，这个音素时间戳太靠前了。  </li>
-</ul>
-
+          <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color="0xFFFFFF">原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<p>我们的操作步骤是</p>
+<ol>
+<li>在github.io　hexo分支备份源文件</li>
+<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
+</ol>
+<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/29/build-and-backup-github-pages-with-hexo/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -360,182 +363,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/29/build-and-backup-github-pages-with-hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/29/build-and-backup-github-pages-with-hexo/" class="post-title-link" itemprop="url">用hexo搭建github blog</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-29 16:46:06" itemprop="dateCreated datePublished" datetime="2020-08-29T16:46:06+08:00">2020-08-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color=0xFFFFFF>原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
-<p>我们的操作步骤是</p>
-<ol>
-<li>在github.io　hexo分支备份源文件</li>
-<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
-</ol>
-<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/29/build-and-backup-github-pages-with-hexo/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">enable_if_t分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-02-26 05:45:03" itemprop="dateCreated datePublished" datetime="2021-02-26T05:45:03+08:00">2021-02-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>To be continued</strong></p>
-<p>在看VS版本的thread库源码时，发现了这么一段</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color=red>enable_if_t</font>__。</p>
-<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
-<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
-
-<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
-<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
-<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
-<p>首先，我们要介绍一个概念 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
-<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
-<p>此特性被用于模板元编程。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -613,7 +440,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/22/git%E5%AD%A6%E4%B9%A0/">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -627,7 +454,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">git学习</a>
+            <a href="/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">enable_if_t分析</a>
         </h2>
 
         <div class="post-meta">
@@ -637,7 +464,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-10-22 18:08:07" itemprop="dateCreated datePublished" datetime="2020-10-22T18:08:07+08:00">2020-10-22</time>
+              <time title="Created: 2021-02-26 05:45:03" itemprop="dateCreated datePublished" datetime="2021-02-26T05:45:03+08:00">2021-02-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -652,7 +479,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
                 </span>
             </span>
 
@@ -667,16 +494,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>今天找到一个非常直观的git学习网站 <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
-<p>Let’s go!  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <p><strong>To be continued</strong></p>
+<p>在看VS版本的thread库源码时，发现了这么一段</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color="red">enable_if_t</font>__。</p>
+<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
+<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
+<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
+<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
+<p>首先，我们要介绍一个概念 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
+<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
+<p>此特性被用于模板元编程。</p>
+
       
     </div>
 
@@ -774,6 +607,88 @@
 &#125;</code></pre>
 <p>这样按照功能来写TestCase是可以的，这样即使例子调用的接口完全相同，因为输入的不同也可以是不同的TestCase。</p>
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/10/22/git%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">git学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-22 18:08:07" itemprop="dateCreated datePublished" datetime="2020-10-22T18:08:07+08:00">2020-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>今天找到一个非常直观的git学习网站 <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
+<p>Let’s go!  </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/22/git%E5%AD%A6%E4%B9%A0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1029,6 +944,106 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/20/%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E6%9C%80%E5%A4%9A%E5%8F%AF%E4%BB%A5%E7%BB%B4%E6%8C%81%E5%A4%9A%E5%B0%91TCP%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">一台机器最多可以维持多少TCP连接</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-11-20 21:06:06" itemprop="dateCreated datePublished" datetime="2020-11-20T21:06:06+08:00">2020-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-26 19:09:48" itemprop="dateModified" datetime="2022-04-26T19:09:48+08:00">2022-04-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>server code</code></p>
+<pre><code>import socket  
+
+if __name__ == &#39;__main__&#39;:
+    mySocket = socket.create_server((&#39;10.4.204.21&#39;, 2000), reuse_port=False)
+    while True:
+        pass</code></pre>
+<p><code>client code</code>  </p>
+<pre><code>import socket
+if __name__ == &#39;__main__&#39;:
+    i = 0
+    while True:
+        mySocket = socket.create_connection((&#39;10.4.204.21&#39;, 2000))
+        if mySocket is None:
+            print(&quot;create client connect failed&quot;)
+            break
+        else:
+            print(&quot;create client connection succeed&quot;)
+            i = i + 1
+            print(&#39;current connection count &#39;, i)  </code></pre>
+<p>可以创建连接，但存在几个现象  </p>
+<ol>
+<li>输出的connection count 是 129，用netstat -nat | grep -i “2000” | wc -l查看连接数是131，不匹配</li>
+<li>最大连接数理论上受资源限制，ulimit -n能够得到系统设置的tcp最大连接上限是1024，这也远远大于131  </li>
+<li>create_connection最终是timeout，为什么会timeout，是资源不足了吗？</li>
+<li>client进程关掉后，大量的tcp连接仍然没有断掉，要好好了解下TCP状态图。  </li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1098,14 +1113,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

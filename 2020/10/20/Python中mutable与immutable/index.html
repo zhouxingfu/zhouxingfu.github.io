@@ -249,18 +249,18 @@
 <li>整体的赋值操作，相当于把变量名绑定了一个新的内存区域  </li>
 </ul>
 <p>下面我们针对tuple来写几个例子。  </p>
-<p><strong><font color=red>不能进行单个元素的赋值操作</font></strong>  </p>
+<p><strong><font color="red">不能进行单个元素的赋值操作</font></strong>  </p>
 <pre><code>a = (1, 2)  
 a[0] = 2 #error</code></pre>
 <p>上面这句话会报 TypeError: ‘tuple’ object does not support item assignment.  </p>
-<p><strong><font color=red>对变量进行整体赋值</font></strong>  </p>
+<p><strong><font color="red">对变量进行整体赋值</font></strong>  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = (<span class="number">1</span>, <span class="number">2</span>)  </span><br><span class="line">id(a) <span class="comment">#140036094436208</span></span><br><span class="line">a = <span class="number">-2</span>, <span class="number">-1</span> <span class="comment"># right (-2, -1)</span></span><br><span class="line">id(a) <span class="comment">#140036072923616</span></span><br><span class="line">a += (<span class="number">-1</span>, <span class="number">4</span>) <span class="comment"># right (-2, -1, -1, 4)</span></span><br><span class="line">id(a) <span class="comment"># 140036094653072</span></span><br></pre></td></tr></table></figure>
 
 <p>上面的例子中，我们可以整体赋值，甚至可以用+=，那为什么=不能用，+=可以了。  </p>
 <p>先拿a = (-2， -1)来说，(-2, -1)相当于生成一个临时对象，绑定到a上。</p>
 <p>同样+=相当于 a = a + (-1, 4)，a + (-1, 4)组成新的临时对象绑定到a上。  </p>
 <p>通过id(a)我们可以看到内存的变化（这不是真正的内存地址，但可以看做与内存一致的一个概念）</p>
-<p>也就是说，<strong><font color=green>Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
+<p>也就是说，<strong><font color="green">Python所谓的immutable，是说对象目前所绑定的id所指向的内容上不可修改，如果id改了，那么内容自然是可以被修改的。</font></strong>  </p>
 <p><strong>修改shape会改变对象的内容或者地址吗</strong> </p>
 <p>我们上面修改了变量的shape，此时变量的内容是没有改变的，我们打印id(a)的值是没有变化的。  </p>
 
@@ -356,14 +356,14 @@ a[0] = 2 #error</code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

@@ -27,12 +27,12 @@
 <meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
 <meta property="og:description" content="音素与音频最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。 声音驱动表情（包括口型）有很多方案，比较著名的是微软的视素驱动，获取 lip-sync 的人脸姿态事件，但好像根据语言也会有不同的视素，所以最终还是跟音素相关。   现在很多语音厂商都能够同时提供音频对应的音素了，比如AiSpeech，Data Baker，但拿到音频和音">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/assets/Praat-Phoneme-a.png">
+<meta property="og:image" content="/.io/2022/07//07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/Praat-Phoneme-a.png">
 <meta property="article:published_time" content="2022-07-29T09:20:38.000Z">
-<meta property="article:modified_time" content="2022-07-29T10:06:32.654Z">
+<meta property="article:modified_time" content="2023-09-01T10:21:31.306Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/assets/Praat-Phoneme-a.png">
+<meta name="twitter:image" content="/.io/2022/07//07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/Praat-Phoneme-a.png">
 
 <link rel="canonical" href="zhouxingfu.github.io/2022/07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/">
 
@@ -213,10 +213,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-07-29 17:20:38 / Modified: 18:06:32" itemprop="dateCreated datePublished" datetime="2022-07-29T17:20:38+08:00">2022-07-29</time>
+              <time title="Created: 2022-07-29 17:20:38" itemprop="dateCreated datePublished" datetime="2022-07-29T17:20:38+08:00">2022-07-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-01 18:21:31" itemprop="dateModified" datetime="2023-09-01T18:21:31+08:00">2023-09-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -251,7 +257,9 @@
 <p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
 <p><strong>Praat</strong>  </p>
 <h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<p><img src="assets/Praat-Phoneme-a.png" alt="Praat音素音频对齐-1"></p>
+<img src="/.io/2022/07//07/29/Praat%E9%AA%8C%E8%AF%81%E9%9F%B3%E7%B4%A0%E6%97%B6%E9%97%B4%E6%88%B3%E5%87%86%E7%A1%AE%E5%BA%A6/Praat-Phoneme-a.png" class>
+
+
 <p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
 <ul>
 <li>出现的界面中有两个文件，同时选中，就会在窗口右侧出现Edit and Continue按钮，此时点击这个按钮，就会出现一个界面，这个界面是上面是音频，下面是音素时间戳，每个音素时间戳占用1格（格子有大有小，跟duration有关），我们点击这个格子，就能提到这段格子所对应的音频，假设这个格子上标注的是 ang，但听到的声音明显不仅仅包含ang，比如杨 i ang2，如果我们听到了 i的声音，那么我们就可以证明，这个音素时间戳太靠前了。  </li>
@@ -350,14 +358,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

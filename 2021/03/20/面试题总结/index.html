@@ -244,13 +244,13 @@
       
         <p>在面试或者被面试过程中收集的面试题目，不仅仅与C++相关，还有数据结构和算法，系统等等。  </p>
 <hr>
-<p><strong><font color=orange size=4> C++</font></strong> </p>
-<p>_<font size=3 color=green>如何让两个shared_ptr指向同一个实例</font>_  </p>
+<p><strong><font color="orange" size="4"> C++</font></strong> </p>
+<p>_<font size="3" color="green">如何让两个shared_ptr指向同一个实例</font>_  </p>
 <p>enable_shared_from_memory </p>
 <p>今天听面试人说的，以前真没考虑过  </p>
-<p><em><font size=3 color=green>只在堆或者栈上创建对象</font></em>  </p>
+<p><em><font size="3" color="green">只在堆或者栈上创建对象</font></em>  </p>
 <p>只在堆上 ： operator new()=delete<br>只在栈上 ： private ~base();  </p>
-<p><em><font size=3 color=green>static成员变量不能在类内部初始化吗</font></em>  </p>
+<p><em><font size="3" color="green">static成员变量不能在类内部初始化吗</font></em>  </p>
 <p><strong>Case 1</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span>  m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.0f</span>; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m_iCount = <span class="number">100</span>; <span class="comment">//OK</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> m_fCount = <span class="number">1.f</span>; <span class="comment">//OK</span></span><br></pre></td></tr></table></figure>
 
@@ -371,14 +371,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
