@@ -28,7 +28,7 @@
 <p>正数 +  负数 </p>
 <p>1 - 2 = 1 + (-2) = 0000 0001 + 1000 0010 = 1000 0011 = -3<br>结果与预期不符合。</p>
 <p>二进制计算溢出有一个特点，就是它类似于模运算。<br>127 + 1 = 1111 1111 + 0000 0001 = 1000 0000 = -128</p>
-<img src="/.io/2020/09//09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg" class>
+<img src="/2020/09/03/100-questions-trouble-me-1-why-should-use-complement/%E5%8F%8D%E7%A0%81_%E8%A1%A5%E7%A0%81.jpg" class>
 
 
 <p>如上述所示，就是看作去模数/余数 的操作，也就是一个数，无论正负，加上模，得到的仍然是它自身。  </p>
@@ -83,15 +83,6 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
-    <title>C++语言特性之condition_variable</title>
-    <url>/2022/10/25/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E4%B9%8Bcondition-variable/</url>
-    <content><![CDATA[<h1 id="为什么引入condition-variable"><a href="#为什么引入condition-variable" class="headerlink" title="为什么引入condition_variable"></a><strong>为什么引入condition_variable</strong></h1><h1 id="语法规定"><a href="#语法规定" class="headerlink" title="语法规定"></a><strong>语法规定</strong></h1><h1 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a><strong>内部实现</strong></h1><h2 id="你会如何实现condition-variable"><a href="#你会如何实现condition-variable" class="headerlink" title="你会如何实现condition_variable"></a><strong>你会如何实现condition_variable</strong></h2><h1 id="应用拓展"><a href="#应用拓展" class="headerlink" title="应用拓展"></a><strong>应用拓展</strong></h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h1><p><a href="https://en.cppreference.com/w/cpp/thread/condition_variable">std::condition_variable</a></p>
-]]></content>
-      <categories>
-        <category>C++</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CMake入门</title>
     <url>/2021/03/20/CMake%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<p>现在的构建工具有很多，CMake是其中的佼佼者，虽然很多人说CMake编译速度太慢，但架不住兼容性好。  </p>
@@ -115,6 +106,41 @@ Output: [1,1,8,8]  </code></pre>
 ]]></content>
       <categories>
         <category>CMake</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>C++语言特性之condition_variable</title>
+    <url>/2022/10/25/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E4%B9%8Bcondition-variable/</url>
+    <content><![CDATA[<h1 id="为什么引入condition-variable"><a href="#为什么引入condition-variable" class="headerlink" title="为什么引入condition_variable"></a><strong>为什么引入condition_variable</strong></h1><h1 id="语法规定"><a href="#语法规定" class="headerlink" title="语法规定"></a><strong>语法规定</strong></h1><h1 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a><strong>内部实现</strong></h1><h2 id="你会如何实现condition-variable"><a href="#你会如何实现condition-variable" class="headerlink" title="你会如何实现condition_variable"></a><strong>你会如何实现condition_variable</strong></h2><h1 id="应用拓展"><a href="#应用拓展" class="headerlink" title="应用拓展"></a><strong>应用拓展</strong></h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h1><p><a href="https://en.cppreference.com/w/cpp/thread/condition_variable">std::condition_variable</a></p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>CS15-213:CSAPP读书笔记(1)</title>
+    <url>/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/</url>
+    <content><![CDATA[<h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
+<p><a href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
+<p>CS15213 参考资料<br><a href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
+<p>MIT 6.828 参考资料<br><a href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
+<p><a href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
+<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
+<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
+<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
+<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
+<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
+<p>我目前的理解是：</p>
+<ol>
+<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
+<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
+<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
+</ol>
+<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
+]]></content>
+      <categories>
+        <category>CSAPP</category>
       </categories>
   </entry>
   <entry>
@@ -143,8 +169,7 @@ Output: [1,1,8,8]  </code></pre>
 <p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
 <h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3><a id="more"></a>
 
-<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png" class title="stack frame call">
-
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-call.png" class title="This is an example image">
 
 <p>从上面我们可知<br>入栈时具体操作是</p>
 <pre><code>1)调用参数从右往左压栈  
@@ -156,7 +181,7 @@ Output: [1,1,8,8]  </code></pre>
 <pre><code>1)movq %rbp, %rsp ; 使 %rsp 和 %rbp 指向同一位置，即子栈帧的起始处, 收回子栈帧空间
 2)popq %rbp ; 将栈中保存的父栈帧的 %rbp 的值赋值给 %rbp，并且 %rsp 上移一个位置指向父栈帧的结尾处</code></pre>
 <p>为了便于栈帧恢复，x86_64 架构中提供了 leave 指令来实现上述两条命令的功能。执行 leave 后，前面图中函数调用的栈帧结构如下　　</p>
-<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-leave.png" class title="stack frame leave">
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png" class title="stack frame leave">
 
 <p>调用 leave 后，%rsp 指向返回地址；ret 指令，从栈顶弹出数据，并跳转到此数据指向的地址处。在leave 执行后，%rsp 指向返回地址，因而 ret 的作用就是把 %rsp 上移一个位置，并跳转到返回地址执行。</p>
 <p>所以，leave 指令用于恢复父函数的栈帧，ret 用于跳转到返回地址处，leave 和ret 配合共同完成了子函数的返回。当执行完成 ret 后，%rsp 指向的是父栈帧的结尾处，父栈帧尾部存储的调用参数由编译器自动释放。</p>
@@ -223,7 +248,7 @@ Output: [1,1,8,8]  </code></pre>
 <td>查看具体变量value</td>
 </tr>
 </tbody></table>
-<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color="0xFFFFFF"> 寄存器建议使用规则</font></strong></h2><img src="/.io/2020/08//08/31/Debug-and-Assembly/registers.jpg" class>
+<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color="0xFFFFFF"> 寄存器建议使用规则</font></strong></h2><img src="/2020/08/31/Debug-and-Assembly/registers.jpg" class>
 
 
 
@@ -250,32 +275,6 @@ Output: [1,1,8,8]  </code></pre>
 ]]></content>
       <categories>
         <category>assembly</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>CS15-213:CSAPP读书笔记(1)</title>
-    <url>/2022/04/26/CS15-213-CSAPP%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-1/</url>
-    <content><![CDATA[<h1 id="为什么要学习这本书？"><a href="#为什么要学习这本书？" class="headerlink" title="为什么要学习这本书？"></a>为什么要学习这本书？</h1><p><a href="https://www.zhihu.com/question/22608820/answer/21968467">Linux C++ 服务器端这条线怎么走？一年半能做出什么？ - 陈硕的回答 - 知乎</a></p>
-<p><a href="https://www.zhihu.com/question/20402534/answer/824172785">如何阅读《深入理解计算机系统》这本书？ - whereisKathy的回答 - 知乎</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/145984455">MIT6.828 - Operating System Engineering - 操作系统公开课 - whereisKathy的文章 - 知乎</a></p>
-<p>CS15213 参考资料<br><a href="https://www.youtube.com/watch?v=ScMxnXq6fbI&list=PLcQU3vbfgCc9sVAiHf5761UUApjZ3ZD3x">CMU 15213/15513 CSAPP 深入理解计算机系统 Lecture 01 Course Overview 中英字幕</a><br><a href="http://www.cs.cmu.edu/~213/">CS15213 官网</a></p>
-<p>MIT 6.828 参考资料<br><a href="https://github.com/yinfredyue/MIT6.828">Learning Material</a><br><a href="https://github.com/yinfredyue/MIT6.828-lab">labs</a><br><a href="https://github.com/yinfredyue/MIT6.828-xv6-public">xv6</a></p>
-<p><a href="https://hansimov.gitbook.io/csapp/">CSAPP</a></p>
-<h1 id="学习路线是什么"><a href="#学习路线是什么" class="headerlink" title="学习路线是什么"></a>学习路线是什么</h1><p>先学习《深入理解计算机系统》，然后学习《操作系统》。</p>
-<h1 id="日程安排"><a href="#日程安排" class="headerlink" title="日程安排"></a>日程安排</h1><p>6.30日之前尽可能完成，因为过了这天之后有重要的事情要发生。</p>
-<h1 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h1><p>看国外公开课，看国外教材，做课后作业，使用Google，多思考，多动手，多讨论。</p>
-<p>直到今天才发现，过河摸TM什么石头啊，高速公路都建好了，开车过去就行了，少自欺欺人。</p>
-<h1 id="课程总览"><a href="#课程总览" class="headerlink" title="课程总览"></a>课程总览</h1><h2 id="Chapter-2-信息的表示与存储"><a href="#Chapter-2-信息的表示与存储" class="headerlink" title="Chapter 2 信息的表示与存储"></a>Chapter 2 信息的表示与存储</h2><h3 id="Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"><a href="#Q1-我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？" class="headerlink" title="Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？"></a><strong>Q1 我们都知道CPU处理的是补码，那么它是怎么知道结果是正还是负的？另外不是还有一些指令是区分正负的吗？标志寄存器里存储的是结果的正负值吗？</strong></h3><p><a href="https://baijiahao.baidu.com/s?id=1660827036098411381&wfr=spider&for=pc">3 万字 51 张图教你 CPU、内存、操作系统硬核知识！</a><br><strong>上面这个链接里的文章当个科普就好，最起码里面关于标志寄存器的介绍就是错误的，标志寄存器里不存储数据是正数 负数。<a href="https://baike.baidu.com/item/%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8/5757541?fr=aladdin">标志寄存器</a></strong>  </p>
-<p>我目前的理解是：</p>
-<ol>
-<li>在程序中读取了一个变量，假设是有符号int类型，系统或者解释器会先翻译成补码</li>
-<li>运算之后的结果也是补码。如果一个signed和unsigned运算，二者会先有一个规则，就是统一按照unsigned还是signed来转换成补码，然后再运算，也就是说CPU在拿到数据的时候，只知道这是补码，至于类型什么的都是在传给CPU之前就处理好了。</li>
-<li>结果是补码，如果我们想把结果赋值给一个变量（假设这个变量是个栈中的临时变量），此时会把补码按照最终要赋值给的类型来做转换。 </li>
-</ol>
-<h3 id="Q2-char数据左移8位的结果为什么有可能不是0？"><a href="#Q2-char数据左移8位的结果为什么有可能不是0？" class="headerlink" title="Q2 char数据左移8位的结果为什么有可能不是0？"></a><strong>Q2 char数据左移8位的结果为什么有可能不是0？</strong></h3><p>在这里我曾经百思不得其解，但现在我突然意识到一个问题，那就是虽然C++是高级语言，但仍要了解底层是如何实现的，因为在可 <strong>正常</strong> 范围内，抽象层和底层的预期一致，我们不用关心</p>
-]]></content>
-      <categories>
-        <category>CSAPP</category>
       </categories>
   </entry>
   <entry>
@@ -385,7 +384,8 @@ Output: [1,1,8,8]  </code></pre>
 </ol>
 <p>所以，原来的很多具体的处理措施，现在并不可用了，但方法该是我们掌握的，比如这里遇到无法显示的问题，首先要排查生成的html里image link是否正确，然后最好的方式是寻找官方文档的支持，说实话，现在搜索引擎的权重设计的并不好，很多已经无法用的方案，还在置顶，不知道因为作者是做了SEO优化，还是说搜索引擎本身并不智能到判断这些信息已经是不合适的了。  </p>
 <p>缘木求鱼，刻舟求剑。从古至今，大的道理还是那么多，关键是如何变成自己的模型。  </p>
-]]></content>
+<p><strong><font color="red" size="10">就是启动hexo-asset-image之后，要修改index.js，另外记住，因为node-modules并不在git上，所以每次到了一个新的环境，你必须重新下载node-modules，并且修改index.js文件。切记！切记！</font></strong></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> cheerio = <span class="built_in">require</span>(<span class="string">&#x27;cheerio&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// http://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPosition</span>(<span class="params">str, m, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> str.split(m, i).join(m).length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> version = <span class="built_in">String</span>(hexo.version).split(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">hexo.extend.filter.register(<span class="string">&#x27;after_post_render&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> config = hexo.config;</span><br><span class="line">  <span class="keyword">if</span>(config.post_asset_folder)&#123;</span><br><span class="line">    	<span class="keyword">var</span> link = data.permalink;</span><br><span class="line">	<span class="keyword">if</span>(version.length &gt; <span class="number">0</span> &amp;&amp; <span class="built_in">Number</span>(version[<span class="number">0</span>]) == <span class="number">3</span>)</span><br><span class="line">	   <span class="keyword">var</span> beginPos = getPosition(link, <span class="string">&#x27;/&#x27;</span>, <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	   <span class="keyword">var</span> beginPos = getPosition(link, <span class="string">&#x27;/&#x27;</span>, <span class="number">3</span>) + <span class="number">1</span>;</span><br><span class="line">	<span class="comment">// In hexo 3.1.1, the permalink of &quot;about&quot; page is like &quot;.../about/index.html&quot;.</span></span><br><span class="line">	<span class="keyword">var</span> endPos = link.lastIndexOf(<span class="string">&#x27;/&#x27;</span>) + <span class="number">1</span>;</span><br><span class="line">    link = link.substring(beginPos, endPos);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> toprocess = [<span class="string">&#x27;excerpt&#x27;</span>, <span class="string">&#x27;more&#x27;</span>, <span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; toprocess.length; i++)&#123;</span><br><span class="line">      <span class="keyword">var</span> key = toprocess[i];</span><br><span class="line"> </span><br><span class="line">      <span class="keyword">var</span> $ = cheerio.load(data[key], &#123;</span><br><span class="line">        ignoreWhitespace: <span class="literal">false</span>,</span><br><span class="line">        xmlMode: <span class="literal">false</span>,</span><br><span class="line">        lowerCaseTags: <span class="literal">false</span>,</span><br><span class="line">        decodeEntities: <span class="literal">false</span></span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      $(<span class="string">&#x27;img&#x27;</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> ($(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>))&#123;</span><br><span class="line">			<span class="comment">// For windows style path, we replace &#x27;\&#x27; to &#x27;/&#x27;.</span></span><br><span class="line">			<span class="keyword">var</span> src = $(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>).replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">			<span class="keyword">if</span>(!<span class="regexp">/http[s]*.*|\/\/.*/</span>.test(src) &amp;&amp;</span><br><span class="line">			   !<span class="regexp">/^\s*\//</span>.test(src)) &#123;</span><br><span class="line">			  <span class="comment">// For &quot;about&quot; page, the first part of &quot;src&quot; can&#x27;t be removed.</span></span><br><span class="line">			  <span class="comment">// In addition, to support multi-level local directory.</span></span><br><span class="line">			  <span class="keyword">var</span> linkArray = link.split(<span class="string">&#x27;/&#x27;</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">				<span class="keyword">return</span> elem != <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">			  &#125;);</span><br><span class="line">			  <span class="keyword">var</span> srcArray = src.split(<span class="string">&#x27;/&#x27;</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">				<span class="keyword">return</span> elem != <span class="string">&#x27;&#x27;</span> &amp;&amp; elem != <span class="string">&#x27;.&#x27;</span>;</span><br><span class="line">			  &#125;);</span><br><span class="line">			  <span class="keyword">if</span>(srcArray.length &gt; <span class="number">1</span>)</span><br><span class="line">				srcArray.shift();</span><br><span class="line">			  src = srcArray.join(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">			  $(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>, config.root + link + src);</span><br><span class="line">			  <span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info(<span class="string">&quot;update link as:--&gt;&quot;</span>+config.root + link + src);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info(<span class="string">&quot;no src attr, skipped...&quot;</span>);</span><br><span class="line">			<span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info($(<span class="built_in">this</span>));</span><br><span class="line">		&#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      data[key] = $.html();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>other</category>
       </categories>
@@ -481,13 +481,13 @@ Output: [1,1,8,8]  </code></pre>
 <ol>
 <li>Windows 64位系统如何跑32位应用？ 通过一个中间层 32位指令 &lt;–&gt; 转换器 &lt;–&gt; 64位指令。</li>
 </ol>
-<img src="/.io/2020/10//10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg" class>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/64call32.jpeg" class>
 
 
 <ol start="2">
 <li>Windows arm如何支持运行x86应用。通过emulator，比如  </li>
 </ol>
-<img src="/.io/2020/10//10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg" class>
+<img src="/2020/10/09/PE%20ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%B5%85%E6%9E%90/arm64callx8632.jpeg" class>
 
 <p>下面这些就是Windows提供的包含emulator的库</p>
 <ul>
@@ -517,6 +517,37 @@ Output: [1,1,8,8]  </code></pre>
       </categories>
   </entry>
   <entry>
+    <title>Partition Labels</title>
+    <url>/2020/09/23/Partition-Labels/</url>
+    <content><![CDATA[<p><strong><font color="red">题目</font></strong>  </p>
+<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>S will have length in range [1, 500].</li>
+<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
+</ul>
+<a id="more"></a>
+
+<p><strong>思路</strong>  </p>
+<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
+<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
+<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color="blue">__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
+<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">partitionLabels</span><span class="params">(<span class="built_in">string</span> S)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; map_assemble;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; vec_result;</span><br><span class="line">        <span class="keyword">int</span> length = S.length();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(map_assemble.<span class="built_in">find</span>(S[i]) != map_assemble.<span class="built_in">end</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//update</span></span><br><span class="line">                map_assemble[S[i]].second = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//add</span></span><br><span class="line">                map_assemble[S[i]] = <span class="built_in">make_pair</span>(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt; map_assemble_reverse;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= map_assemble.<span class="built_in">begin</span>(); it!=map_assemble.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(<span class="built_in">make_pair</span>(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//求相交集合的并集</span></span><br><span class="line">         <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(it = map_assemble_reverse.<span class="built_in">begin</span>(); it!=map_assemble_reverse.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> bProcessed = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> it1=vec_result.<span class="built_in">begin</span>(); it1!=vec_result.<span class="built_in">end</span>(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> a1 = it-&gt;first.first, b1 = it-&gt;first.second;</span><br><span class="line">                <span class="keyword">int</span> a2 = it1-&gt;first, b2 = it1-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>((a1 &gt; b2) <span class="keyword">or</span> (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    it1 = vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(<span class="built_in">make_pair</span>(<span class="built_in">min</span>(a1, a2), <span class="built_in">max</span>(b1, b2)));</span><br><span class="line">                    bProcessed = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bProcessed)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vec_result.push_back(<span class="built_in">make_pair</span>(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; final_result;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= vec_result.<span class="built_in">begin</span>(); it!=vec_result.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Praat验证音素时间戳准确度</title>
     <url>/2022/07/29/Praat-Verify-Phoneme-Timestamp/</url>
     <content><![CDATA[<h1 id="音素与音频"><a href="#音素与音频" class="headerlink" title="音素与音频"></a><strong>音素与音频</strong></h1><p>最近两年做MetaHuman的人越来越多了，而MetaHuman涉及到肢体的驱动和嘴部的驱动，嘴型的驱动又依靠声音。</p>
@@ -532,7 +563,7 @@ Output: [1,1,8,8]  </code></pre>
 <p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
 <p><strong>Praat</strong>  </p>
 <h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<img src="/.io/2022/07//07/29/Praat-Verify-Phoneme-Timestamp/Praat-Phoneme-a.png" class title="Praat">
+<img src="/2022/07/29/Praat-Verify-Phoneme-Timestamp/Praat-Phoneme-a.png" class title="Praat">
 
 <p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
 <ul>
@@ -573,37 +604,6 @@ a[0] = 2 #error</code></pre>
       </categories>
   </entry>
   <entry>
-    <title>Partition Labels</title>
-    <url>/2020/09/23/Partition-Labels/</url>
-    <content><![CDATA[<p><strong><font color="red">题目</font></strong>  </p>
-<p><strong>A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</strong>  </p>
-<p><strong>Example 1:</strong>  </p>
-<pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
-Output: [9,7,8]
-Explanation:
-The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
-This is a partition so that each letter appears in at most one part.
-A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.</code></pre>
-<p><strong>Note:</strong></p>
-<ul>
-<li>S will have length in range [1, 500].</li>
-<li>S will consist of lowercase English letters (‘a’ to ‘z’) only.  </li>
-</ul>
-<a id="more"></a>
-
-<p><strong>思路</strong>  </p>
-<p>输入是一个string，要求我们拆分成尽可能多的子串，不同字串间没有重复字符。<br>要求的输出是每个子串的size。  </p>
-<p>我们可以先对string做一次全遍历，用map&lt; char, pair&lt;int, int&gt; &gt; 记录每个字符在string中出现的起始索引，至此，我们得到了一些集合，接下来就是求这些集合的并集，集合求并集的前提是 —— 这两个集合有相交区域，否则无法求并集。  </p>
-<p>下面是一个不算成功的实现，耗时太高，内存占用太大。<br>在写的时候还遇到一个问题，就是<font color="blue">__map默认是按照key的升序来排列的，而且map的Compare是根据key来比较的，就算我们写一个自己的Compare，也没办法按照value来排序；想着用unordered_map，但今天才意识到，原来unordered_map的存储顺序也不是插入顺序，是根据hash的计算。map底层是红黑树，unordered_map底层是hash。__</font>  __</p>
-<p>现在相出的解决方案是map&lt;K, T&gt; 重新保存为map&lt;T, K&gt;，但这样也就增加耗时。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">partitionLabels</span><span class="params">(<span class="built_in">string</span> S)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; map_assemble;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; vec_result;</span><br><span class="line">        <span class="keyword">int</span> length = S.length();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(map_assemble.<span class="built_in">find</span>(S[i]) != map_assemble.<span class="built_in">end</span>())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//update</span></span><br><span class="line">                map_assemble[S[i]].second = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//add</span></span><br><span class="line">                map_assemble[S[i]] = <span class="built_in">make_pair</span>(i, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt; map_assemble_reverse;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= map_assemble.<span class="built_in">begin</span>(); it!=map_assemble.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            map_assemble_reverse.insert(<span class="built_in">make_pair</span>(it-&gt;second, it-&gt;first));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//求相交集合的并集</span></span><br><span class="line">         <span class="built_in">map</span>&lt;<span class="built_in">pair</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;, <span class="keyword">char</span>&gt;::iterator it;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(it = map_assemble_reverse.<span class="built_in">begin</span>(); it!=map_assemble_reverse.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> bProcessed = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> it1=vec_result.<span class="built_in">begin</span>(); it1!=vec_result.<span class="built_in">end</span>(); ++it1)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> a1 = it-&gt;first.first, b1 = it-&gt;first.second;</span><br><span class="line">                <span class="keyword">int</span> a2 = it1-&gt;first, b2 = it1-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>((a1 &gt; b2) <span class="keyword">or</span> (b1 &lt; a2))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    it1 = vec_result.erase(it1);</span><br><span class="line">                    vec_result.push_back(<span class="built_in">make_pair</span>(<span class="built_in">min</span>(a1, a2), <span class="built_in">max</span>(b1, b2)));</span><br><span class="line">                    bProcessed = <span class="literal">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bProcessed)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vec_result.push_back(<span class="built_in">make_pair</span>(it-&gt;first.first, it-&gt;first.second));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//convert vector&lt;pair&lt;int,int&gt;&gt; to vector&lt;int&gt;</span></span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; final_result;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> it= vec_result.<span class="built_in">begin</span>(); it!=vec_result.<span class="built_in">end</span>(); ++it)</span><br><span class="line">        &#123;</span><br><span class="line">            final_result.push_back(it-&gt;second - it-&gt;first + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> final_result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Python线程操作</title>
     <url>/2020/11/20/Python%E7%BA%BF%E7%A8%8B%E6%93%8D%E4%BD%9C/</url>
     <content><![CDATA[<h1 id="1-多线程操作的基本原理"><a href="#1-多线程操作的基本原理" class="headerlink" title="1 多线程操作的基本原理"></a><strong>1 多线程操作的基本原理</strong></h1><p>开发语言与系统架构无关，在学习使用C++的时候我们就接触过多线程编程，后面随着处理器多核的出现，有了并行编程，这两个还存在着很大的区别。  </p>
@@ -624,6 +624,135 @@ A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect
 ]]></content>
       <categories>
         <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Repeated Substring Pattern</title>
+    <url>/2020/09/23/Repeated-Substring-Pattern/</url>
+    <content><![CDATA[<p><strong><font color="red">题目</font></strong></p>
+<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
+<p><strong>Example 1:</strong>  </p>
+<pre><code>Input: &quot;abab&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
+<p><strong>Example 2:</strong>  </p>
+<pre><code>Input: &quot;aba&quot;
+Output: False </code></pre>
+<p><strong>Example 3:</strong>  </p>
+<pre><code>Input: &quot;abcabcabcabc&quot;
+Output: True
+Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
+<p><strong>思路</strong>  </p>
+<p>start : 代表要比较的子串的开始索引  </p>
+<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
+<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
+<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
+<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">repeatedSubstringPattern</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">1</span>, start=<span class="number">0</span>, cmp_times=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= (<span class="built_in">floor</span>)(s.length() / <span class="number">2</span>); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length() % len != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            cmp_times = s.length() / len;</span><br><span class="line">            <span class="keyword">bool</span> bCurDup = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(s[j] != s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>TVM概览</title>
+    <url>/2023/09/01/TVM%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>用hexo搭建github blog</title>
+    <url>/2020/08/29/build-and-backup-github-pages-with-hexo/</url>
+    <content><![CDATA[<p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color="0xFFFFFF">原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
+<p>我们的操作步骤是</p>
+<ol>
+<li>在github.io　hexo分支备份源文件</li>
+<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
+</ol>
+<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
+<a id="more"></a>
+
+<p>下面我们梳理一下具体的流程。  </p>
+<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color="0xFFFFFF">node及hexo环境</font></strong></h2><pre><code>mkdir blog
+npm i hexo-cli -g
+hexo -v 
+hexo init  
+npm install  </code></pre>
+<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color="0xFFFFFF">github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
+<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color="0xFFFFFF">发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
+<p>修改_config.yml文件</p>
+<pre><code>deploy:
+type: &#39;git&#39;
+repository: git@github.com:username/username.github.io.git
+branch: master</code></pre>
+<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color="0xFFFFFF">hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
+<p>所以，我们有两种处理方法</p>
+<ol>
+<li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
+<li>把github.io　切换到hexo branch，把blog folder中需要的文件<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">scaffolds/  </span><br><span class="line">source/  </span><br><span class="line">themes/  </span><br><span class="line"><span class="selector-class">.gitignore</span>  </span><br><span class="line">_config<span class="selector-class">.yml</span>  </span><br><span class="line">package<span class="selector-class">.json</span>  </span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>拷贝到github.io所在的目录，然后  </p>
+<pre><code>git add --all  
+git commit 
+git push --set--upstream origin hexo　
+　</code></pre>
+<p>然后把.git目录拷贝到blog folder</p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color="0xFFFFFF">发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
+<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color="0xFFFFFF">环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
+<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#111;&#x6d;">&#103;&#105;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#111;&#x6d;</a>/username/username.github.io</del></p>
+<p>The instrutions above is not right, you should do as follows</p>
+<pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
+npm install</code></pre>
+<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color="0xFFFFFF">小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color="0xFF">添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
+<pre><code>npm install hexo-generator-searchdb  </code></pre>
+<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color="0xFF">首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
+<p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
+<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color="0xFF">文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span> <span class="comment">#从-date改成-updated</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color="0xFF">git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
+<p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>delete之后发生了什么</title>
+    <url>/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">delete</span> p;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; p[<span class="number">0</span>] &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码会崩溃吗？  </p>
+<p>不一定，delete是释放堆空间，但实际上内存只是被回收了，p还是指向那块区域，所以我们还可以继续使用，但这块空间的value有可能已经不是我们原来的value了，因为如果这块空间被重新分配给其它变量的话，有可能就会读写这块空间，value就会被改变。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>enable_if_t分析</title>
+    <url>/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<p><strong>To be continued</strong></p>
+<p>在看VS版本的thread库源码时，发现了这么一段</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color="red">enable_if_t</font>__。</p>
+<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
+<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
+<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
+<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
+<p>首先，我们要介绍一个概念 <a href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
+<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
+<p>此特性被用于模板元编程。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
       </categories>
   </entry>
   <entry>
@@ -748,135 +877,6 @@ def create():
       </categories>
   </entry>
   <entry>
-    <title>Repeated Substring Pattern</title>
-    <url>/2020/09/23/Repeated-Substring-Pattern/</url>
-    <content><![CDATA[<p><strong><font color="red">题目</font></strong></p>
-<p><strong><strong>Given a non-empty string check if it can be constructed by taking a substring of it and appending multiple copies of the substring together. You may assume the given string consists of lowercase English letters only and its length will not exceed 10000.</strong></strong></p>
-<p><strong>Example 1:</strong>  </p>
-<pre><code>Input: &quot;abab&quot;
-Output: True
-Explanation: It&#39;s the substring &quot;ab&quot; twice.  </code></pre>
-<p><strong>Example 2:</strong>  </p>
-<pre><code>Input: &quot;aba&quot;
-Output: False </code></pre>
-<p><strong>Example 3:</strong>  </p>
-<pre><code>Input: &quot;abcabcabcabc&quot;
-Output: True
-Explanation: It&#39;s the substring &quot;abc&quot; four times. (And the substring &quot;abcabc&quot; twice.)  </code></pre>
-<p><strong>思路</strong>  </p>
-<p>start : 代表要比较的子串的开始索引  </p>
-<p>length : 代表当前的字串长度, length最多为str.length()/2长度，而且还得是偶数字节</p>
-<p>循环不定式<br>如果duplicate的length [1, str.length()/2]</p>
-<p>那么我们可以实时得到默认的子串个数就是 str.length() / length  = compare_times</p>
-<p>这样就是说我们要比较compare_times次，其中每一次比较要比较length长度</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">repeatedSubstringPattern</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">1</span>, start=<span class="number">0</span>, cmp_times=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">1</span>; len &lt;= (<span class="built_in">floor</span>)(s.length() / <span class="number">2</span>); ++len)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length() % len != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            cmp_times = s.length() / len;</span><br><span class="line">            <span class="keyword">bool</span> bCurDup = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;cmp_times; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;len; ++j)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(s[j] != s[i*len+j])</span><br><span class="line">                        &#123;</span><br><span class="line">                            bCurDup = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(bCurDup == <span class="literal">true</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>TVM概览</title>
-    <url>/2023/09/01/TVM%E6%A6%82%E8%A7%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>用hexo搭建github blog</title>
-    <url>/2020/08/29/build-and-backup-github-pages-with-hexo/</url>
-    <content><![CDATA[<p>之前用hexo搭建过blog，当时也新建了一个github repo用来备份，但不知道怎么恢复，因为是在虚拟机里搭的环境，后来也丢了，现在重新整理一遍，最重要的是备份，换台机器照样能搞定。  </p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong><font color="0xFFFFFF">原理</font></strong></h2><p>hexo依赖于node，环境是不需要备份的，那么我们要备份的是除了环境和包之外的东西。<br>我们的github.io repo上有两个分支，其中master用来发布，hexo用来备份。<br>注意：发布的东西和备份的东西是有差别的，备份的是源文件，发布的是hexo生成后的文件。  </p>
-<p>我们的操作步骤是</p>
-<ol>
-<li>在github.io　hexo分支备份源文件</li>
-<li>本地文件夹blog负责发布master分支所需要的生成后文件</li>
-</ol>
-<p>我们可以每次修改后，把blog里修改的文件拷贝到github.io/hexo下面，然后git push。但这样太过麻烦了，我们可以把blog中我们需要的文件git add，作为hexo分支所需要的文件，然后在同一个文件夹内，保持两个branch的内容。</p>
-<a id="more"></a>
-
-<p>下面我们梳理一下具体的流程。  </p>
-<h2 id="node及hexo环境"><a href="#node及hexo环境" class="headerlink" title="node及hexo环境"></a><strong><font color="0xFFFFFF">node及hexo环境</font></strong></h2><pre><code>mkdir blog
-npm i hexo-cli -g
-hexo -v 
-hexo init  
-npm install  </code></pre>
-<h2 id="github-io"><a href="#github-io" class="headerlink" title="github io"></a><strong><font color="0xFFFFFF">github io</font></strong></h2><p>在github上新建repo github.io，同时创建hexo分支，并把hexo分支选做default branch。  </p>
-<h2 id="发布到github-io"><a href="#发布到github-io" class="headerlink" title="发布到github.io"></a><strong><font color="0xFFFFFF">发布到github.io</font></strong></h2><pre><code>npm i hexo-deployer-git</code></pre>
-<p>修改_config.yml文件</p>
-<pre><code>deploy:
-type: &#39;git&#39;
-repository: git@github.com:username/username.github.io.git
-branch: master</code></pre>
-<h2 id="hexo-branch"><a href="#hexo-branch" class="headerlink" title="hexo branch"></a><strong><font color="0xFFFFFF">hexo branch</font></strong></h2><p>很奇怪，我们在hexo init的时候，确实是clone了themes，但在本地没有发现.git目录，只发现了.gitignore。  </p>
-<p>所以，我们有两种处理方法</p>
-<ol>
-<li>把github.io 切换到hexo　branch，然后把.git目录拷贝到blog目录。此时，在blog目录里有了一个.gitignore，我们git add –all, git commit  git push origin hexo  </li>
-<li>把github.io　切换到hexo branch，把blog folder中需要的文件<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">scaffolds/  </span><br><span class="line">source/  </span><br><span class="line">themes/  </span><br><span class="line"><span class="selector-class">.gitignore</span>  </span><br><span class="line">_config<span class="selector-class">.yml</span>  </span><br><span class="line">package<span class="selector-class">.json</span>  </span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>拷贝到github.io所在的目录，然后  </p>
-<pre><code>git add --all  
-git commit 
-git push --set--upstream origin hexo　
-　</code></pre>
-<p>然后把.git目录拷贝到blog folder</p>
-<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong><font color="0xFFFFFF">发布文章</font></strong></h2><p>经过上面的操作后，我们hexo g | hexo d就是发布到github.io/master，　我们git add | commit |  push就是发布到hexo  </p>
-<h2 id="环境移植"><a href="#环境移植" class="headerlink" title="环境移植"></a><strong><font color="0xFFFFFF">环境移植</font></strong></h2><p>如果我们要在另一台环境上写我们的blog，那么我们  </p>
-<p><del>mkdir blog_folder</del><br>    <del>cd blog_folder</del><br>    <del>npm install -g hexo-cli</del><br>    <del>hexo init</del><br>    <del>npm install</del><br>    <del>git clone -b hexo <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;">&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;</a>/username/username.github.io</del></p>
-<p>The instrutions above is not right, you should do as follows</p>
-<pre><code>git clone -b hexo git@github.com:zhouxingfu/zhouxingfu.github.io.git  blog_directory  
-npm install</code></pre>
-<h2 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a><strong><font color="0xFFFFFF">小技巧</font></strong></h2><h3 id="添加本地搜索"><a href="#添加本地搜索" class="headerlink" title="添加本地搜索"></a><strong><font color="0xFF">添加本地搜索</font></strong></h3><p>在themes/next下_config.yml文件中，local_research改为true，需要安装依赖的插件 </p>
-<pre><code>npm install hexo-generator-searchdb  </code></pre>
-<h3 id="首页文章只显示部分摘要"><a href="#首页文章只显示部分摘要" class="headerlink" title="首页文章只显示部分摘要"></a><strong><font color="0xFF">首页文章只显示部分摘要</font></strong></h3><p>themes/next下_config.yml 设置excerpt_description: true  </p>
-<p>在文章中不显示的部分之前增加 &lt;!–more–&gt; </p>
-<h3 id="文章按照更新时间排序"><a href="#文章按照更新时间排序" class="headerlink" title="文章按照更新时间排序"></a><strong><font color="0xFF">文章按照更新时间排序</font></strong></h3><p>在blog下_config.yml中 </p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">index_generator:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">order_by:</span> <span class="string">-updated</span> <span class="comment">#从-date改成-updated</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="git如何添加修改后的themes"><a href="#git如何添加修改后的themes" class="headerlink" title="git如何添加修改后的themes"></a><strong><font color="0xFF">git如何添加修改后的themes</font></strong></h3><p>landscape界面不如next好看，切换theme的时候，在_config.yml里加上要使用的主题，然后<br>git clone <a href="https://github.com/theme-next/hexo-theme-next">https://github.com/theme-next/hexo-theme-next</a> themes/next。<br>但这里有个问题，我们是要对theme做些修改的，至少_config.yml是要修改的，那我们上传到git上呢。<br>如果是git submodule的话，就没办法修改了，因为submodule用的都是现成的commit。除非我们fork一个，然后自己修改，然后git clone我们自己修改好的theme，然后再用git submodule。</p>
-<p>还有一种思路，就是我不用git clone，我我直接拿到不带git的文件，直接修改源文件就好了。不过这里面也有问题，就是如果theme更新，我们只能手工操作了。  目前就先按照这种方式弄吧。  </p>
-]]></content>
-      <categories>
-        <category>other</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>delete之后发生了什么</title>
-    <url>/2020/09/27/delete%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/</url>
-    <content><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">delete</span> p;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; p[<span class="number">0</span>] &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
-<p>上面这段代码会崩溃吗？  </p>
-<p>不一定，delete是释放堆空间，但实际上内存只是被回收了，p还是指向那块区域，所以我们还可以继续使用，但这块空间的value有可能已经不是我们原来的value了，因为如果这块空间被重新分配给其它变量的话，有可能就会读写这块空间，value就会被改变。</p>
-]]></content>
-      <categories>
-        <category>C++</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>enable_if_t分析</title>
-    <url>/2021/02/26/enable-if-t%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<p><strong>To be continued</strong></p>
-<p>在看VS版本的thread库源码时，发现了这么一段</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// STRUCT TEMPLATE enable_if</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span> &#123;</span>&#125;; <span class="comment">// no member &quot;type&quot; when !_Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">enable_if</span>&lt;true, _Ty&gt; &#123;</span> <span class="comment">// type is _Ty for _Test</span></span><br><span class="line">    <span class="keyword">using</span> type = _Ty;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">bool</span> _Test, <span class="class"><span class="keyword">class</span> _<span class="title">Ty</span> = <span class="title">void</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> <span class="title">enable_if_t</span> = <span class="title">typename</span> <span class="title">enable_if</span>&lt;_Test, _Ty&gt;:</span>:type;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">thread</span> &#123;</span> <span class="comment">// class for observing and managing threads</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Fn</span>, <span class="title">class</span>... _<span class="title">Args</span>, <span class="title">enable_if_t</span>&lt;!is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt;, int&gt; = 0&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">thread</span>(_<span class="title">Fn</span>&amp;&amp; _<span class="title">Fx</span>, _<span class="title">Args</span>&amp;&amp;... _<span class="title">Ax</span>) &#123;</span></span><br><span class="line">        <span class="keyword">using</span> _Tuple                 = tuple&lt;<span class="keyword">decay_t</span>&lt;_Fn&gt;, <span class="keyword">decay_t</span>&lt;_Args&gt;...&gt;;</span><br><span class="line">        <span class="keyword">auto</span> _Decay_copied           = _STD make_unique&lt;_Tuple&gt;(_STD forward&lt;_Fn&gt;(_Fx), _STD forward&lt;_Args&gt;(_Ax)...);</span><br><span class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> _Invoker_proc = _Get_invoke&lt;_Tuple&gt;(make_index_sequence&lt;<span class="number">1</span> + <span class="keyword">sizeof</span>...(_Args)&gt;&#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(push)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable : 5039) <span class="comment">// pointer or reference to potentially throwing function passed to</span></span></span><br><span class="line">                                <span class="comment">// extern C function under -EHc. Undefined behavior may occur</span></span><br><span class="line">                                <span class="comment">// if this function throws an exception. (/Wall)</span></span><br><span class="line">        _Thr._Hnd =</span><br><span class="line">            <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">void</span>*&gt;(_CSTD _beginthreadex(<span class="literal">nullptr</span>, <span class="number">0</span>, _Invoker_proc, _Decay_copied.<span class="built_in">get</span>(), <span class="number">0</span>, &amp;_Thr._Id));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(pop)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_Thr._Hnd) &#123; <span class="comment">// ownership transferred to the thread</span></span><br><span class="line">            (<span class="keyword">void</span>) _Decay_copied.<span class="built_in">release</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// failed to start thread</span></span><br><span class="line">            _Thr._Id = <span class="number">0</span>;</span><br><span class="line">            _Throw_Cpp_error(_RESOURCE_UNAVAILABLE_TRY_AGAIN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里我们看到thread构造函数的模板参数有三个，<em>Fn和不定参数模板<em>Args，以后最后的</em></em><font color="red">enable_if_t</font>__。</p>
-<p>enable_if_t 是 enable_if在_Test为true的情况下 才会存在别名type，而此时type=第二个参数类型。</p>
-<p>那么 _is_same_v&lt;_Remove_cvref_t&lt;_Fn&gt;, thread&gt; _必须为false</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">using</span> _<span class="title">Remove_cvref_t</span> = <span class="title">remove_cv_t</span>&lt;remove_reference_t&lt;_Ty&gt;&gt;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span>, <span class="title">class</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span> = <span class="title">false</span>;</span> <span class="comment">// determine whether arguments are the same type</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Ty</span>&gt;</span></span><br><span class="line"><span class="class">_<span class="title">INLINE_VAR</span> <span class="title">constexpr</span> <span class="title">bool</span> <span class="title">is_same_v</span>&lt;_Ty, _Ty&gt; = <span class="title">true</span>;</span></span><br></pre></td></tr></table></figure>
-
-<p>_Remove_cvref_t 是取出类型本身的引用（包括左值 右值）属性、const、volatile属性。  </p>
-<p>也就是说，对thread构造中enable_if_t中 _Fn和thread必须是不同类型，也就是_Fn不能是thread类型，那_Fn是其他任何类型都可以了？ 不是的，必须是Callable&amp;&amp;类型，因为必须支持std::invoke，这些在其它博文中再探讨。  </p>
-<p>回到本文主题 enable_if_t的作用是什么，有没有其它方式实现，我们该在什么场合，如何使用它？  </p>
-<p>首先，我们要介绍一个概念 <a href="https://en.cppreference.com/w/cpp/language/sfinae">SFINAE</a>  </p>
-<p>在函数模板的重载决议中应用此规则：当将模板形参替换为显式指定的类型或推导的类型失败时，从重载集中丢弃这个特化，而非导致编译失败。</p>
-<p>此特性被用于模板元编程。</p>
-]]></content>
-      <categories>
-        <category>C++</category>
-      </categories>
-  </entry>
-  <entry>
     <title>git学习</title>
     <url>/2020/10/22/git%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<p>今天找到一个非常直观的git学习网站 <a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a>  为啥需要学习git呢，本来以为自己已经学会了，结果发现在某种使用场景中，自己又找不到对策了，很多概念都弄不懂，感觉连“知其然”都做不到，更不要说“所以然”了。  </p>
@@ -932,24 +932,6 @@ npm install</code></pre>
 ]]></content>
       <categories>
         <category>tools</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
-    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
-    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
- 
-
-<p>按两次shift就变成正常了  </p>
-  
-
-<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
-<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
-  
-
-  ]]></content>
-      <categories>
-        <category>other</category>
       </categories>
   </entry>
   <entry>
@@ -1186,6 +1168,24 @@ JSON的数据类型和Python的数据类型是很容易找到对应关系的，�
       </categories>
   </entry>
   <entry>
+    <title>ubuntu搜狗输入法乱码需切换两次shift才恢复</title>
+    <url>/2020/10/10/ubuntu%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E4%B9%B1%E7%A0%81%E9%9C%80%E5%88%87%E6%8D%A2%E4%B8%A4%E6%AC%A1shift%E6%89%8D%E6%81%A2%E5%A4%8D/</url>
+    <content><![CDATA[<p>ubuntu 16.04上装了搜狗输入法，但每次调出来的时候，就是乱码  </p>
+ 
+
+<p>按两次shift就变成正常了  </p>
+  
+
+<p>每次都特别麻烦，后来在网上找到原因了<a href="https://blog.csdn.net/huayunhualuo/article/details/103722937">Ubuntu搜狗输入法乱码问题</a>  </p>
+<p>因为我们在设置输入法的时候，把搜狗设置为首选输入法了，解决方案是把英文设置为首选输入法，感谢上面链接作者找到了解决方法。</p>
+  
+
+  ]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
     <title>utf8 格式源代码跨平台编译</title>
     <url>/2020/09/28/utf8-%E6%A0%BC%E5%BC%8F%E6%BA%90%E4%BB%A3%E7%A0%81%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91/</url>
     <content><![CDATA[<p>在Windows平台，如果不指定bom头的话，是不清楚当前是什么编码格式的，如果我们在代码中使用了中文，系统根本不知道是utf-8 还是unicode-16，而对Linux来说，默认就是utf-8，所以写中文没关系。</p>
@@ -1193,6 +1193,32 @@ JSON的数据类型和Python的数据类型是很容易找到对应关系的，�
 ]]></content>
       <categories>
         <category>other</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>如何从100亿个url中找出相同的url</title>
+    <url>/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/</url>
+    <content><![CDATA[<p>看到这道题目的第一反应，HashMap，但100亿真的太多了，我不可能在内存中建立一个这个大的HashMap。</p>
+<p>这里面需要的操作是</p>
+<ol>
+<li>计算所有文件的hash（还要解决可能出现的哈希冲突）</li>
+<li>内存中要保存一个几百G的哈希表</li>
+</ol>
+<p>查找的时候因为是哈希，所以不需要遍历匹配，所以这块消耗不大。</p>
+<p>但内存就否决了方案。  </p>
+<p>一个优化思路是 计算出hash之后%1000，这样可以分成1000个文件夹，这次每次处理其中一个文件夹就好。  </p>
+<p>但这里也要问题</p>
+<ol>
+<li>如何保证尽量均为分布到1000个文件夹？很难，尽量选用合适的哈希算法。  </li>
+<li>IO操作大，因为计算哈希之后要先保存下来，再%1000。  </li>
+</ol>
+<p>还有一个思路，就是外部排序，然后逐个比较，但外部排序100亿个，O(NlogN)，而且也不能一次加载到内存中。 </p>
+<p>从知乎一个回答上看可以用布隆filter，而这又是redis里的概念，所以</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">mapreduce</span> redis是怎么实现的呢？</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+]]></content>
+      <categories>
+        <category>algorithm</category>
       </categories>
   </entry>
   <entry>
@@ -1228,32 +1254,6 @@ if __name__ == &#39;__main__&#39;:
 ]]></content>
       <categories>
         <category>other</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>如何从100亿个url中找出相同的url</title>
-    <url>/2020/09/21/%E5%A6%82%E4%BD%95%E4%BB%8E100%E4%BA%BF%E4%B8%AAurl%E4%B8%AD%E6%89%BE%E5%87%BA%E7%9B%B8%E5%90%8C%E7%9A%84url/</url>
-    <content><![CDATA[<p>看到这道题目的第一反应，HashMap，但100亿真的太多了，我不可能在内存中建立一个这个大的HashMap。</p>
-<p>这里面需要的操作是</p>
-<ol>
-<li>计算所有文件的hash（还要解决可能出现的哈希冲突）</li>
-<li>内存中要保存一个几百G的哈希表</li>
-</ol>
-<p>查找的时候因为是哈希，所以不需要遍历匹配，所以这块消耗不大。</p>
-<p>但内存就否决了方案。  </p>
-<p>一个优化思路是 计算出hash之后%1000，这样可以分成1000个文件夹，这次每次处理其中一个文件夹就好。  </p>
-<p>但这里也要问题</p>
-<ol>
-<li>如何保证尽量均为分布到1000个文件夹？很难，尽量选用合适的哈希算法。  </li>
-<li>IO操作大，因为计算哈希之后要先保存下来，再%1000。  </li>
-</ol>
-<p>还有一个思路，就是外部排序，然后逐个比较，但外部排序100亿个，O(NlogN)，而且也不能一次加载到内存中。 </p>
-<p>从知乎一个回答上看可以用布隆filter，而这又是redis里的概念，所以</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">mapreduce</span> redis是怎么实现的呢？</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-]]></content>
-      <categories>
-        <category>algorithm</category>
       </categories>
   </entry>
   <entry>

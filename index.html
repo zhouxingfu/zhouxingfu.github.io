@@ -184,6 +184,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/30/How-To-Display-Image-With-hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhouxingfu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/30/How-To-Display-Image-With-hexo/" class="post-title-link" itemprop="url">在hexo中显示图片</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-30 17:55:46" itemprop="dateCreated datePublished" datetime="2020-08-30T17:55:46+08:00">2020-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-01 18:46:38" itemprop="dateModified" datetime="2023-09-01T18:46:38+08:00">2023-09-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><font color="0xFFFFFF">本文所有方式均通过亲自验证</font></p>
+<p>刻舟求剑是什么意思，今天算是认识到了。<br>为什么信息越来越多，我们却越来越累了呢，是因为有其他的东西吸引了我们本来的注意力吗？有这种原因，但还有更重要的是，有效信息太少。<br>今天我在网上找hexo显示本地图片的方式，尝试了很多都有问题，搜索出来的结果绝大部分都是无效信息。<br>下面我们说一说这些无效信息。  </p>
+<p><strong>npm install hexo-asset-image</strong><br>安装这个插件之后，显示图片不对。通过查看public目录下生成的index，发现是生成的图片link不对。<br>我们用上面这个命令安装的是hexo-asset-image 1.0.0版本，这个版本跟hexo3兼容上有问题，无法正确生成图片link。  </p>
+<p><strong>npm install <a target="_blank" rel="noopener" href="https://github.com/CodeFalling/hexo-asset-image">https://github.com/CodeFalling/hexo-asset-image</a> –save</strong><br>有的blog发现了这个问题，提示要用这个版本的插件0.0.5。<br>但这个插件也有问题，我们需要修改hexo-asset-image的index.js文件，可以参考<a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000020310187/a-1020000020311907">hexo 图片路径错误/.com//</a><br>也就是说，用很老的版本是可以的，但同样的，这个老版本的插件跟hexo3及以上版本也存在兼容问题。  </p>
+<p>上面是网络搜索的两个主要结果，其实主要结果是第1个，第2个我也是在segmentfault上找到的。  </p>
+<p>还好，搜索引擎给了我一个更好的答案。  </p>
+<p><strong>hexo原生支持image</strong>  </p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7f06d10f2e3e">关于hexo博客图片插件问题</a>  </p>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/asset-folders">hexo文档：资源文件夹</a>  </p>
+<p>根据官方文档的说明，目前版本的hexo可以直接显示图片，主要有两种方式</p>
+<ol>
+<li>source/images文件夹下面放置图片，通过![](/images/sample.jpg)直接显示</li>
+<li>通过文章资源文件夹   <ol>
+<li>_config.yml中　post_asset_folder : true</li>
+<li>hexo n title “name” 会生成同名的md和文件夹  </li>
+<li>把图片资源放置到对应的文件夹，这时候有两种方式来显示图片<br>markdown方式： ![](1.png) 这种方式会导致的结果是，在首页中看不到图片，但如果点开具体文章，图片是可以正常显示的。<br>正确方式：hexo3支持的标签用法   </li>
+</ol>
+</li>
+</ol>
+<p>所以，原来的很多具体的处理措施，现在并不可用了，但方法该是我们掌握的，比如这里遇到无法显示的问题，首先要排查生成的html里image link是否正确，然后最好的方式是寻找官方文档的支持，说实话，现在搜索引擎的权重设计的并不好，很多已经无法用的方案，还在置顶，不知道因为作者是做了SEO优化，还是说搜索引擎本身并不智能到判断这些信息已经是不合适的了。  </p>
+<p>缘木求鱼，刻舟求剑。从古至今，大的道理还是那么多，关键是如何变成自己的模型。  </p>
+<p><strong><font color="red" size="10">就是启动hexo-asset-image之后，要修改index.js，另外记住，因为node-modules并不在git上，所以每次到了一个新的环境，你必须重新下载node-modules，并且修改index.js文件。切记！切记！</font></strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> cheerio = <span class="built_in">require</span>(<span class="string">&#x27;cheerio&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// http://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPosition</span>(<span class="params">str, m, i</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> str.split(m, i).join(m).length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> version = <span class="built_in">String</span>(hexo.version).split(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">hexo.extend.filter.register(<span class="string">&#x27;after_post_render&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> config = hexo.config;</span><br><span class="line">  <span class="keyword">if</span>(config.post_asset_folder)&#123;</span><br><span class="line">    	<span class="keyword">var</span> link = data.permalink;</span><br><span class="line">	<span class="keyword">if</span>(version.length &gt; <span class="number">0</span> &amp;&amp; <span class="built_in">Number</span>(version[<span class="number">0</span>]) == <span class="number">3</span>)</span><br><span class="line">	   <span class="keyword">var</span> beginPos = getPosition(link, <span class="string">&#x27;/&#x27;</span>, <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	   <span class="keyword">var</span> beginPos = getPosition(link, <span class="string">&#x27;/&#x27;</span>, <span class="number">3</span>) + <span class="number">1</span>;</span><br><span class="line">	<span class="comment">// In hexo 3.1.1, the permalink of &quot;about&quot; page is like &quot;.../about/index.html&quot;.</span></span><br><span class="line">	<span class="keyword">var</span> endPos = link.lastIndexOf(<span class="string">&#x27;/&#x27;</span>) + <span class="number">1</span>;</span><br><span class="line">    link = link.substring(beginPos, endPos);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> toprocess = [<span class="string">&#x27;excerpt&#x27;</span>, <span class="string">&#x27;more&#x27;</span>, <span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; toprocess.length; i++)&#123;</span><br><span class="line">      <span class="keyword">var</span> key = toprocess[i];</span><br><span class="line"> </span><br><span class="line">      <span class="keyword">var</span> $ = cheerio.load(data[key], &#123;</span><br><span class="line">        ignoreWhitespace: <span class="literal">false</span>,</span><br><span class="line">        xmlMode: <span class="literal">false</span>,</span><br><span class="line">        lowerCaseTags: <span class="literal">false</span>,</span><br><span class="line">        decodeEntities: <span class="literal">false</span></span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      $(<span class="string">&#x27;img&#x27;</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> ($(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>))&#123;</span><br><span class="line">			<span class="comment">// For windows style path, we replace &#x27;\&#x27; to &#x27;/&#x27;.</span></span><br><span class="line">			<span class="keyword">var</span> src = $(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>).replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">			<span class="keyword">if</span>(!<span class="regexp">/http[s]*.*|\/\/.*/</span>.test(src) &amp;&amp;</span><br><span class="line">			   !<span class="regexp">/^\s*\//</span>.test(src)) &#123;</span><br><span class="line">			  <span class="comment">// For &quot;about&quot; page, the first part of &quot;src&quot; can&#x27;t be removed.</span></span><br><span class="line">			  <span class="comment">// In addition, to support multi-level local directory.</span></span><br><span class="line">			  <span class="keyword">var</span> linkArray = link.split(<span class="string">&#x27;/&#x27;</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">				<span class="keyword">return</span> elem != <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">			  &#125;);</span><br><span class="line">			  <span class="keyword">var</span> srcArray = src.split(<span class="string">&#x27;/&#x27;</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">				<span class="keyword">return</span> elem != <span class="string">&#x27;&#x27;</span> &amp;&amp; elem != <span class="string">&#x27;.&#x27;</span>;</span><br><span class="line">			  &#125;);</span><br><span class="line">			  <span class="keyword">if</span>(srcArray.length &gt; <span class="number">1</span>)</span><br><span class="line">				srcArray.shift();</span><br><span class="line">			  src = srcArray.join(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">			  $(<span class="built_in">this</span>).attr(<span class="string">&#x27;src&#x27;</span>, config.root + link + src);</span><br><span class="line">			  <span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info(<span class="string">&quot;update link as:--&gt;&quot;</span>+config.root + link + src);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info(<span class="string">&quot;no src attr, skipped...&quot;</span>);</span><br><span class="line">			<span class="built_in">console</span>.info&amp;&amp;<span class="built_in">console</span>.info($(<span class="built_in">this</span>));</span><br><span class="line">		&#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      data[key] = $.html();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2020/08/31/Debug-and-Assembly/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -215,7 +310,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-01 18:33:04" itemprop="dateModified" datetime="2023-09-01T18:33:04+08:00">2023-09-01</time>
+                <time title="Modified: 2023-09-01 18:42:11" itemprop="dateModified" datetime="2023-09-01T18:42:11+08:00">2023-09-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -348,7 +443,7 @@
 <p>回到本文，有了audio和textgrid文件之后，该怎么把这两者结合起来使用呢？  </p>
 <p><strong>Praat</strong>  </p>
 <h2 id="Praat"><a href="#Praat" class="headerlink" title="Praat"></a><strong>Praat</strong></h2><p>Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  </p>
-<img src="/.io/2022/07//07/29/Praat-Verify-Phoneme-Timestamp/Praat-Phoneme-a.png" class title="Praat">
+<img src="/2022/07/29/Praat-Verify-Phoneme-Timestamp/Praat-Phoneme-a.png" class title="Praat">
 
 <p>因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 </p>
 <ul>
@@ -840,97 +935,6 @@
 
       
           <h1 id="为什么引入condition-variable"><a href="#为什么引入condition-variable" class="headerlink" title="为什么引入condition_variable"></a><strong>为什么引入condition_variable</strong></h1><h1 id="语法规定"><a href="#语法规定" class="headerlink" title="语法规定"></a><strong>语法规定</strong></h1><h1 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a><strong>内部实现</strong></h1><h2 id="你会如何实现condition-variable"><a href="#你会如何实现condition-variable" class="headerlink" title="你会如何实现condition_variable"></a><strong>你会如何实现condition_variable</strong></h2><h1 id="应用拓展"><a href="#应用拓展" class="headerlink" title="应用拓展"></a><strong>应用拓展</strong></h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h1><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/thread/condition_variable">std::condition_variable</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="zhouxingfu.github.io/2021/03/20/CMake%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhouxingfu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="I WILL TRY ANYTHING ONCE">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/20/CMake%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">CMake入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-20 05:20:39" itemprop="dateCreated datePublished" datetime="2021-03-20T05:20:39+08:00">2021-03-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-10-25 18:11:32" itemprop="dateModified" datetime="2022-10-25T18:11:32+08:00">2022-10-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CMake/" itemprop="url" rel="index"><span itemprop="name">CMake</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>现在的构建工具有很多，CMake是其中的佼佼者，虽然很多人说CMake编译速度太慢，但架不住兼容性好。  </p>
-<p>我了解的构建工具有bazel、ninja等，但暂时都没用过，先掌握CMake吧。  </p>
-<h2 id="从一个简单的项目开始"><a href="#从一个简单的项目开始" class="headerlink" title="从一个简单的项目开始"></a><strong>从一个简单的项目开始</strong></h2><p><strong><font color="orange">一个最简单的例子</font></strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br></pre></td></tr></table></figure>
-
-<p>只有3行，但也构建了CMakeLists.txt的骨架。  </p>
-<ul>
-<li>指定cmake支持的最小版本</li>
-<li>指定项目名称</li>
-<li>指定目标名称及其依赖  </li>
-</ul>
-<p><strong><font size="4" color="red">注意事项</font></strong>  </p>
-<ol>
-<li><em>关于targetname和projectname</em><br>targetname和projectname不要相同，projectname直接在CMakeLists.txt中指定，</li>
-</ol>
-<h2 id="那么如果我们要依赖库呢"><a href="#那么如果我们要依赖库呢" class="headerlink" title="那么如果我们要依赖库呢"></a><strong>那么如果我们要依赖库呢</strong></h2><p>我们先添加一个预先生成好的库，CMakeLists.txt更新为 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.0)</span><br><span class="line">project(myApp)  </span><br><span class="line">add_executable(myTarget sample.cpp)</span><br><span class="line">target_link_libraries(myTarget PUBLIC ui PRIVATE algorithm INTERNAL framework)</span><br></pre></td></tr></table></figure>
-
 
       
     </div>

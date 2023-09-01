@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="I WILL TRY ANYTHING ONCE">
 <meta property="og:description" content="前言首先介绍一个可以在线查看C++转汇编的网站 www.godbolt.org，可以选择任意平台 任意版本的编译器，非常方便学习。  C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括STL库，还包括汇编乃至指令集。   对上，C++要写出媲美java C#甚至python的代码，底层还要关心各种内存分配、指针，ABI兼容，出了错误，非常难以排查，不像“虚拟机语言”，只需要关注自己这一层。从">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png">
-<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-leave.png">
-<meta property="og:image" content="/.io/2020/08//08/31/Debug-and-Assembly/registers.jpg">
+<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-call.png">
+<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png">
+<meta property="og:image" content="/2020/08/31/Debug-and-Assembly/registers.jpg">
 <meta property="article:published_time" content="2020-08-31T03:36:09.000Z">
-<meta property="article:modified_time" content="2023-09-01T10:33:04.582Z">
+<meta property="article:modified_time" content="2023-09-01T10:42:11.410Z">
 <meta property="article:author" content="zhouxingfu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png">
+<meta name="twitter:image" content="/2020/08/31/Debug-and-Assembly/stack-frame-call.png">
 
 <link rel="canonical" href="zhouxingfu.github.io/2020/08/31/Debug-and-Assembly/">
 
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-01 18:33:04" itemprop="dateModified" datetime="2023-09-01T18:33:04+08:00">2023-09-01</time>
+                <time title="Modified: 2023-09-01 18:42:11" itemprop="dateModified" datetime="2023-09-01T18:42:11+08:00">2023-09-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,8 +264,7 @@
 <p>这里，我们提到的是可追溯。每次发布版本要在git上有对应的commit，而这个commit要很容易就从SDK里获得，比如在加载时输出commit-id。  </p>
 <h3 id="分析堆栈"><a href="#分析堆栈" class="headerlink" title="分析堆栈"></a>分析堆栈</h3><a id="more"></a>
 
-<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-call.png" class title="stack frame call">
-
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-call.png" class title="This is an example image">
 
 <p>从上面我们可知<br>入栈时具体操作是</p>
 <pre><code>1)调用参数从右往左压栈  
@@ -277,7 +276,7 @@
 <pre><code>1)movq %rbp, %rsp ; 使 %rsp 和 %rbp 指向同一位置，即子栈帧的起始处, 收回子栈帧空间
 2)popq %rbp ; 将栈中保存的父栈帧的 %rbp 的值赋值给 %rbp，并且 %rsp 上移一个位置指向父栈帧的结尾处</code></pre>
 <p>为了便于栈帧恢复，x86_64 架构中提供了 leave 指令来实现上述两条命令的功能。执行 leave 后，前面图中函数调用的栈帧结构如下　　</p>
-<img src="/.io/2020/08//08/31/Debug-and-Assembly/stack-frame-leave.png" class title="stack frame leave">
+<img src="/2020/08/31/Debug-and-Assembly/stack-frame-leave.png" class title="stack frame leave">
 
 <p>调用 leave 后，%rsp 指向返回地址；ret 指令，从栈顶弹出数据，并跳转到此数据指向的地址处。在leave 执行后，%rsp 指向返回地址，因而 ret 的作用就是把 %rsp 上移一个位置，并跳转到返回地址执行。</p>
 <p>所以，leave 指令用于恢复父函数的栈帧，ret 用于跳转到返回地址处，leave 和ret 配合共同完成了子函数的返回。当执行完成 ret 后，%rsp 指向的是父栈帧的结尾处，父栈帧尾部存储的调用参数由编译器自动释放。</p>
@@ -344,7 +343,7 @@
 <td>查看具体变量value</td>
 </tr>
 </tbody></table>
-<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color="0xFFFFFF"> 寄存器建议使用规则</font></strong></h2><img src="/.io/2020/08//08/31/Debug-and-Assembly/registers.jpg" class>
+<h2 id="寄存器建议使用规则"><a href="#寄存器建议使用规则" class="headerlink" title=" 寄存器建议使用规则"></a><strong><font color="0xFFFFFF"> 寄存器建议使用规则</font></strong></h2><img src="/2020/08/31/Debug-and-Assembly/registers.jpg" class>
 
 
 
