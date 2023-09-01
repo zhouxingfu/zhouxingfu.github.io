@@ -87,8 +87,7 @@ __Praat__
 
 Praat是语音界的一个神奇工具，而我只是用它来实现音素时间戳校准的工作。  
 
-![Praat音素音频对齐-1](assets/Praat-Phoneme-a.png)
-
+{% asset_img Praat-Phoneme-a.png Praat %}
 
 因为手头没有对应的音频文件和TextGrid（后面补齐），接下来的步骤是 
 
