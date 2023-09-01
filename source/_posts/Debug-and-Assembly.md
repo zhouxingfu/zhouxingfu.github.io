@@ -41,8 +41,7 @@ C++是一门需要跟底层打交道的语言，这里的底层不仅仅包括ST
 
 <!--more-->
 
-{% asset_img stack-frame-call.png stack frame call %}
-
+{% asset_img stack-frame-call.png This is an example image %}
 
 从上面我们可知  
 入栈时具体操作是

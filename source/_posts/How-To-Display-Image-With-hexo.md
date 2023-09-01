@@ -45,3 +45,73 @@ __hexo原生支持image__
 所以，原来的很多具体的处理措施，现在并不可用了，但方法该是我们掌握的，比如这里遇到无法显示的问题，首先要排查生成的html里image link是否正确，然后最好的方式是寻找官方文档的支持，说实话，现在搜索引擎的权重设计的并不好，很多已经无法用的方案，还在置顶，不知道因为作者是做了SEO优化，还是说搜索引擎本身并不智能到判断这些信息已经是不合适的了。  
 
 缘木求鱼，刻舟求剑。从古至今，大的道理还是那么多，关键是如何变成自己的模型。  
+
+
+__<font color=red size = 10>就是启动hexo-asset-image之后，要修改index.js，另外记住，因为node-modules并不在git上，所以每次到了一个新的环境，你必须重新下载node-modules，并且修改index.js文件。切记！切记！</font>__
+
+
+
+```JS
+'use strict';
+var cheerio = require('cheerio');
+
+// http://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string
+function getPosition(str, m, i) {
+  return str.split(m, i).join(m).length;
+}
+
+var version = String(hexo.version).split('.');
+hexo.extend.filter.register('after_post_render', function(data){
+  var config = hexo.config;
+  if(config.post_asset_folder){
+    	var link = data.permalink;
+	if(version.length > 0 && Number(version[0]) == 3)
+	   var beginPos = getPosition(link, '/', 1) + 1;
+	else
+	   var beginPos = getPosition(link, '/', 3) + 1;
+	// In hexo 3.1.1, the permalink of "about" page is like ".../about/index.html".
+	var endPos = link.lastIndexOf('/') + 1;
+    link = link.substring(beginPos, endPos);
+
+    var toprocess = ['excerpt', 'more', 'content'];
+    for(var i = 0; i < toprocess.length; i++){
+      var key = toprocess[i];
+ 
+      var $ = cheerio.load(data[key], {
+        ignoreWhitespace: false,
+        xmlMode: false,
+        lowerCaseTags: false,
+        decodeEntities: false
+      });
+
+      $('img').each(function(){
+		if ($(this).attr('src')){
+			// For windows style path, we replace '\' to '/'.
+			var src = $(this).attr('src').replace('\\', '/');
+			if(!/http[s]*.*|\/\/.*/.test(src) &&
+			   !/^\s*\//.test(src)) {
+			  // For "about" page, the first part of "src" can't be removed.
+			  // In addition, to support multi-level local directory.
+			  var linkArray = link.split('/').filter(function(elem){
+				return elem != '';
+			  });
+			  var srcArray = src.split('/').filter(function(elem){
+				return elem != '' && elem != '.';
+			  });
+			  if(srcArray.length > 1)
+				srcArray.shift();
+			  src = srcArray.join('/');
+			  $(this).attr('src', config.root + link + src);
+			  console.info&&console.info("update link as:-->"+config.root + link + src);
+			}
+		}else{
+			console.info&&console.info("no src attr, skipped...");
+			console.info&&console.info($(this));
+		}
+      });
+      data[key] = $.html();
+    }
+  }
+});
+
+```
